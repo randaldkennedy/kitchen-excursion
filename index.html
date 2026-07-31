@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#7a3e24">
+  <title>Randy's Recipe Book</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">Tried, adjusted, worth making again</p>
+      <h1>Randy's Recipe Book</h1>
+      <p class="subtitle">Simple meals, real notes, and recipes calibrated to our kitchen.</p>
+    </div>
+    <button id="installHint" class="secondary-btn" type="button">Add to phone</button>
+  </header>
+
+  <main>
+    <section class="toolbar" aria-label="Recipe controls">
+      <label class="search-wrap">
+        <span>Search recipes</span>
+        <input id="searchInput" type="search" placeholder="Try pork, slow cooker, mashed potatoes…">
+      </label>
+      <div class="filters" role="group" aria-label="Filter recipes">
+        <button class="filter active" data-filter="all" type="button">All</button>
+        <button class="filter" data-filter="favorite" type="button">Favorites</button>
+        <button class="filter" data-filter="pork" type="button">Pork</button>
+        <button class="filter" data-filter="beef" type="button">Beef</button>
+        <button class="filter" data-filter="slow-cooker" type="button">Slow cooker</button>
+      </div>
+    </section>
+
+    <section id="recipeGrid" class="recipe-grid" aria-live="polite"></section>
+  </main>
+
+  <dialog id="recipeDialog" class="recipe-dialog">
+    <article id="dialogContent"></article>
+    <form method="dialog" class="dialog-actions">
+      <button class="secondary-btn" value="close">Close</button>
+    </form>
+  </dialog>
+
+  <dialog id="cookingDialog" class="cooking-dialog">
+    <div class="cooking-shell">
+      <div class="cooking-topbar">
+        <div>
+          <p class="eyebrow">Cooking mode</p>
+          <h2 id="cookingTitle"></h2>
+        </div>
+        <button id="closeCooking" class="secondary-btn" type="button">Exit</button>
+      </div>
+      <ol id="cookingSteps" class="cooking-steps"></ol>
+    </div>
+  </dialog>
+
+  <template id="recipeCardTemplate">
+    <article class="recipe-card">
+      <div class="recipe-image-wrap">
+        <img class="recipe-image" alt="">
+        <span class="badge"></span>
+      </div>
+      <div class="recipe-card-body">
+        <div class="recipe-meta"></div>
+        <h2 class="recipe-title"></h2>
+        <p class="recipe-summary"></p>
+        <div class="card-actions">
+          <button class="primary-btn view-btn" type="button">Open recipe</button>
+          <button class="secondary-btn cook-btn" type="button">Cooking mode</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
