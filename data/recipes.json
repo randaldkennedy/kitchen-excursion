@@ -2,8 +2,14 @@
   {
     "id": "smothered-pork-chops",
     "title": "Randy's Smothered Pork Chops",
-    "categories": ["Pork", "Home Favorite"],
-    "filters": ["favorite", "pork"],
+    "categories": [
+      "Pork",
+      "Home Favorite"
+    ],
+    "filters": [
+      "favorite",
+      "pork"
+    ],
     "badge": "Approved",
     "image": "assets/smothered-pork-chops.jpeg",
     "imageAlt": "Smothered pork chop with mushroom gravy, rice, and vegetables",
@@ -50,8 +56,14 @@
   {
     "id": "mississippi-pot-roast",
     "title": "Mississippi Pot Roast",
-    "categories": ["Beef", "Slow Cooker"],
-    "filters": ["beef", "slow-cooker"],
+    "categories": [
+      "Beef",
+      "Slow Cooker"
+    ],
+    "filters": [
+      "beef",
+      "slow-cooker"
+    ],
     "badge": "Next up",
     "image": "",
     "imageAlt": "",
@@ -85,6 +97,50 @@
       "Butter, 1 stick",
       "Pepperoncini peppers",
       "Potatoes for mashing"
+    ]
+  },
+  {
+    "id": "simple-mashed-potatoes",
+    "title": "Randy's Simple Mashed Potatoes",
+    "categories": [
+      "Sides",
+      "Home Favorite"
+    ],
+    "filters": [
+      "favorite"
+    ],
+    "badge": "New",
+    "image": "",
+    "imageAlt": "",
+    "summary": "Simple, creamy mashed potatoes with butter, warm milk, and sour cream.",
+    "prep": "15 min",
+    "cook": "20 min",
+    "serves": "6",
+    "ingredients": [
+      "3 lb russet potatoes",
+      "6 tablespoons butter",
+      "½ cup whole milk, warmed",
+      "¼ cup sour cream",
+      "1 tablespoon salt for the cooking water, plus more to taste",
+      "Black pepper to taste"
+    ],
+    "steps": [
+      "Peel the potatoes and cut them into roughly 2-inch chunks.",
+      "Put the potatoes in a large pot, cover with cold water, and add about 1 tablespoon salt.",
+      "Bring to a boil and cook for 18–20 minutes, until a fork slides into the potatoes easily.",
+      "Drain well. Return the potatoes to the hot pot over low heat for about 1 minute to dry them slightly.",
+      "Add the butter, warm milk, and sour cream.",
+      "Mash until smooth, then season with salt and black pepper.",
+      "Stop mashing as soon as they are smooth so they do not become gluey."
+    ],
+    "notes": "Made to serve under Mississippi Pot Roast or smothered pork chops. Start with ½ cup milk and add only a splash more if needed.",
+    "shopping": [
+      "Russet potatoes, 3 lb",
+      "Butter",
+      "Whole milk",
+      "Sour cream",
+      "Salt",
+      "Black pepper"
     ]
   }
 ]
