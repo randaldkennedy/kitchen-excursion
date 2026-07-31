@@ -15,6 +15,50 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--bg); color: var(--text); }
+
+.art-banner {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  background: #2f1c13;
+  border-bottom: 4px solid #bb7b52;
+}
+.art-banner img {
+  width: 100%;
+  height: clamp(220px, 32vw, 470px);
+  object-fit: cover;
+  object-position: center 55%;
+  display: block;
+}
+.art-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(25,14,8,.58), transparent 48%);
+  pointer-events: none;
+}
+.art-banner__label {
+  position: absolute;
+  z-index: 1;
+  left: max(18px, calc((100% - 1100px) / 2));
+  bottom: 18px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: #fffaf4;
+  text-shadow: 0 2px 12px rgba(0,0,0,.75);
+}
+.art-banner__label span {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+}
+.art-banner__label strong {
+  font-size: clamp(.8rem, 1.5vw, 1rem);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
 button, input { font: inherit; }
 button { -webkit-tap-highlight-color: transparent; }
 
@@ -88,6 +132,8 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
 @media (max-width: 760px) {
   .brand-header__inner { align-items: flex-start; flex-direction: column; justify-content: center; gap: 4px; padding: 16px 0; }
   .brand__tagline { font-size: .86rem; }
+  .art-banner img { height: 230px; object-position: center center; }
+  .art-banner__label { left: 16px; right: 16px; bottom: 12px; flex-direction: column; gap: 2px; }
   .hero { align-items: start; padding-top: 30px; }
   .hero__button { display: none; }
   .detail-grid { grid-template-columns: 1fr; }
