@@ -1,95 +1,87 @@
-const recipes = [
-  {
-    id: 'smothered-pork-chops',
-    title: "Randy's Smothered Pork Chops",
-    category: ['pork', 'favorite'],
-    badge: 'Approved',
-    image: 'assets/smothered-pork-chops.jpeg',
-    imageAlt: 'Smothered pork chop with mushroom gravy, rice, and broccoli',
-    summary: 'Bone-in chops with mushrooms, onions, and gravy. Next time: one-hour bake, creamier gravy, mashed potatoes.',
-    prep: '20 min',
-    cook: '1 hr',
-    serves: '2–4',
-    ingredients: [
-      '4 bone-in center loin pork chops, about 1 inch thick',
-      '1 large yellow onion, sliced into ¼-inch half-moons',
-      '16 oz sliced mushrooms',
-      '1 can cream of mushroom soup',
-      '1 packet onion soup mix',
-      '1 cup beef broth',
-      '½ cup whole milk or half-and-half',
-      '1 tablespoon Worcestershire sauce',
-      'Salt and black pepper',
-      'Butter or oil for browning',
-      'Mashed potatoes for serving'
-    ],
-    steps: [
-      'Preheat the oven to 350°F.',
-      'Season the pork chops with salt and pepper.',
-      'Brown the chops in a skillet with a little butter or oil for 2–3 minutes per side. They do not need to cook through.',
-      'Remove the chops. Cook the onions for 2–3 minutes, then add the mushrooms and cook another 4–5 minutes.',
-      'Stir in the cream of mushroom soup, onion soup mix, beef broth, milk, and Worcestershire sauce. Scrape up the browned bits from the skillet.',
-      'Place the chops in a baking dish, pour the gravy over them, and cover tightly with foil.',
-      'Bake for 1 hour. Check for tenderness and doneness; add only 5–10 minutes if truly needed.',
-      'Rest for 5 minutes and serve over mashed potatoes with plenty of gravy.'
-    ],
-    notes: 'First attempt at 1 hour 15 minutes was slightly dry and tough near the bone. The outer meat was perfect. Keep the generous amount of mushrooms and onions; there was plenty of gravy.'
-  },
-  {
-    id: 'mississippi-pot-roast',
-    title: 'Mississippi Pot Roast',
-    category: ['beef', 'slow-cooker'],
-    badge: 'Next up',
-    image: '',
-    imageAlt: '',
-    summary: 'Five ingredients, almost no prep, and built for mashed potatoes.',
-    prep: '10 min',
-    cook: '8 hr low',
-    serves: '6–8',
-    ingredients: [
-      '3–4 lb chuck roast',
-      '1 packet Hidden Valley Ranch seasoning',
-      '1 packet au jus gravy mix',
-      '1 stick butter',
-      '6–10 pepperoncini peppers',
-      '2–4 tablespoons pepperoncini juice (optional)',
-      'Mashed potatoes for serving'
-    ],
-    steps: [
-      'Place the chuck roast in the slow cooker.',
-      'Sprinkle the ranch seasoning and au jus mix evenly over the roast.',
-      'Place the stick of butter on top.',
-      'Add the pepperoncini peppers around the roast and a little juice if desired.',
-      'Cover and cook on LOW for about 8 hours, or HIGH for about 5 hours.',
-      'When fork-tender, shred with two forks and stir the meat into the cooking juices.',
-      'Serve over mashed potatoes.'
-    ],
-    notes: 'Do not add water. Start checking a little early if the roast is closer to 3 lb. Save all the cooking juices for the potatoes.'
-  }
-];
-
 const grid = document.querySelector('#recipeGrid');
 const template = document.querySelector('#recipeCardTemplate');
 const searchInput = document.querySelector('#searchInput');
+const filtersContainer = document.querySelector('#filters');
+const recipeCount = document.querySelector('#recipeCount');
 const recipeDialog = document.querySelector('#recipeDialog');
 const dialogContent = document.querySelector('#dialogContent');
 const cookingDialog = document.querySelector('#cookingDialog');
 const cookingTitle = document.querySelector('#cookingTitle');
 const cookingSteps = document.querySelector('#cookingSteps');
+const shoppingDialog = document.querySelector('#shoppingDialog');
+const shoppingContent = document.querySelector('#shoppingContent');
+
+let recipes = [];
 let activeFilter = 'all';
 
-function render() {
+const filterLabels = {
+  all: 'All',
+  favorite: 'Favorites',
+  pork: 'Pork',
+  beef: 'Beef',
+  'slow-cooker': 'Slow cooker'
+};
+
+async function loadRecipes() {
+  try {
+    const response = await fetch('data/recipes.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    recipes = await response.json();
+    buildFilters();
+    render();
+  } catch (error) {
+    grid.innerHTML = `
+      <div class="empty">
+        <strong>The recipes could not be loaded.</strong><br>
+        Open this site through GitHub Pages, IIS, or another local web server rather than directly from the file system.
+      </div>`;
+    console.error(error);
+  }
+}
+
+function buildFilters() {
+  const found = new Set(['all']);
+  recipes.forEach(recipe => recipe.filters.forEach(filter => found.add(filter)));
+  filtersContainer.innerHTML = '';
+  [...found].forEach(filter => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `filter${filter === activeFilter ? ' active' : ''}`;
+    button.dataset.filter = filter;
+    button.textContent = filterLabels[filter] || filter;
+    button.addEventListener('click', () => {
+      activeFilter = filter;
+      document.querySelectorAll('.filter').forEach(btn => btn.classList.toggle('active', btn === button));
+      render();
+    });
+    filtersContainer.appendChild(button);
+  });
+}
+
+function filteredRecipes() {
   const query = searchInput.value.trim().toLowerCase();
-  const filtered = recipes.filter(recipe => {
-    const matchesFilter = activeFilter === 'all' || recipe.category.includes(activeFilter);
-    const haystack = [recipe.title, recipe.summary, recipe.ingredients.join(' '), recipe.notes].join(' ').toLowerCase();
+  return recipes.filter(recipe => {
+    const matchesFilter = activeFilter === 'all' || recipe.filters.includes(activeFilter);
+    const haystack = [
+      recipe.title,
+      recipe.summary,
+      recipe.categories.join(' '),
+      recipe.ingredients.join(' '),
+      recipe.notes
+    ].join(' ').toLowerCase();
     return matchesFilter && haystack.includes(query);
   });
+}
+
+function render() {
+  const filtered = filteredRecipes();
+  recipeCount.textContent = `${filtered.length} recipe${filtered.length === 1 ? '' : 's'}`;
   grid.innerHTML = '';
   if (!filtered.length) {
     grid.innerHTML = '<p class="empty">No recipes match that search yet.</p>';
     return;
   }
+
   filtered.forEach(recipe => {
     const node = template.content.cloneNode(true);
     const img = node.querySelector('.recipe-image');
@@ -104,8 +96,16 @@ function render() {
     node.querySelector('.recipe-meta').textContent = `${recipe.prep} prep • ${recipe.cook} cook • serves ${recipe.serves}`;
     node.querySelector('.recipe-title').textContent = recipe.title;
     node.querySelector('.recipe-summary').textContent = recipe.summary;
+    const tags = node.querySelector('.tag-row');
+    recipe.categories.forEach(category => {
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.textContent = category;
+      tags.appendChild(tag);
+    });
     node.querySelector('.view-btn').addEventListener('click', () => openRecipe(recipe));
     node.querySelector('.cook-btn').addEventListener('click', () => openCooking(recipe));
+    node.querySelector('.shop-btn').addEventListener('click', () => openShopping(recipe));
     grid.appendChild(node);
   });
 }
@@ -137,15 +137,25 @@ function openCooking(recipe) {
   cookingDialog.showModal();
 }
 
-document.querySelectorAll('.filter').forEach(button => {
-  button.addEventListener('click', () => {
-    document.querySelectorAll('.filter').forEach(btn => btn.classList.remove('active'));
-    button.classList.add('active');
-    activeFilter = button.dataset.filter;
-    render();
-  });
-});
+function openShopping(recipe) {
+  shoppingContent.innerHTML = `
+    <div class="recipe-detail">
+      <p class="eyebrow">Shopping list</p>
+      <h2>${recipe.title}</h2>
+      <p class="shopping-note">Tap each box as you shop. Exact H-E-B aisles can be added as we verify them.</p>
+      <ul class="shopping-list">
+        ${recipe.shopping.map((item, index) => `
+          <li><label><input type="checkbox" id="shop-${recipe.id}-${index}"><span>${item}</span></label></li>
+        `).join('')}
+      </ul>
+    </div>`;
+  shoppingDialog.showModal();
+}
+
 searchInput.addEventListener('input', render);
 document.querySelector('#closeCooking').addEventListener('click', () => cookingDialog.close());
-document.querySelector('#installHint').addEventListener('click', () => alert('After we publish it, open the site in Safari on your iPhone, tap Share, then choose “Add to Home Screen.”'));
-render();
+document.querySelector('#installHint').addEventListener('click', () => {
+  alert('On your iPhone, open this site in Safari, tap Share, then choose “Add to Home Screen.”');
+});
+
+loadRecipes();

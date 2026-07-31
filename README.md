@@ -1,17 +1,19 @@
 # Randy's Recipe Book
 
-A mobile-friendly static recipe website designed for GitHub Pages.
+Part of **La Última Excursión Kitchen**.
 
-## Publish on GitHub Pages
+## Structure
 
-1. Create a new public GitHub repository named `randys-recipe-book`.
-2. Upload all files in this folder to the repository root.
-3. In the repository, open **Settings → Pages**.
-4. Under **Build and deployment**, select **Deploy from a branch**.
-5. Choose the `main` branch and `/ (root)`, then save.
-6. The site will appear at `https://YOUR-USERNAME.github.io/randys-recipe-book/`.
+- `index.html` — website shell
+- `styles.css` — visual design
+- `app.js` — search, filters, recipe dialogs, cooking mode, and shopping lists
+- `data/recipes.json` — recipe content
+- `assets/` — recipe photos
 
-## Current recipes
+## Add a recipe
 
-- Randy's Smothered Pork Chops
-- Mississippi Pot Roast
+Add one recipe object to `data/recipes.json`, then add its photo to `assets/` and set the `image` property.
+
+## Local testing
+
+Because recipes load from JSON, serve the folder through IIS, GitHub Pages, VS Code Live Server, or another web server. Opening `index.html` directly from Windows may block the JSON request.

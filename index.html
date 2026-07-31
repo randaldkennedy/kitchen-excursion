@@ -3,37 +3,55 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#7a3e24">
-  <title>Randy's Recipe Book</title>
+  <meta name="theme-color" content="#5b2f20">
+  <meta name="description" content="Randy and Lisa's tried, adjusted, worth-making-again recipes.">
+  <title>Randy's Recipe Book | La Última Excursión</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <div>
-      <p class="eyebrow">Tried, adjusted, worth making again</p>
-      <h1>Randy's Recipe Book</h1>
-      <p class="subtitle">Simple meals, real notes, and recipes calibrated to our kitchen.</p>
+  <header class="brand-header">
+    <div class="brand-header__inner">
+      <a class="brand" href="#" aria-label="Randy's Recipe Book home">
+        <span class="brand__kicker">La Última Excursión</span>
+        <span class="brand__title">Kitchen</span>
+      </a>
+      <p class="brand__tagline">The journey continues… in the kitchen.</p>
     </div>
-    <button id="installHint" class="secondary-btn" type="button">Add to phone</button>
   </header>
 
-  <main>
+  <main class="page-shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Tried, adjusted, worth making again</p>
+        <h1>Randy's Recipe Book</h1>
+        <p class="subtitle">Simple meals, honest notes, and recipes calibrated to our kitchen.</p>
+      </div>
+      <button id="installHint" class="secondary-btn hero__button" type="button">Add to phone</button>
+    </section>
+
     <section class="toolbar" aria-label="Recipe controls">
       <label class="search-wrap">
         <span>Search recipes</span>
         <input id="searchInput" type="search" placeholder="Try pork, slow cooker, mashed potatoes…">
       </label>
-      <div class="filters" role="group" aria-label="Filter recipes">
-        <button class="filter active" data-filter="all" type="button">All</button>
-        <button class="filter" data-filter="favorite" type="button">Favorites</button>
-        <button class="filter" data-filter="pork" type="button">Pork</button>
-        <button class="filter" data-filter="beef" type="button">Beef</button>
-        <button class="filter" data-filter="slow-cooker" type="button">Slow cooker</button>
+      <div id="filters" class="filters" role="group" aria-label="Filter recipes"></div>
+    </section>
+
+    <section class="section-heading">
+      <div>
+        <p class="eyebrow">Our kitchen notebook</p>
+        <h2>Recipes</h2>
       </div>
+      <p id="recipeCount" class="recipe-count"></p>
     </section>
 
     <section id="recipeGrid" class="recipe-grid" aria-live="polite"></section>
   </main>
+
+  <footer class="site-footer">
+    <p><strong>La Última Excursión Kitchen</strong></p>
+    <p>Home favorites today. Road-trip and camp meals tomorrow.</p>
+  </footer>
 
   <dialog id="recipeDialog" class="recipe-dialog">
     <article id="dialogContent"></article>
@@ -55,6 +73,13 @@
     </div>
   </dialog>
 
+  <dialog id="shoppingDialog" class="recipe-dialog shopping-dialog">
+    <article id="shoppingContent"></article>
+    <form method="dialog" class="dialog-actions">
+      <button class="secondary-btn" value="close">Close</button>
+    </form>
+  </dialog>
+
   <template id="recipeCardTemplate">
     <article class="recipe-card">
       <div class="recipe-image-wrap">
@@ -63,16 +88,18 @@
       </div>
       <div class="recipe-card-body">
         <div class="recipe-meta"></div>
-        <h2 class="recipe-title"></h2>
+        <h3 class="recipe-title"></h3>
         <p class="recipe-summary"></p>
+        <div class="tag-row"></div>
         <div class="card-actions">
           <button class="primary-btn view-btn" type="button">Open recipe</button>
           <button class="secondary-btn cook-btn" type="button">Cooking mode</button>
+          <button class="secondary-btn shop-btn" type="button">Shopping list</button>
         </div>
       </div>
     </article>
   </template>
 
-  <script src="app.js"></script>
+  <script src="app.js" defer></script>
 </body>
 </html>
