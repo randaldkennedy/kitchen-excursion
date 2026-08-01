@@ -10,7 +10,8 @@
     "filters": [
       "favorite",
       "pork",
-      "dinner"
+      "dinner",
+       "la-jefa-approved"
     ],
     "badge": "Approved",
     "image": "assets/smothered-pork-chops.jpeg",
