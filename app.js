@@ -130,7 +130,26 @@ function buildFilters() {
 
     section.appendChild(buttonRow);
     filtersContainer.appendChild(section);
+  })
+  const clearButton = document.createElement('button');
+  clearButton.type = 'button';
+  clearButton.className = 'secondary-btn clear-filters';
+  clearButton.textContent = 'Clear All Filters';
+
+  clearButton.addEventListener('click', () => {
+    Object.keys(activeFilters).forEach(key => {
+      activeFilters[key] = 'all';
+    });
+
+    searchInput.value = '';
+
+    buildFilters();
+    render();
+    updateFilterToggleLabel();
   });
+
+  filtersContainer.appendChild(clearButton);
+;
 }
 
 function recipeMatchesFilters(recipe) {
@@ -256,3 +275,4 @@ document.querySelector('#installHint').addEventListener('click', () => {
 });
 
 loadRecipes();
+updateFilterToggleLabel();
