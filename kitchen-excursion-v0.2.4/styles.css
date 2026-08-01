@@ -30,6 +30,7 @@ button { -webkit-tap-highlight-color: transparent; }
 h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-spacing: -.05em; }
 .hero__button { flex: 0 0 auto; }
 .subtitle { color: var(--muted); margin: 12px 0 0; max-width: 650px; line-height: 1.55; }
+.project-label { margin: 12px 0 0; color: var(--accent); font-weight: 850; letter-spacing: .04em; }
 .eyebrow { margin: 0 0 8px; color: var(--accent); font-weight: 900; text-transform: uppercase; letter-spacing: .09em; font-size: .76rem; }
 
 .toolbar { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 91%, transparent); backdrop-filter: blur(14px); padding: 16px 0 18px; }
