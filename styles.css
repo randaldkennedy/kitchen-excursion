@@ -133,3 +133,28 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
     padding-top: 0;
   }
 }
+.filter-panel {
+  margin-top: 0.75rem;
+}
+
+.filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.filters {
+  max-height: 1000px;
+  opacity: 1;
+  overflow: hidden;
+  transition:
+    max-height 450ms ease,
+    opacity 300ms ease,
+    margin-top 450ms ease;
+}
+
+.filters--collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+}

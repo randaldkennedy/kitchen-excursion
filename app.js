@@ -1,7 +1,7 @@
 const grid = document.querySelector('#recipeGrid');
 const template = document.querySelector('#recipeCardTemplate');
 const searchInput = document.querySelector('#searchInput');
-const filtersContainer = document.querySelector('#filters');recipeMatchesFilters
+const filtersContainer = document.querySelector('#filters');
 const recipeCount = document.querySelector('#recipeCount');
 const recipeDialog = document.querySelector('#recipeDialog');
 const dialogContent = document.querySelector('#dialogContent');
@@ -10,6 +10,16 @@ const cookingTitle = document.querySelector('#cookingTitle');
 const cookingSteps = document.querySelector('#cookingSteps');
 const shoppingDialog = document.querySelector('#shoppingDialog');
 const shoppingContent = document.querySelector('#shoppingContent');
+const filterToggle = document.querySelector('#filterToggle');
+
+filterToggle.addEventListener('click', () => {
+  const isExpanded = filterToggle.getAttribute('aria-expanded') === 'true';
+
+  filterToggle.setAttribute('aria-expanded', String(!isExpanded));
+  filtersContainer.classList.toggle('filters--collapsed', isExpanded);
+  /*filterToggle.textContent = isExpanded ? '▶ Filters' : '▼ Filters'; */
+  updateFilterToggleLabel();
+});
 
 let recipes = [];
 const activeFilters = {
@@ -70,7 +80,13 @@ function buildFilters() {
   filtersContainer.innerHTML = '';
 
   filterGroups.forEach(group => {
-    const available = group.values.filter(value => recipes.some(recipe => Array.isArray(recipe.filters) && recipe.filters.includes(value)));
+    const available = group.values.filter(value =>
+      recipes.some(recipe =>
+        Array.isArray(recipe.filters) &&
+        recipe.filters.includes(value)
+      )
+    );
+
     if (!available.length) return;
 
     const section = document.createElement('section');
@@ -88,15 +104,27 @@ function buildFilters() {
     ['all', ...available].forEach(value => {
       const button = document.createElement('button');
       button.type = 'button';
-      button.className = `filter${activeFilters[group.key] === value ? ' active' : ''}`;
+      button.className =
+        `filter${activeFilters[group.key] === value ? ' active' : ''}`;
+
       button.dataset.group = group.key;
       button.dataset.filter = value;
-      button.textContent = value === 'all' ? `All ${group.label}` : filterLabels[value] || value;
+      button.textContent =
+        value === 'all'
+          ? `All ${group.label}`
+          : filterLabels[value] || value;
+
       button.addEventListener('click', () => {
         activeFilters[group.key] = value;
-        buttonRow.querySelectorAll('.filter').forEach(btn => btn.classList.toggle('active', btn === button));
+
+        buttonRow.querySelectorAll('.filter').forEach(btn => {
+          btn.classList.toggle('active', btn === button);
+        });
+
         render();
+        updateFilterToggleLabel();
       });
+
       buttonRow.appendChild(button);
     });
 
@@ -128,6 +156,18 @@ function filteredRecipes() {
     ].join(' ').toLowerCase();
     return recipeMatchesFilters(recipe) && haystack.includes(query);
   });
+}
+
+function updateFilterToggleLabel() {
+  const activeCount = Object.values(activeFilters)
+    .filter(value => value !== 'all')
+    .length;
+
+  const isExpanded = filterToggle.getAttribute('aria-expanded') === 'true';
+  const arrow = isExpanded ? '▼' : '▶';
+  const count = activeCount ? ` (${activeCount})` : '';
+
+  filterToggle.textContent = `${arrow} Filters${count}`;
 }
 
 function render() {
