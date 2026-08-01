@@ -2,14 +2,8 @@
   {
     "id": "smothered-pork-chops",
     "title": "Randy's Smothered Pork Chops",
-    "categories": [
-      "Pork",
-      "Home Favorite"
-    ],
-    "filters": [
-      "favorite",
-      "pork"
-    ],
+    "categories": ["Dinner", "Beef", "Slow Cooker"],
+   "filters": ["favorite", "dinner", "pork"],
     "badge": "Approved",
     "image": "assets/smothered-pork-chops.jpeg",
     "imageAlt": "Smothered pork chop with mushroom gravy, rice, and vegetables",
@@ -56,14 +50,8 @@
   {
     "id": "mississippi-pot-roast",
     "title": "Mississippi Pot Roast",
-    "categories": [
-      "Beef",
-      "Slow Cooker"
-    ],
-    "filters": [
-      "beef",
-      "slow-cooker"
-    ],
+"categories": ["Dinner", "Beef", "Slow Cooker"],
+"filters": ["dinner", "beef", "slow-cooker"],
     "badge": "Next up",
     "image": "",
     "imageAlt": "",
