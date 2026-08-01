@@ -20,7 +20,8 @@ const filterLabels = {
   pork: 'Pork',
   beef: 'Beef',
   'slow-cooker': 'Slow cooker',
-  breakfast: 'Breakfast'
+  breakfast: 'Breakfast',
+  dinner: 'Dinner
 };
 
 async function loadRecipes() {
