@@ -62,58 +62,60 @@
       "favorite"
     ]
   },
-  {
-    "id": "mississippi-pot-roast",
-    "title": "Mississippi Pot Roast",
-    "categories": [
-      "Dinner",
-      "Beef",
-      "Slow Cooker"
-    ],
-    "filters": [
-      "beef",
-      "slow-cooker",
-      "dinner"
-    ],
-    "badge": "Next up",
-    "image": "",
-    "imageAlt": "",
-    "summary": "Five ingredients, almost no prep, and built for mashed potatoes.",
-    "prep": "10 min",
-    "cook": "8 hr low",
-    "serves": "6–8",
-    "ingredients": [
-      "3–4 lb chuck roast",
-      "1 packet Hidden Valley Ranch seasoning",
-      "1 packet au jus gravy mix",
-      "1 stick butter",
-      "6–10 pepperoncini peppers",
-      "2–4 tablespoons pepperoncini juice (optional)",
-      "Mashed potatoes for serving"
-    ],
-    "steps": [
-      "Place the chuck roast in the slow cooker.",
-      "Sprinkle the ranch seasoning and au jus mix evenly over the roast.",
-      "Place the stick of butter on top.",
-      "Add the pepperoncini peppers around the roast and a little juice if desired.",
-      "Cover and cook on LOW for about 8 hours, or HIGH for about 5 hours.",
-      "When fork-tender, shred with two forks and stir the meat into the cooking juices.",
-      "Serve over mashed potatoes."
-    ],
-    "notes": "Do not add water. Start checking a little early if the roast is closer to 3 lb. Save all the cooking juices for the potatoes.",
-    "shopping": [
-      "Chuck roast, 3–4 lb",
-      "Hidden Valley Ranch seasoning packet",
-      "Au jus gravy mix packet",
-      "Butter, 1 stick",
-      "Pepperoncini peppers",
-      "Potatoes for mashing"
-    ],
-    "meal": "dinner",
-    "protein": "beef",
-    "method": "slow-cooker",
-    "status": []
-  },
+ {
+  "id": "mississippi-pot-roast",
+  "title": "Mississippi Pot Roast",
+  "categories": [
+    "Dinner",
+    "Beef",
+    "Slow Cooker"
+  ],
+  "filters": [
+    "dinner",
+    "beef",
+    "slow-cooker"
+  ],
+  "badge": "Next up",
+  "image": "",
+  "imageAlt": "",
+  "summary": "Five ingredients, almost no prep, and built for mashed potatoes.",
+  "prep": "15 min",
+  "cook": "8 hr low*",
+  "serves": "6–8",
+  "ingredients": [
+    "3–4 lb chuck roast",
+    "Black pepper",
+    "1 tablespoon vegetable or avocado oil",
+    "1 packet Hidden Valley Ranch seasoning",
+    "1 packet au jus gravy mix",
+    "1 stick butter",
+    "6–10 pepperoncini peppers",
+    "2–4 tablespoons pepperoncini juice (optional)",
+    "Mashed potatoes for serving"
+  ],
+  "steps": [
+    "If time allows, remove the roast from the refrigerator 20–30 minutes before cooking.",
+    "Pat the roast dry with paper towels and season lightly with black pepper. Do not add extra salt because the seasoning mixes are already salty.",
+    "Heat the oil in a large skillet over medium-high heat.",
+    "Sear the roast for 2–3 minutes per side, including the edges, until browned. Do not cook it through.",
+    "Place the browned roast in the slow cooker.",
+    "Sprinkle the ranch seasoning and au jus gravy mix evenly over the roast.",
+    "Place the stick of butter on top.",
+    "Add the pepperoncini peppers around the roast and a little juice if desired.",
+    "Cover and cook on LOW for about 8 hours, or until the roast shreds easily with two forks.",
+    "Shred the roast with two forks and stir the meat into the cooking juices.",
+    "Serve over mashed potatoes."
+  ],
+  "notes": "Do not add water. Searing the roast first adds richer beef flavor. Randy's Ninja slow cooker runs hot, so begin checking earlier than the standard 8-hour cook time. For a smaller roast around 2½ lb, use ¾ packet ranch seasoning, ¾ packet au jus mix, 6 tablespoons butter, 5–6 pepperoncinis, and begin checking around 5½ hours. Save all the cooking juices for the mashed potatoes.",
+  "shopping": [
+    "Chuck roast, 3–4 lb",
+    "Hidden Valley Ranch seasoning packet",
+    "Au jus gravy mix packet",
+    "Butter, 1 stick",
+    "Pepperoncini peppers",
+    "Potatoes for mashing"
+  ]
+},
   {
     "id": "simple-mashed-potatoes",
     "title": "Randy's Simple Mashed Potatoes",
