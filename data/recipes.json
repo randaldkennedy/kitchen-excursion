@@ -70,11 +70,15 @@
     "Beef",
     "Slow Cooker"
   ],
-  "filters": [
-    "dinner",
-    "beef",
-    "slow-cooker"
+"filters": [
+   "dinner",
+   "beef",
+   "slow-cooker"
   ],
+  "meal": "dinner",
+  "protein": "beef",
+  "method": "slow-cooker",
+  "status": [],
   "badge": "Next up",
   "image": "",
   "imageAlt": "",
