@@ -21,7 +21,7 @@ const filterLabels = {
   beef: 'Beef',
   'slow-cooker': 'Slow cooker',
   breakfast: 'Breakfast',
-  dinner: 'Dinner
+  dinner: 'Dinner'
 };
 
 async function loadRecipes() {
