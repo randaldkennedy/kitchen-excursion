@@ -12,16 +12,41 @@ const shoppingDialog = document.querySelector('#shoppingDialog');
 const shoppingContent = document.querySelector('#shoppingContent');
 
 let recipes = [];
-let activeFilter = 'all';
+const activeFilters = {
+  meal: 'all',
+  protein: 'all',
+  method: 'all',
+  status: 'all'
+};
+
+const filterGroups = [
+  { key: 'meal', label: 'Meal', values: ['breakfast', 'lunch', 'dinner', 'side', 'dessert'] },
+  { key: 'protein', label: 'Protein', values: ['pork', 'beef', 'chicken', 'seafood', 'meatless'] },
+  { key: 'method', label: 'Method', values: ['oven', 'stovetop', 'slow-cooker', 'grill', 'air-fryer', 'microwave'] },
+  { key: 'status', label: 'Status', values: ['favorite', 'la-jefa-approved', 'quick'] }
+];
 
 const filterLabels = {
   all: 'All',
-  favorite: 'Favorites',
+  breakfast: 'Breakfast',
+  lunch: 'Lunch',
+  dinner: 'Dinner',
+  side: 'Sides',
+  dessert: 'Dessert',
   pork: 'Pork',
   beef: 'Beef',
-  'slow-cooker': 'Slow cooker',
-  breakfast: 'Breakfast',
-  dinner: 'Dinner'
+  chicken: 'Chicken',
+  seafood: 'Seafood',
+  meatless: 'Meatless',
+  oven: 'Oven',
+  stovetop: 'Stovetop',
+  'slow-cooker': 'Slow Cooker',
+  grill: 'Grill',
+  'air-fryer': 'Air Fryer',
+  microwave: 'Microwave',
+  favorite: 'Favorites',
+  'la-jefa-approved': 'La Jefa Approved',
+  quick: 'Quick'
 };
 
 async function loadRecipes() {
@@ -42,36 +67,67 @@ async function loadRecipes() {
 }
 
 function buildFilters() {
-  const found = new Set(['all']);
-  recipes.forEach(recipe => recipe.filters.forEach(filter => found.add(filter)));
   filtersContainer.innerHTML = '';
-  [...found].forEach(filter => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = `filter${filter === activeFilter ? ' active' : ''}`;
-    button.dataset.filter = filter;
-    button.textContent = filterLabels[filter] || filter;
-    button.addEventListener('click', () => {
-      activeFilter = filter;
-      document.querySelectorAll('.filter').forEach(btn => btn.classList.toggle('active', btn === button));
-      render();
+
+  filterGroups.forEach(group => {
+    const available = group.values.filter(value => recipes.some(recipe => recipe[group.key] === value || recipe.status?.includes(value)));
+    if (!available.length) return;
+
+    const section = document.createElement('section');
+    section.className = 'filter-group';
+    section.setAttribute('aria-label', `${group.label} filters`);
+
+    const heading = document.createElement('span');
+    heading.className = 'filter-group__label';
+    heading.textContent = group.label;
+    section.appendChild(heading);
+
+    const buttonRow = document.createElement('div');
+    buttonRow.className = 'filter-group__buttons';
+
+    ['all', ...available].forEach(value => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `filter${activeFilters[group.key] === value ? ' active' : ''}`;
+      button.dataset.group = group.key;
+      button.dataset.filter = value;
+      button.textContent = value === 'all' ? `All ${group.label}` : filterLabels[value] || value;
+      button.addEventListener('click', () => {
+        activeFilters[group.key] = value;
+        buttonRow.querySelectorAll('.filter').forEach(btn => btn.classList.toggle('active', btn === button));
+        render();
+      });
+      buttonRow.appendChild(button);
     });
-    filtersContainer.appendChild(button);
+
+    section.appendChild(buttonRow);
+    filtersContainer.appendChild(section);
   });
+}
+
+function recipeMatchesFilters(recipe) {
+  const mealMatch = activeFilters.meal === 'all' || recipe.meal === activeFilters.meal;
+  const proteinMatch = activeFilters.protein === 'all' || recipe.protein === activeFilters.protein;
+  const methodMatch = activeFilters.method === 'all' || recipe.method === activeFilters.method;
+  const statusMatch = activeFilters.status === 'all' || recipe.status?.includes(activeFilters.status);
+  return mealMatch && proteinMatch && methodMatch && statusMatch;
 }
 
 function filteredRecipes() {
   const query = searchInput.value.trim().toLowerCase();
   return recipes.filter(recipe => {
-    const matchesFilter = activeFilter === 'all' || recipe.filters.includes(activeFilter);
     const haystack = [
       recipe.title,
       recipe.summary,
       recipe.categories.join(' '),
       recipe.ingredients.join(' '),
-      recipe.notes
+      recipe.notes,
+      recipe.meal,
+      recipe.protein,
+      recipe.method,
+      ...(recipe.status || [])
     ].join(' ').toLowerCase();
-    return matchesFilter && haystack.includes(query);
+    return recipeMatchesFilters(recipe) && haystack.includes(query);
   });
 }
 
@@ -80,7 +136,7 @@ function render() {
   recipeCount.textContent = `${filtered.length} recipe${filtered.length === 1 ? '' : 's'}`;
   grid.innerHTML = '';
   if (!filtered.length) {
-    grid.innerHTML = '<p class="empty">No recipes match that search yet.</p>';
+    grid.innerHTML = '<p class="empty">No recipes match those filters yet.</p>';
     return;
   }
 

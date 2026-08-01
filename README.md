@@ -1,14 +1,27 @@
-# Kitchen Excursion v0.2.2
+# Kitchen Excursion v0.2.5
 
-## What's new
+Part of **La Última Excursión**.
 
-- Added **Breakfast Sliders**
-- Added the **Breakfast** filter
-- Marked the recipe **La Jefa requested**
-- Included the original Tasty recipe attribution in Randy's notes
+## Structure
 
-## Publish
+- `index.html` — website shell
+- `styles.css` — visual design
+- `app.js` — search, filters, recipe dialogs, cooking mode, and shopping lists
+- `data/recipes.json` — recipe content
+- `assets/` — recipe photos
+- `CHANGELOG.md` — version history
 
-Upload the contents of this folder to the root of the existing GitHub repository and commit the changes. GitHub Pages will republish automatically.
+## Add a recipe
 
-Source recipe: https://tasty.co/recipe/breakfast-sliders
+Add one recipe object to `data/recipes.json`, then add its photo to `assets/` and set the `image` property.
+
+## Local testing
+
+Because recipes load from JSON, serve the folder through IIS, GitHub Pages, VS Code Live Server, or another web server. Opening `index.html` directly from Windows may block the JSON request.
+
+## What's new in v0.2.5
+
+- Added **Dinner** to Smothered Pork Chops.
+- Added **Dinner** to Mississippi Pot Roast.
+- Added a **Dinner** filter to the recipe toolbar.
+- Added `CHANGELOG.md` for release history.

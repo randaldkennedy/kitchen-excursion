@@ -2,8 +2,16 @@
   {
     "id": "smothered-pork-chops",
     "title": "Randy's Smothered Pork Chops",
-    "categories": ["Dinner", "Pork", "Home Favorite"],
-   "filters": ["favorite", "dinner", "pork"],
+    "categories": [
+      "Dinner",
+      "Pork",
+      "Home Favorite"
+    ],
+    "filters": [
+      "favorite",
+      "pork",
+      "dinner"
+    ],
     "badge": "Approved",
     "image": "assets/smothered-pork-chops.jpeg",
     "imageAlt": "Smothered pork chop with mushroom gravy, rice, and vegetables",
@@ -45,13 +53,27 @@
       "Whole milk or half-and-half",
       "Worcestershire sauce",
       "Potatoes for mashing"
+    ],
+    "meal": "dinner",
+    "protein": "pork",
+    "method": "oven",
+    "status": [
+      "favorite"
     ]
   },
   {
     "id": "mississippi-pot-roast",
     "title": "Mississippi Pot Roast",
-"categories": ["Dinner", "Beef", "Slow Cooker"],
-"filters": ["dinner", "beef", "slow-cooker"],
+    "categories": [
+      "Dinner",
+      "Beef",
+      "Slow Cooker"
+    ],
+    "filters": [
+      "beef",
+      "slow-cooker",
+      "dinner"
+    ],
     "badge": "Next up",
     "image": "",
     "imageAlt": "",
@@ -85,7 +107,11 @@
       "Butter, 1 stick",
       "Pepperoncini peppers",
       "Potatoes for mashing"
-    ]
+    ],
+    "meal": "dinner",
+    "protein": "beef",
+    "method": "slow-cooker",
+    "status": []
   },
   {
     "id": "simple-mashed-potatoes",
@@ -129,6 +155,12 @@
       "Sour cream",
       "Salt",
       "Black pepper"
+    ],
+    "meal": "side",
+    "protein": "meatless",
+    "method": "stovetop",
+    "status": [
+      "favorite"
     ]
   },
   {
@@ -179,6 +211,13 @@
       "Baby spinach, 3 oz",
       "Butter",
       "Black pepper"
+    ],
+    "meal": "breakfast",
+    "protein": "pork",
+    "method": "oven",
+    "status": [
+      "favorite",
+      "la-jefa-approved"
     ]
   }
 ]
