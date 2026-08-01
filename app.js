@@ -1,7 +1,7 @@
 const grid = document.querySelector('#recipeGrid');
 const template = document.querySelector('#recipeCardTemplate');
 const searchInput = document.querySelector('#searchInput');
-const filtersContainer = document.querySelector('#filters');
+const filtersContainer = document.querySelector('#filters');recipeMatchesFilters
 const recipeCount = document.querySelector('#recipeCount');
 const recipeDialog = document.querySelector('#recipeDialog');
 const dialogContent = document.querySelector('#dialogContent');
@@ -106,11 +106,10 @@ function buildFilters() {
 }
 
 function recipeMatchesFilters(recipe) {
-  const mealMatch = activeFilters.meal === 'all' || recipe.meal === activeFilters.meal;
-  const proteinMatch = activeFilters.protein === 'all' || recipe.protein === activeFilters.protein;
-  const methodMatch = activeFilters.method === 'all' || recipe.method === activeFilters.method;
-  const statusMatch = activeFilters.status === 'all' || recipe.status?.includes(activeFilters.status);
-  return mealMatch && proteinMatch && methodMatch && statusMatch;
+  return Object.values(activeFilters).every(value =>
+    value === 'all' ||
+    (Array.isArray(recipe.filters) && recipe.filters.includes(value))
+  );
 }
 
 function filteredRecipes() {
