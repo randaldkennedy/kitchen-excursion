@@ -19,7 +19,8 @@ const filterLabels = {
   favorite: 'Favorites',
   pork: 'Pork',
   beef: 'Beef',
-  'slow-cooker': 'Slow cooker'
+  'slow-cooker': 'Slow cooker',
+  breakfast: 'Breakfast'
 };
 
 async function loadRecipes() {

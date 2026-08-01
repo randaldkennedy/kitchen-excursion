@@ -142,5 +142,55 @@
       "Salt",
       "Black pepper"
     ]
+  },
+  {
+    "id": "breakfast-sliders",
+    "title": "Breakfast Sliders",
+    "categories": [
+      "Breakfast",
+      "La Jefa Approved"
+    ],
+    "filters": [
+      "favorite",
+      "breakfast"
+    ],
+    "badge": "La Jefa requested",
+    "image": "",
+    "imageAlt": "",
+    "summary": "Hawaiian rolls layered with scrambled eggs, ham, white cheddar, bacon, and spinach, then baked until golden.",
+    "prep": "15 min",
+    "cook": "20 min",
+    "serves": "12 sliders",
+    "ingredients": [
+      "12 dinner rolls or Hawaiian sweet rolls",
+      "9 eggs, scrambled",
+      "6 slices ham",
+      "6 slices white cheddar cheese",
+      "6 strips bacon, cooked",
+      "3 oz baby spinach",
+      "2 tablespoons butter, melted",
+      "1 teaspoon black pepper"
+    ],
+    "steps": [
+      "Preheat the oven to 350°F.",
+      "Slice the rolls in half horizontally, keeping the tops and bottoms together as two slabs.",
+      "Place the bottom slab in a 9 x 13-inch baking dish.",
+      "Spread the scrambled eggs evenly over the rolls, then layer on the ham, white cheddar, bacon, and spinach.",
+      "Place the top slab of rolls over the filling.",
+      "Brush the tops with melted butter and sprinkle with black pepper.",
+      "Bake for about 20 minutes, until the tops are golden and the cheese is melted.",
+      "Cut into 12 individual sliders and serve warm."
+    ],
+    "notes": "La Jefa requested these again, so they are automatically a favorite. Adapted from Tasty's Breakfast Sliders recipe. Take our own photo next time and record any changes Randy and Lisa prefer.",
+    "shopping": [
+      "Hawaiian sweet rolls, 12 count",
+      "Eggs, 9",
+      "Sliced ham, 6 slices",
+      "White cheddar cheese, 6 slices",
+      "Bacon, 6 strips",
+      "Baby spinach, 3 oz",
+      "Butter",
+      "Black pepper"
+    ]
   }
 ]

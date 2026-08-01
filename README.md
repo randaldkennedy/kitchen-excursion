@@ -1,19 +1,14 @@
-# Randy's Recipe Book
+# Kitchen Excursion v0.2.2
 
-Part of **La Última Excursión Kitchen**.
+## What's new
 
-## Structure
+- Added **Breakfast Sliders**
+- Added the **Breakfast** filter
+- Marked the recipe **La Jefa requested**
+- Included the original Tasty recipe attribution in Randy's notes
 
-- `index.html` — website shell
-- `styles.css` — visual design
-- `app.js` — search, filters, recipe dialogs, cooking mode, and shopping lists
-- `data/recipes.json` — recipe content
-- `assets/` — recipe photos
+## Publish
 
-## Add a recipe
+Upload the contents of this folder to the root of the existing GitHub repository and commit the changes. GitHub Pages will republish automatically.
 
-Add one recipe object to `data/recipes.json`, then add its photo to `assets/` and set the `image` property.
-
-## Local testing
-
-Because recipes load from JSON, serve the folder through IIS, GitHub Pages, VS Code Live Server, or another web server. Opening `index.html` directly from Windows may block the JSON request.
+Source recipe: https://tasty.co/recipe/breakfast-sliders
