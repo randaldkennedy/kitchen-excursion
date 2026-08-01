@@ -70,7 +70,7 @@ function buildFilters() {
   filtersContainer.innerHTML = '';
 
   filterGroups.forEach(group => {
-    const available = group.values.filter(value => recipes.some(recipe => recipe[group.key] === value || recipe.status?.includes(value)));
+    const available = group.values.filter(value => recipes.some(recipe => recipe.filters?.includes(value));
     if (!available.length) return;
 
     const section = document.createElement('section');
