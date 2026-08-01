@@ -1,14 +1,22 @@
-# Kitchen Excursion v0.2.2
+# Kitchen Excursion Changelog
 
-## What's new
+## v0.2.5 — August 1, 2026
 
-- Added **Breakfast Sliders**
-- Added the **Breakfast** filter
-- Marked the recipe **La Jefa requested**
-- Included the original Tasty recipe attribution in Randy's notes
+- Added the Dinner category and filter to Smothered Pork Chops.
+- Added the Dinner category and filter to Mississippi Pot Roast.
+- Added this changelog.
 
-## Publish
+## v0.2.4
 
-Upload the contents of this folder to the root of the existing GitHub repository and commit the changes. GitHub Pages will republish automatically.
+- Changed the homepage tagline to **Real recipes. Real notes. Really good food.**
 
-Source recipe: https://tasty.co/recipe/breakfast-sliders
+## v0.2.3
+
+- Rebranded the homepage as **Kitchen Excursion**.
+- Added **A La Última Excursión Project**.
+
+## v0.2.2
+
+- Added Breakfast Sliders.
+- Added the Breakfast filter.
+- Added the La Jefa requested badge.
