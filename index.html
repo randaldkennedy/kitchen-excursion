@@ -35,7 +35,25 @@
         <span>Search recipes</span>
         <input id="searchInput" type="search" placeholder="Try pork, slow cooker, mashed potatoes…">
       </label>
-      <div id="filters" class="filters" role="group" aria-label="Filter recipes"></div>
+      <div class="filter-panel">
+  <button
+    id="filterToggle"
+    class="secondary-btn filter-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="filters"
+  >
+    ▶ Filters
+  </button>
+
+  <div
+    id="filters"
+    class="filters filters--collapsed"
+    role="group"
+    aria-label="Filter recipes"
+  ></div>
+</div>
+  </div>
     </section>
 
     <section class="section-heading">
