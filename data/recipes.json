@@ -7,12 +7,6 @@
       "Pork",
       "Home Favorite"
     ],
-    "filters": [
-      "favorite",
-      "pork",
-      "dinner",
-       "la-jefa-approved"
-    ],
     "badge": "Approved",
     "image": "assets/smothered-pork-chops.jpeg",
     "imageAlt": "Smothered pork chop with mushroom gravy, rice, and vegetables",
@@ -71,12 +65,6 @@
     "Beef",
     "Slow Cooker"
   ],
-  "filters": [
-    "dinner",
-    "beef",
-    "slow-cooker",
-    "favorite"
-  ],
   "meal": "dinner",
   "protein": "beef",
   "method": "slow-cooker",
@@ -133,10 +121,7 @@
       "Sides",
       "Home Favorite"
     ],
-    "filters": [
-      "favorite"
-    ],
-    "badge": "",
+    "badge": "Approved",
     "image": "assets/mashed-taters.jpg",
     "imageAlt": "",
     "summary": "Simple, creamy mashed potatoes with butter, warm milk, and sour cream.",
@@ -160,12 +145,7 @@
       "Mash until smooth, then season with salt and black pepper.",
       "Stop mashing as soon as they are smooth so they do not become gluey."
     ],
-    "notes": ["Made to serve under Mississippi Pot Roast or smothered pork chops. Start with ½ cup milk and add only a splash more if needed.",
-      " ",
-      "Russet potatoes peeled and started in cold salted water. Boiled exactly 18 minutes, then drained well. Butter added first, followed by warm milk. Mixed with a hand mixer until smooth and creamy without becoming gluey. ",
-      "Excellent fresh, and reheats well with a splash of milk. Even better with leftover pot roast juices or homemade gravy stirred in while reheating.",
-      "Makes a large batch—plan on leftovers."
-    ],
+    "notes": "Made to serve under Mississippi Pot Roast or smothered pork chops. Start with ½ cup milk and add only a splash more if needed. Russet potatoes were peeled and started in cold salted water, then boiled exactly 18 minutes and drained well. Butter was added first, followed by warm milk. Mixed with a hand mixer only until smooth and creamy to avoid becoming gluey. Excellent fresh and reheats well with a splash of milk. Even better with leftover pot roast juices or homemade gravy stirred in while reheating. Makes a large batch, so plan on leftovers.",
     "shopping": [
       "Russet potatoes, 3 lb",
       "Butter",
@@ -187,10 +167,6 @@
     "categories": [
       "Breakfast",
       "La Jefa Approved"
-    ],
-    "filters": [
-      "favorite",
-      "breakfast"
     ],
     "badge": "La Jefa Approved",
     "image": "",
