@@ -81,10 +81,13 @@ function buildFilters() {
 
   filterGroups.forEach(group => {
     const available = group.values.filter(value =>
-      recipes.some(recipe =>
-        Array.isArray(recipe.filters) &&
-        recipe.filters.includes(value)
-      )
+      recipes.some(recipe => {
+        if (group.key === 'status') {
+          return Array.isArray(recipe.status) && recipe.status.includes(value);
+        }
+
+        return recipe[group.key] === value;
+      })
     );
 
     if (!available.length) return;
@@ -111,7 +114,9 @@ function buildFilters() {
       button.dataset.filter = value;
       button.textContent =
         value === 'all'
-          ? `All ${group.label}`
+          ? group.key === 'meal'
+            ? 'All Meals'
+            : `All ${group.label}`
           : filterLabels[value] || value;
 
       button.addEventListener('click', () => {
@@ -153,10 +158,15 @@ function buildFilters() {
 }
 
 function recipeMatchesFilters(recipe) {
-  return Object.values(activeFilters).every(value =>
-    value === 'all' ||
-    (Array.isArray(recipe.filters) && recipe.filters.includes(value))
-  );
+  return Object.entries(activeFilters).every(([key, value]) => {
+    if (value === 'all') return true;
+
+    if (key === 'status') {
+      return Array.isArray(recipe.status) && recipe.status.includes(value);
+    }
+
+    return recipe[key] === value;
+  });
 }
 
 function filteredRecipes() {
