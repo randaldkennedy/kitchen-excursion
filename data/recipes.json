@@ -62,7 +62,8 @@
       "favorite"
     ]
   },
- {
+ 
+  {
   "id": "mississippi-pot-roast",
   "title": "Mississippi Pot Roast",
   "categories": [
@@ -70,21 +71,24 @@
     "Beef",
     "Slow Cooker"
   ],
-"filters": [
-   "dinner",
-   "beef",
-   "slow-cooker"
+  "filters": [
+    "dinner",
+    "beef",
+    "slow-cooker",
+    "favorite"
   ],
   "meal": "dinner",
   "protein": "beef",
   "method": "slow-cooker",
-  "status": [],
-  "badge": "Next up",
-  "image": "",
-  "imageAlt": "",
-  "summary": "Five ingredients, almost no prep, and built for mashed potatoes.",
+  "status": [
+    "favorite"
+  ],
+  "badge": "Randy Favorite",
+  "image": "assets/mississippi-pot-roast.jpg",
+  "imageAlt": "Mississippi pot roast served over mashed potatoes with pepperoncinis",
+  "summary": "Rich, tangy chuck roast served over creamy mashed potatoes with plenty of pepperoncinis.",
   "prep": "15 min",
-  "cook": "8 hr low*",
+  "cook": "6–8+ hr",
   "serves": "6–8",
   "ingredients": [
     "3–4 lb chuck roast",
@@ -93,24 +97,26 @@
     "1 packet Hidden Valley Ranch seasoning",
     "1 packet au jus gravy mix",
     "1 stick butter",
-    "6–10 pepperoncini peppers",
-    "2–4 tablespoons pepperoncini juice (optional)",
+    "10–15 whole pepperoncini peppers",
+    "2–4 tablespoons pepperoncini juice",
+    "Sliced pepperoncinis for serving",
     "Mashed potatoes for serving"
   ],
   "steps": [
     "If time allows, remove the roast from the refrigerator 20–30 minutes before cooking.",
     "Pat the roast dry with paper towels and season lightly with black pepper. Do not add extra salt because the seasoning mixes are already salty.",
     "Heat the oil in a large skillet over medium-high heat.",
-    "Sear the roast for 2–3 minutes per side, including the edges, until browned. Do not cook it through.",
+    "Sear the roast for 2–3 minutes per side, including the edges, until deeply browned. Do not cook it through.",
     "Place the browned roast in the slow cooker.",
     "Sprinkle the ranch seasoning and au jus gravy mix evenly over the roast.",
     "Place the stick of butter on top.",
-    "Add the pepperoncini peppers around the roast and a little juice if desired.",
-    "Cover and cook on LOW for about 8 hours, or until the roast shreds easily with two forks.",
-    "Shred the roast with two forks and stir the meat into the cooking juices.",
-    "Serve over mashed potatoes."
+    "Add the whole pepperoncinis around the roast and pour in the pepperoncini juice.",
+    "Cover and cook on LOW until a fork slides in easily and twists the meat apart. Begin checking around 6 hours, but cook longer as needed.",
+    "If the roast is still firm late in the cook, switch to HIGH and check again after 45–60 minutes.",
+    "Shred or pull apart the tender meat and stir it into the cooking juices.",
+    "Serve over mashed potatoes with extra cooking juices and sliced pepperoncinis."
   ],
-  "notes": "Do not add water. Searing the roast first adds richer beef flavor. Randy's Ninja slow cooker runs hot, so begin checking earlier than the standard 8-hour cook time. For a smaller roast around 2½ lb, use ¾ packet ranch seasoning, ¾ packet au jus mix, 6 tablespoons butter, 5–6 pepperoncinis, and begin checking around 5½ hours. Save all the cooking juices for the mashed potatoes.",
+  "notes": "★★★★★ Randy Favorite. The first test used a 2.47 lb chuck roast. Cook to tenderness rather than strictly by the clock: if a fork can lift the roast without pulling it apart, it needs more time. The center became tender before the thicker outer portions, so continue cooking until all sections pull apart easily. The flavor was spot on. Next time use more pepperoncinis, add sliced pepperoncinis to each serving, and save every drop of the cooking juices for gravy and reheating leftover mashed potatoes. Served with mashed potatoes boiled exactly 18 minutes and finished with a hand mixer.",
   "shopping": [
     "Chuck roast, 3–4 lb",
     "Hidden Valley Ranch seasoning packet",
@@ -130,8 +136,8 @@
     "filters": [
       "favorite"
     ],
-    "badge": "New",
-    "image": "",
+    "badge": "",
+    "image": "assets/mashed-taters.jpg",
     "imageAlt": "",
     "summary": "Simple, creamy mashed potatoes with butter, warm milk, and sour cream.",
     "prep": "15 min",
@@ -154,7 +160,12 @@
       "Mash until smooth, then season with salt and black pepper.",
       "Stop mashing as soon as they are smooth so they do not become gluey."
     ],
-    "notes": "Made to serve under Mississippi Pot Roast or smothered pork chops. Start with ½ cup milk and add only a splash more if needed.",
+    "notes": ["Made to serve under Mississippi Pot Roast or smothered pork chops. Start with ½ cup milk and add only a splash more if needed.",
+      " ",
+      "Russet potatoes peeled and started in cold salted water. Boiled exactly 18 minutes, then drained well. Butter added first, followed by warm milk. Mixed with a hand mixer until smooth and creamy without becoming gluey. ",
+      "Excellent fresh, and reheats well with a splash of milk. Even better with leftover pot roast juices or homemade gravy stirred in while reheating.",
+      "Makes a large batch—plan on leftovers."
+    ],
     "shopping": [
       "Russet potatoes, 3 lb",
       "Butter",
