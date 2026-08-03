@@ -21,6 +21,7 @@ filterToggle.addEventListener('click', () => {
   updateFilterToggleLabel();
 });
 
+
 let recipes = [];
 const activeFilters = {
   meal: 'all',
@@ -177,7 +178,7 @@ function filteredRecipes() {
       recipe.summary,
       recipe.categories.join(' '),
       recipe.ingredients.join(' '),
-      recipe.notes,
+      recipe.journal?.general || '',
       recipe.meal,
       recipe.protein,
       recipe.method,
@@ -237,26 +238,125 @@ function render() {
 }
 
 function openRecipe(recipe) {
+  const recipeNotes = recipe.journal?.general?.trim() || '';
+  const cookLog = recipe.journal?.cookLog || [];
+
+  const cookLogEntriesHtml = cookLog.length
+    ? cookLog.map(entry => {
+        const cookedAt = new Date(entry.date);
+
+        const formattedDate = cookedAt.toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        const formattedTime = cookedAt.toLocaleTimeString(undefined, {
+          hour: 'numeric',
+          minute: '2-digit'
+        });
+
+        return `
+          <article class="cook-log__entry">
+            <div class="cook-log__meta">
+              <strong>${formattedDate} • ${formattedTime}</strong>
+              <div class="cook-log__author">
+                by ${entry.author}
+              </div>
+            </div>
+
+            <p>${entry.note.replace(/\s+/g, ' ').trim()}</p>
+          </article>
+        `;
+      }).join('')
+    : '<p class="empty">No cook log entries yet.</p>';
+
+  const recipeNotesHtml = recipeNotes
+    ? `
+        <div class="note-box">
+          <strong>Recipe notes:</strong>
+          ${recipeNotes}
+        </div>
+      `
+    : '';
+
   dialogContent.innerHTML = `
     <div class="recipe-detail">
       <p class="eyebrow">${recipe.badge}</p>
       <h2>${recipe.title}</h2>
-      <p class="subtitle">${recipe.prep} prep • ${recipe.cook} cook • serves ${recipe.serves}</p>
+
+      <p class="subtitle">
+        ${recipe.prep} prep • ${recipe.cook} cook • serves ${recipe.serves}
+      </p>
+
       <div class="detail-grid">
         <section class="detail-section">
           <h3>Ingredients</h3>
-          <ul>${recipe.ingredients.map(item => `<li>${item}</li>`).join('')}</ul>
+          <ul>
+            ${recipe.ingredients.map(item => `<li>${item}</li>`).join('')}
+          </ul>
         </section>
+
         <section class="detail-section">
           <h3>Instructions</h3>
-          <ol>${recipe.steps.map(step => `<li>${step}</li>`).join('')}</ol>
+          <ol>
+            ${recipe.steps.map(step => `<li>${step}</li>`).join('')}
+          </ol>
         </section>
       </div>
-      <div class="note-box"><strong>Randy's notes:</strong> ${recipe.notes}</div>
-    </div>`;
+
+      ${recipeNotesHtml}
+
+      <section class="cook-log">
+        <div class="cook-log__header">
+          <button
+            class="secondary-btn cook-log__toggle"
+            type="button"
+            aria-expanded="false"
+          >
+            ▶ Cook Log (${cookLog.length})
+          </button>
+
+          <button
+            class="secondary-btn cook-log__add"
+            type="button"
+          >
+            + Add Entry
+          </button>
+        </div>
+
+        <div class="cook-log__entries cook-log__entries--collapsed">
+          ${cookLogEntriesHtml}
+        </div>
+      </section>
+    </div>
+  `;
+
+  const toggle = dialogContent.querySelector('.cook-log__toggle');
+  const entries = dialogContent.querySelector('.cook-log__entries');
+  const addEntry = dialogContent.querySelector('.cook-log__add');
+
+  toggle?.addEventListener('click', () => {
+    const willExpand =
+      toggle.getAttribute('aria-expanded') !== 'true';
+
+    toggle.setAttribute('aria-expanded', String(willExpand));
+    toggle.textContent =
+      `${willExpand ? '▼' : '▶'} Cook Log (${cookLog.length})`;
+
+    entries.classList.toggle(
+      'cook-log__entries--collapsed',
+      !willExpand
+    );
+  });
+
+  addEntry?.addEventListener('click', () => {
+    alert('Cook Log editor coming next.');
+  });
+
   recipeDialog.showModal();
 }
-
+  
 function openCooking(recipe) {
   cookingTitle.textContent = recipe.title;
   cookingSteps.innerHTML = recipe.steps.map(step => `<li>${step}</li>`).join('');

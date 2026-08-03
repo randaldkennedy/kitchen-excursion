@@ -170,3 +170,60 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
   opacity: 0;
   margin-top: 0;
 }
+
+/* ==========================
+   Cook Log
+   ========================== */
+
+.cook-log {
+  margin-top: 1rem;
+}
+
+.cook-log__toggle {
+  margin-bottom: .75rem;
+}
+
+.cook-log__entries {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.cook-log__entry {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+  padding: .9rem 1rem;
+}
+
+.cook-log__meta {
+  font-size: .85rem;
+  color: var(--muted);
+  margin-bottom: .5rem;
+}
+
+.cook-log__meta strong {
+  color: var(--text);
+}
+
+.cook-log__entry p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.cook-log .empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.cook-log__author {
+  margin-top: .15rem;
+  font-size: .8rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.cook-log__entries--collapsed {
+  display: none;
+}
