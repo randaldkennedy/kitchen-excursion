@@ -1,0 +1,6 @@
+@KitchenExcursion.Api_HostAddress = http://localhost:5066
+
+GET {{KitchenExcursion.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
