@@ -72,12 +72,26 @@
     <p>Family favorites today. Road-trip and camp meals tomorrow.</p>
   </footer>
 
-  <dialog id="recipeDialog" class="recipe-dialog">
-    <article id="dialogContent"></article>
-    <form method="dialog" class="dialog-actions">
-      <button class="secondary-btn" value="close">Close</button>
-    </form>
-  </dialog>
+<dialog id="recipeDialog" class="recipe-dialog">
+
+  <button
+    class="dialog-close"
+    type="button"
+    onclick="recipeDialog.close()"
+    aria-label="Close"
+  >X
+  </button>
+
+  <article id="dialogContent"></article>
+
+  <form method="dialog" class="dialog-actions">
+    <button class="secondary-btn" value="close">Close</button>
+  </form>
+
+</dialog>
+
+  <article id="dialogContent"></article>
+</dialog>
 
   <dialog id="cookingDialog" class="cooking-dialog">
     <div class="cooking-shell">
@@ -92,12 +106,23 @@
     </div>
   </dialog>
 
-  <dialog id="shoppingDialog" class="recipe-dialog shopping-dialog">
-    <article id="shoppingContent"></article>
-    <form method="dialog" class="dialog-actions">
-      <button class="secondary-btn" value="close">Close</button>
-    </form>
-  </dialog>
+ <dialog id="shoppingDialog" class="recipe-dialog shopping-dialog">
+ <button
+    class="dialog-close"
+    type="button"
+    onclick="recipeDialog.close()"
+    aria-label="Close"
+  >X
+  </button>
+
+  <article id="dialogContent"></article>
+
+  <form method="dialog" class="dialog-actions">
+    <button class="secondary-btn" value="close">Close</button>
+  </form>
+
+  <article id="shoppingContent"></article>
+</dialog>
 
   <template id="recipeCardTemplate">
     <article class="recipe-card">

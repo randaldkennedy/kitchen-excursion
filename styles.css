@@ -227,3 +227,45 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
 .cook-log__entries--collapsed {
   display: none;
 }
+
+.recipe-dialog {
+    position: relative;
+}
+
+.dialog-close {
+    position: absolute;
+    top: 14px;
+    right: 28px;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(40, 25, 18, 0.92);
+    color: #fff;
+
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    transition: all .15s ease;
+}
+
+.dialog-close:hover {
+    background: #6b3a24;
+    transform: scale(1.08);
+    cursor: pointer;
+}
+
+.dialog-close:active {
+    transform: scale(.95);
+}
