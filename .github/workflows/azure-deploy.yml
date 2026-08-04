@@ -39,6 +39,20 @@ jobs:
       - name: Publish
         run: dotnet publish "${{ env.PROJECT_PATH }}" --configuration Release --no-build --output "${{ env.PUBLISH_PATH }}"
 
+      - name: Write build info
+        shell: pwsh
+        run: |
+          $buildInfo = @{
+            app = "Kitchen Excursion"
+            version = "0.3.1"
+            commit = "${{ github.sha }}"
+            builtAt = (Get-Date).ToUniversalTime().ToString("o")
+          } | ConvertTo-Json
+
+          $buildInfo | Set-Content `
+            -Path "${{ env.PUBLISH_PATH }}/build-info.json" `
+            -Encoding utf8
+
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
         with:

@@ -122,12 +122,27 @@ app.MapPost(
     }
 );
 
-app.MapGet("/api/version", () => Results.Ok(new
+app.MapGet("/api/version", async (IWebHostEnvironment environment) =>
 {
-    app = "Kitchen Excursion",
-    version = "0.3.1",
-    deployedAt = DateTime.UtcNow
-}));
+    var buildInfoPath = Path.Combine(
+        environment.ContentRootPath,
+        "build-info.json"
+    );
+
+    if (File.Exists(buildInfoPath))
+    {
+        var json = await File.ReadAllTextAsync(buildInfoPath);
+        return Results.Text(json, "application/json");
+    }
+
+    return Results.Ok(new
+    {
+        app = "Kitchen Excursion",
+        version = "0.3.1",
+        commit = "local",
+        builtAt = DateTime.UtcNow
+    });
+});
 
 app.Run();
 
