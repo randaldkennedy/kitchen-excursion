@@ -222,6 +222,8 @@ function render() {
     node.querySelector('.badge').textContent = recipe.badge;
     node.querySelector('.recipe-meta').textContent = `${recipe.prep} prep • ${recipe.cook} cook • serves ${recipe.serves}`;
     node.querySelector('.recipe-title').textContent = recipe.title;
+    img.style.cursor = 'pointer';
+    img.addEventListener('click', () => openRecipe(recipe));
     node.querySelector('.recipe-summary').textContent = recipe.summary;
     const tags = node.querySelector('.tag-row');
     recipe.categories.forEach(category => {
