@@ -308,5 +308,63 @@
     "status": [
       "favorite"
     ]
+  },
+  {
+    "id": "slow-cooker-carnitas",
+    "title": "Slow Cooker Carnitas",
+    "categories": [
+      "Dinner",
+      "Pork",
+      "Slow Cooker"
+    ],
+    "badge": "New",
+    "image": "",
+    "imageAlt": "",
+    "summary": "Tender, flavorful slow-cooked pork finished under the broiler for crisp, browned edges.",
+    "prep": "10 min",
+    "cook": "6–8 hr",
+    "serves": "8–10",
+    "ingredients": [
+      "1 boneless pork roast, 4–5 lb, excess fat trimmed and cut into 3-inch chunks",
+      "1 cup beer or chicken stock",
+      "1 medium white onion, diced",
+      "4 cloves garlic, minced",
+      "1 tablespoon chipotle powder, or 1 chipotle pepper in adobo sauce, minced",
+      "2 teaspoons ground cumin",
+      "1 teaspoon black pepper",
+      "1 teaspoon chili powder",
+      "1½ teaspoons fine sea salt"
+    ],
+    "steps": [
+      "Add the pork, beer or chicken stock, onion, garlic, chipotle, cumin, black pepper, chili powder, and salt to a large slow cooker. Stir to combine.",
+      "Cover and cook on LOW for 6–8 hours or on HIGH for 4–5 hours, until the pork is completely tender and shreds easily with a fork.",
+      "Preheat the broiler to high. Line two large baking sheets with aluminum foil.",
+      "Shred the pork into bite-sized pieces. Use a slotted spoon to transfer it to the baking sheets, spreading it into a single even layer. Leave the cooking juices in the slow cooker.",
+      "Broil one sheet for about 5 minutes, until the edges begin to brown and crisp.",
+      "Remove the sheet from the oven, spoon about ¼ cup of the reserved cooking juices over the pork, and toss with tongs.",
+      "Broil for another 5 minutes, then spoon another ¼ cup of cooking juices over the crispy pork.",
+      "Repeat the broiling and moistening steps with the second sheet of pork.",
+      "Serve immediately in tacos, burritos, quesadillas, salads, nachos, or bowls."
+    ],
+    "journal": {
+      "general": "Adapted from Gimme Some Oven. The pork does not need to be seared before slow cooking because it is crisped under the broiler at the end. Save the cooking juices and add them back after each broiling step so the carnitas stay juicy. Refrigerate leftovers for up to 3 days or freeze for up to 3 months.",
+      "cookLog": []
+    },
+    "shopping": [
+      "Boneless pork roast, 4–5 lb",
+      "Beer or chicken stock",
+      "White onion",
+      "Garlic",
+      "Chipotle powder or chipotle pepper in adobo sauce",
+      "Ground cumin",
+      "Black pepper",
+      "Chili powder",
+      "Fine sea salt",
+      "Tortillas and desired toppings for serving"
+    ],
+    "meal": "dinner",
+    "protein": "pork",
+    "method": "slow-cooker",
+    "status": []
   }
 ]
