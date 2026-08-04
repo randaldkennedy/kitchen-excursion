@@ -16,15 +16,15 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseCors();
 
-var recipesPath = Path.GetFullPath(
-    Path.Combine(
-        app.Environment.ContentRootPath,
-        "..",
-        "data",
-        "recipes.json"
-    )
+var recipesPath = Path.Combine(
+    app.Environment.ContentRootPath,
+    "data",
+    "recipes.json"
 );
 
 app.MapGet("/api/recipes", async () =>
