@@ -286,7 +286,13 @@
     ],
     "journal": {
       "general": "Designed for camping. Assemble everything at home so breakfast at camp is almost effortless. Let the eggs cool slightly before rolling so the tortillas stay firm. Heavy-duty foil works best. Picante sauce isn\u0027t optional\u2014it gets added after opening the foil at camp.",
-      "cookLog": []
+      "cookLog": [
+        {
+          "date": "2026-08-04T14:44:24.2448360-05:00",
+          "author": "Randy",
+          "note": "test 1"
+        }
+      ]
     },
     "shopping": [
       "Large flour tortillas",
