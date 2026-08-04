@@ -1,27 +1,104 @@
-# Kitchen Excursion v0.2.5
+# Kitchen Excursion
 
 Part of **La Última Excursión**.
 
-## Structure
+A personal recipe journal that combines recipes, cooking notes, shopping lists, and cook logs into a single Progressive Web App.
 
-- `index.html` — website shell
-- `styles.css` — visual design
-- `app.js` — search, filters, recipe dialogs, cooking mode, and shopping lists
-- `data/recipes.json` — recipe content
-- `assets/` — recipe photos
-- `CHANGELOG.md` — version history
+---
 
-## Add a recipe
+## Features
 
-Add one recipe object to `data/recipes.json`, then add its photo to `assets/` and set the `image` property.
+- Recipe search
+- Category filters
+- Recipe detail dialogs
+- Cooking mode
+- Shopping lists
+- Cook Log (persistent)
+- Mobile-friendly design
+- Progressive Web App (installable)
 
-## Local testing
+---
 
-Because recipes load from JSON, serve the folder through IIS, GitHub Pages, VS Code Live Server, or another web server. Opening `index.html` directly from Windows may block the JSON request.
+## Project Structure
 
-## What's new in v0.2.5
+```
+KitchenExcursion.Api/
+    ASP.NET Core Web API
+    Serves recipes
+    Saves cook log entries
 
-- Added **Dinner** to Smothered Pork Chops.
-- Added **Dinner** to Mississippi Pot Roast.
-- Added a **Dinner** filter to the recipe toolbar.
-- Added `CHANGELOG.md` for release history.
+assets/
+    Recipe photos
+
+data/
+    recipes.json
+
+index.html
+styles.css
+app.js
+```
+
+---
+
+## Technology
+
+Frontend
+- HTML
+- CSS
+- Vanilla JavaScript
+
+Backend
+- ASP.NET Core Minimal API (.NET 10)
+
+Storage
+- JSON file (temporary)
+- SQLite planned
+
+---
+
+## Running Locally
+
+### Frontend
+
+Serve the site from IIS, GitHub Pages, or another web server.
+
+Example:
+
+http://localhost/kitchen-excursion/
+
+### Backend
+
+```
+cd KitchenExcursion.Api
+dotnet run
+```
+
+API:
+
+```
+http://localhost:5066/api/recipes
+```
+
+---
+
+## Roadmap
+
+Current work:
+- ✅ Backend API
+- ✅ Persistent Cook Log
+
+Next:
+- SQLite database
+- Recipe editing
+- Add recipes from the browser
+- Image uploads
+- Authentication
+- Cloud deployment
+
+See BACKLOG.md for the full roadmap.
+
+---
+
+## License
+
+Personal project.
