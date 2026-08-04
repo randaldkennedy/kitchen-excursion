@@ -15,6 +15,8 @@ const filterToggle = document.querySelector('#filterToggle');
 const cookLogForm = document.querySelector('#cookLogForm');
 const cookLogNote = document.querySelector('#cookLogNote');
 
+const API = 'http://localhost:5066/api';
+
 let activeCookLogRecipe = null;
 
 filterToggle.addEventListener('click', () => {
@@ -67,7 +69,7 @@ const filterLabels = {
 
 async function loadRecipes() {
   try {
-    const response = await fetch('data/recipes.json', { cache: 'no-store' });
+    const response = await fetch(`${API}/recipes`);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     recipes = await response.json();
     buildFilters();
@@ -395,25 +397,47 @@ document.querySelector('#installHint').addEventListener('click', () => {
   alert('On your iPhone, open this site in Safari, tap Share, then choose “Add to Home Screen.”');
 });
 
-cookLogForm.addEventListener('submit', event => {
+cookLogForm.addEventListener('submit', async event => {
   event.preventDefault();
 
   const note = cookLogNote.value.trim();
 
   if (!note || !activeCookLogRecipe) return;
 
-  activeCookLogRecipe.journal ??= {};
-  activeCookLogRecipe.journal.cookLog ??= [];
+  try {
+    const response = await fetch(
+      `${API}/recipes/${activeCookLogRecipe.id}/cook-log`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          author: 'Randy',
+          note
+        })
+      }
+    );
 
-  activeCookLogRecipe.journal.cookLog.unshift({
-    date: new Date().toISOString(),
-    author: 'Randy',
-    note
-  });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
 
-  cookLogDialog.close();
-  openRecipe(activeCookLogRecipe);
+    const savedEntry = await response.json();
+
+    activeCookLogRecipe.journal ??= {};
+    activeCookLogRecipe.journal.cookLog ??= [];
+    activeCookLogRecipe.journal.cookLog.unshift(savedEntry);
+
+    cookLogDialog.close();
+    openRecipe(activeCookLogRecipe);
+  } catch (error) {
+    console.error(error);
+    alert('The cook log entry could not be saved.');
+  }
 });
+
+  
 
 loadRecipes();
 updateFilterToggleLabel();
