@@ -122,6 +122,13 @@ app.MapPost(
     }
 );
 
+app.MapGet("/api/version", () => Results.Ok(new
+{
+    app = "Kitchen Excursion",
+    version = "0.3.1",
+    deployedAt = DateTime.UtcNow
+}));
+
 app.Run();
 
 record CookLogRequest(string? Author, string Note);
