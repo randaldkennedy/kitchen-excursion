@@ -124,6 +124,46 @@
   <article id="shoppingContent"></article>
 </dialog>
 
+<dialog id="cookLogDialog" class="recipe-dialog cook-log-dialog">
+  <button
+    class="dialog-close"
+    type="button"
+    onclick="cookLogDialog.close()"
+    aria-label="Close"
+    title="Close"
+  >
+    ✕
+  </button>
+
+  <form id="cookLogForm">
+    <p class="eyebrow">Cook Log</p>
+    <h2>Add Entry</h2>
+
+    <label class="form-field">
+        <textarea
+        id="cookLogNote"
+        rows="6"
+        required
+        placeholder="What worked? What would you change next time?"
+      ></textarea>
+    </label>
+
+    <div class="dialog-actions">
+      <button
+        class="secondary-btn"
+        type="button"
+        onclick="cookLogDialog.close()"
+      >
+        Cancel
+      </button>
+
+      <button class="primary-btn" type="submit">
+        Save Entry
+      </button>
+    </div>
+  </form>
+</dialog>
+
   <template id="recipeCardTemplate">
     <article class="recipe-card">
       <div class="recipe-image-wrap">

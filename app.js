@@ -10,7 +10,12 @@ const cookingTitle = document.querySelector('#cookingTitle');
 const cookingSteps = document.querySelector('#cookingSteps');
 const shoppingDialog = document.querySelector('#shoppingDialog');
 const shoppingContent = document.querySelector('#shoppingContent');
+const cookLogDialog = document.querySelector('#cookLogDialog');
 const filterToggle = document.querySelector('#filterToggle');
+const cookLogForm = document.querySelector('#cookLogForm');
+const cookLogNote = document.querySelector('#cookLogNote');
+
+let activeCookLogRecipe = null;
 
 filterToggle.addEventListener('click', () => {
   const isExpanded = filterToggle.getAttribute('aria-expanded') === 'true';
@@ -353,7 +358,11 @@ function openRecipe(recipe) {
   });
 
   addEntry?.addEventListener('click', () => {
-    alert('Cook Log editor coming next.');
+    activeCookLogRecipe = recipe;
+    cookLogForm.reset();
+
+    cookLogDialog.showModal();
+    cookLogNote.focus();
   });
 
   recipeDialog.showModal();
@@ -384,6 +393,26 @@ searchInput.addEventListener('input', render);
 document.querySelector('#closeCooking').addEventListener('click', () => cookingDialog.close());
 document.querySelector('#installHint').addEventListener('click', () => {
   alert('On your iPhone, open this site in Safari, tap Share, then choose “Add to Home Screen.”');
+});
+
+cookLogForm.addEventListener('submit', event => {
+  event.preventDefault();
+
+  const note = cookLogNote.value.trim();
+
+  if (!note || !activeCookLogRecipe) return;
+
+  activeCookLogRecipe.journal ??= {};
+  activeCookLogRecipe.journal.cookLog ??= [];
+
+  activeCookLogRecipe.journal.cookLog.unshift({
+    date: new Date().toISOString(),
+    author: 'Randy',
+    note
+  });
+
+  cookLogDialog.close();
+  openRecipe(activeCookLogRecipe);
 });
 
 loadRecipes();
