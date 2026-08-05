@@ -14,6 +14,7 @@ const cookLogDialog = document.querySelector('#cookLogDialog');
 const filterToggle = document.querySelector('#filterToggle');
 const cookLogForm = document.querySelector('#cookLogForm');
 const cookLogNote = document.querySelector('#cookLogNote');
+const closeRecipeDialog = document.querySelector('#closeRecipeDialog');
 
 const API = '/api';
 
@@ -434,6 +435,10 @@ searchInput.addEventListener('input', render);
 document.querySelector('#closeCooking').addEventListener('click', () => cookingDialog.close());
 document.querySelector('#installHint').addEventListener('click', () => {
   alert('On your iPhone, open this site in Safari, tap Share, then choose “Add to Home Screen.”');
+});
+
+closeRecipeDialog.addEventListener('click', () => {
+  recipeDialog.close();
 });
 
 cookLogForm.addEventListener('submit', async event => {

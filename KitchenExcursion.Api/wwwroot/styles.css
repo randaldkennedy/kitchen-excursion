@@ -75,10 +75,14 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
 #dialogContent {
   height: calc(100% - 72px);
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-}r
-.recipe-detail { padding: 26px; }
+}
+.recipe-detail {
+  padding: 26px;
+  min-width: 0;
+  }
 .recipe-detail h2 { font-size: clamp(2rem, 5vw, 3.2rem); margin: 0 0 10px; }
 .detail-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 26px; margin-top: 24px; }
 .detail-section { border-top: 1px solid var(--line); padding-top: 18px; }
@@ -109,6 +113,16 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
   .hero__button { display: none; }
   .detail-grid { grid-template-columns: 1fr; }
   .card-actions button { flex: 1 1 46%; }
+  .recipe-dialog {
+  width: calc(100% - 24px);
+  max-height: calc(100dvh - 32px);
+  margin: 16px auto;
+  }
+  .dialog-close {
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+  }
 }
 
 /* v0.2.6 grouped recipe filters */
