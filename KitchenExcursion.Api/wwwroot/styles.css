@@ -60,8 +60,24 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
 .tag { background: var(--soft); color: var(--accent-dark); border-radius: 999px; padding: 5px 9px; font-size: .78rem; font-weight: 750; }
 .card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
 
-.recipe-dialog { width: min(860px, calc(100% - 24px)); max-height: 92vh; border: 0; border-radius: 22px; padding: 0; background: var(--panel); color: var(--text); box-shadow: 0 30px 80px rgba(20,12,8,.35); }
-.recipe-dialog::backdrop, .cooking-dialog::backdrop { background: rgba(30,20,15,.74); }
+.recipe-dialog {
+  width: min(860px, calc(100% - 24px));
+  height: min(92vh, 900px);
+  max-height: 92vh;
+  border: 0;
+  border-radius: 22px;
+  padding: 0;
+  overflow: hidden;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 30px 80px rgba(20,12,8,.35);
+}
+#dialogContent {
+  height: calc(100% - 72px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}r
 .recipe-detail { padding: 26px; }
 .recipe-detail h2 { font-size: clamp(2rem, 5vw, 3.2rem); margin: 0 0 10px; }
 .detail-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 26px; margin-top: 24px; }

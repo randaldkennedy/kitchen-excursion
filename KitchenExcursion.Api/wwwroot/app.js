@@ -18,6 +18,8 @@ const cookLogNote = document.querySelector('#cookLogNote');
 const API = '/api';
 
 let activeCookLogRecipe = null;
+let recipePageScrollY = 0;
+
 
 filterToggle.addEventListener('click', () => {
   const isExpanded = filterToggle.getAttribute('aria-expanded') === 'true';
@@ -367,11 +369,12 @@ function openRecipe(recipe) {
     cookLogNote.focus();
   });
 
+  lockRecipePageScroll();
   recipeDialog.showModal();
 
-  // Always start at the top
+  requestAnimationFrame(() => {
   dialogContent.scrollTop = 0;
-  recipeDialog.scrollTop = 0;
+});
 }
   
 function openCooking(recipe) {
@@ -394,6 +397,38 @@ function openShopping(recipe) {
     </div>`;
   shoppingDialog.showModal();
 }
+
+function lockRecipePageScroll() {
+  recipePageScrollY = window.scrollY;
+
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${recipePageScrollY}px`;
+  document.body.style.left = '0';
+  document.body.style.right = '0';
+  document.body.style.width = '100%';
+}
+
+function restoreRecipePageScroll() {
+  const previousScrollBehavior =
+    document.documentElement.style.scrollBehavior;
+
+  document.documentElement.style.scrollBehavior = 'auto';
+
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.left = '';
+  document.body.style.right = '';
+  document.body.style.width = '';
+
+  window.scrollTo(0, recipePageScrollY);
+
+  requestAnimationFrame(() => {
+    document.documentElement.style.scrollBehavior =
+      previousScrollBehavior;
+  });
+}
+
+recipeDialog.addEventListener('close', restoreRecipePageScroll);
 
 searchInput.addEventListener('input', render);
 document.querySelector('#closeCooking').addEventListener('click', () => cookingDialog.close());

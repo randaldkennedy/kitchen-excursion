@@ -4,14 +4,7 @@ Future work for the Kitchen Excursion project.
 
 ---
 
-# Current Sprint
 
-- [ ] Fix the known small UI and API bugs before expanding the schema.
-- [ ] Complete the normalized recipe data model.
-- [ ] Move recipe reads from JSON to Azure SQL without changing the frontend contract.
-- [ ] Move Cook Log persistence from JSON to Azure SQL.
-- [ ] Remove the JSON runtime dependency after SQL cutover is verified.
-- [ ] Fix the `Microsoft.OpenApi` high-severity package warning.
 
 ---
 
