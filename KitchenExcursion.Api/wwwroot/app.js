@@ -368,6 +368,10 @@ function openRecipe(recipe) {
   });
 
   recipeDialog.showModal();
+
+  // Always start at the top
+  dialogContent.scrollTop = 0;
+  recipeDialog.scrollTop = 0;
 }
   
 function openCooking(recipe) {
