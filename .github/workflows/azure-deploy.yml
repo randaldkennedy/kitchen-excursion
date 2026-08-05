@@ -42,11 +42,13 @@ jobs:
       - name: Write build info
         shell: pwsh
         run: |
+          $commit = "${{ github.sha }}".Substring(0,7)
+
           $buildInfo = @{
             app = "Kitchen Excursion"
             version = "0.3.1"
-            commit = "${{ github.sha }}"
-            builtAt = (Get-Date).ToUniversalTime().ToString("o")
+            commit = $commit
+            builtAt = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
           } | ConvertTo-Json
 
           $buildInfo | Set-Content `
