@@ -1,5 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using KitchenExcursion.Api.Data;
+using Microsoft.EntityFrameworkCore;
+using KitchenExcursion.Api.SeedData;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +17,27 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddDbContext<KitchenExcursionContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("KitchenExcursion"),
+        sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(15),
+                errorNumbersToAdd: null);
+        }));
+
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var context =
+        scope.ServiceProvider.GetRequiredService<KitchenExcursionContext>();
+
+    await DatabaseSeeder.SeedRecipesAsync(
+        context,
+        app.Environment);
+}
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
@@ -23,9 +46,20 @@ app.UseCors();
 
 var recipesPath = Path.Combine(
     app.Environment.ContentRootPath,
-    "data",
+    "SeedData",
     "recipes.json"
 );
+/*
+app.MapGet("/api/recipes", async(KitchenExcursionContext context) =>
+{
+    var recipes = await context.Recipes
+        .AsNoTracking()
+        .OrderBy(recipe => recipe.RecipeId)
+        .ToListAsync();
+
+    return Results.Ok(recipes);
+});
+*/
 
 app.MapGet("/api/recipes", async () =>
 {
