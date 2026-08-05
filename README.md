@@ -9,7 +9,7 @@ Kitchen Excursion is a personal cooking journal and recipe-management applicatio
 ## Features
 
 - Recipe search and structured filters
-- Recipe detail dialogs
+- Recipe detail dialogs with preserved browsing position across desktop and mobile
 - Cooking mode
 - Shopping-list view
 - Persistent Cook Log
@@ -144,6 +144,8 @@ Completed foundation work:
 - Initial database migration
 - Recipe seed import
 - Local and Azure connection-string configuration
+- Cross-browser recipe-dialog scrolling and close-button behavior
+- Recipe-list position preservation when opening and closing a recipe
 
 Next:
 

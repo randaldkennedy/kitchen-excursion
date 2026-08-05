@@ -26,6 +26,18 @@
 - Limited Azure deployment workflow triggers to application and workflow changes.
 - Shortened the deployment commit hash to seven characters.
 - Increased the Azure SQL connection timeout to tolerate serverless database wake-up time.
+- Updated the recipe dialog so its content scrolls independently from the recipe list behind it.
+
+### Fixed
+
+- Fixed recipe dialogs opening at an inherited scroll position on iPhone.
+- Preserved the user's recipe-list position while opening and closing a recipe.
+- Removed the visible jump caused by smooth scrolling during page-position restoration.
+- Fixed the recipe-dialog close button in iPhone Safari and Chrome by replacing the inline handler with an explicit event listener.
+- Prevented the mobile close button from being clipped by the browser viewport.
+- Fixed clipped recipe status labels and headings caused by horizontal dialog-content drift.
+- Removed duplicate `dialogContent` markup.
+- Corrected the Shopping List dialog close button so it closes the correct dialog.
 
 ### Current Transition
 

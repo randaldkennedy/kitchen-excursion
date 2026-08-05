@@ -4,7 +4,17 @@ Future work for the Kitchen Excursion project.
 
 ---
 
+# Current Sprint — Mobile Polish and Foundation
 
+- [x] Fix recipe dialog opening position on desktop and iPhone.
+- [x] Preserve the recipe-list scroll position while a recipe dialog is open.
+- [x] Restore the recipe-list position immediately when the dialog closes.
+- [x] Make the recipe dialog close button work consistently in desktop Chrome, iPhone Safari, and iPhone Chrome.
+- [x] Prevent recipe headings and status labels from being clipped inside the dialog.
+- [x] Remove duplicate `dialogContent` markup and correct the Shopping List dialog close target.
+- [x] Verify the updated dialog locally and on the Azure-hosted site.
+- [ ] Remove legacy project snapshot directories after one final verification.
+- [ ] Resolve the `Microsoft.OpenApi` package vulnerability warning.
 
 ---
 
@@ -113,6 +123,8 @@ Future work for the Kitchen Excursion project.
 
 - [ ] Dark mode.
 - [ ] Better animations.
+- [ ] Add a polished fade/scale transition for recipe dialogs.
+- [ ] Test recipe browsing and dialog behavior with 50+ recipes.
 - [ ] Keyboard shortcuts.
 - [ ] Better mobile layout.
 - [ ] Pantry and shopping dashboards.
@@ -168,12 +180,28 @@ Future work for the Kitchen Excursion project.
 - [ ] Replace publish-profile deployment credentials with OpenID Connect.
 - [ ] Remove archived project snapshots from the repository after confirming they are no longer needed.
 
+## Development Process
+
+- [ ] Create a tracked `scripts` directory.
+- [ ] Add `new-sprint.cmd`.
+- [ ] Add `merge-sprint.cmd`.
+- [ ] Add `close-sprint.cmd`.
+- [ ] Standardize future sprint names with a sortable `YYMMDD` date and descriptive topic while preserving focused prefixes such as `ui/`, `infra/`, `docs/`, and `hotfix/`.
+- [ ] Use the sprint closeout checklist: build, local test, documentation update, commit, push, merge, Azure deployment, desktop smoke test, iPhone Safari test, iPhone Chrome test, and release tag when appropriate.
+
 ---
 
 # Completed
 
-## v0.4.0 Foundation
+## v0.4.0 Foundation and Mobile Polish
 
+- [x] Recipe dialog opens at the top of its own content.
+- [x] Background recipe-list position is preserved while the dialog is open.
+- [x] Closing a recipe dialog restores the browsing position without a visible jump.
+- [x] Cross-browser recipe-dialog close control for desktop Chrome, iPhone Safari, and iPhone Chrome.
+- [x] Fixed clipped dialog headings and status labels.
+- [x] Removed duplicate recipe-dialog content markup.
+- [x] Corrected the Shopping List dialog close target.
 - [x] Azure App Service hosting.
 - [x] GitHub Actions automatic deployment.
 - [x] Deployment path filters.
