@@ -1,7 +1,7 @@
 [
   {
     "id": "smothered-pork-chops",
-    "title": "Randy\u0027s Smothered Pork Chops",
+    "title": "Randy's Smothered Pork Chops",
     "categories": [
       "Dinner",
       "Pork",
@@ -13,28 +13,28 @@
     "summary": "Bone-in chops with mushrooms, onions, and gravy. Next time: one-hour bake, creamier gravy, and mashed potatoes.",
     "prep": "20 min",
     "cook": "1 hr",
-    "serves": "2\u20134",
+    "serves": "2–4",
     "ingredients": [
       "4 bone-in center loin pork chops, about 1 inch thick",
-      "1 large yellow onion, sliced into \u00BC-inch half-moons",
+      "1 large yellow onion, sliced into ¼-inch half-moons",
       "16 oz sliced mushrooms",
       "1 can cream of mushroom soup",
       "1 packet onion soup mix",
       "1 cup beef broth",
-      "\u00BD cup whole milk or half-and-half",
+      "½ cup whole milk or half-and-half",
       "1 tablespoon Worcestershire sauce",
       "Salt and black pepper",
       "Butter or oil for browning",
       "Mashed potatoes for serving"
     ],
     "steps": [
-      "Preheat the oven to 350\u00B0F.",
+      "Preheat the oven to 350°F.",
       "Season the pork chops with salt and pepper.",
-      "Brown the chops in a skillet with a little butter or oil for 2\u20133 minutes per side. They do not need to cook through.",
-      "Remove the chops. Cook the onions for 2\u20133 minutes, then add the mushrooms and cook another 4\u20135 minutes.",
+      "Brown the chops in a skillet with a little butter or oil for 2–3 minutes per side. They do not need to cook through.",
+      "Remove the chops. Cook the onions for 2–3 minutes, then add the mushrooms and cook another 4–5 minutes.",
       "Stir in the cream of mushroom soup, onion soup mix, beef broth, milk, and Worcestershire sauce. Scrape up the browned bits from the skillet.",
       "Place the chops in a baking dish, pour the gravy over them, and cover tightly with foil.",
-      "Bake for 1 hour. Check for tenderness and doneness; add only 5\u201310 minutes if truly needed.",
+      "Bake for 1 hour. Check for tenderness and doneness; add only 5–10 minutes if truly needed.",
       "Rest for 5 minutes and serve over mashed potatoes with plenty of gravy."
     ],
     "journal": {
@@ -89,36 +89,36 @@
     "imageAlt": "Mississippi pot roast served over mashed potatoes with pepperoncinis",
     "summary": "Rich, tangy chuck roast served over creamy mashed potatoes with plenty of pepperoncinis.",
     "prep": "15 min",
-    "cook": "6\u20138\u002B hr",
-    "serves": "6\u20138",
+    "cook": "6–8+ hr",
+    "serves": "6–8",
     "ingredients": [
-      "3\u20134 lb chuck roast",
+      "3–4 lb chuck roast",
       "Black pepper",
       "1 tablespoon vegetable or avocado oil",
       "1 packet Hidden Valley Ranch seasoning",
       "1 packet au jus gravy mix",
       "1 stick butter",
-      "10\u201315 whole pepperoncini peppers",
-      "2\u20134 tablespoons pepperoncini juice",
+      "10–15 whole pepperoncini peppers",
+      "2–4 tablespoons pepperoncini juice",
       "Sliced pepperoncinis for serving",
       "Mashed potatoes for serving"
     ],
     "steps": [
-      "If time allows, remove the roast from the refrigerator 20\u201330 minutes before cooking.",
+      "If time allows, remove the roast from the refrigerator 20–30 minutes before cooking.",
       "Pat the roast dry with paper towels and season lightly with black pepper. Do not add extra salt because the seasoning mixes are already salty.",
       "Heat the oil in a large skillet over medium-high heat.",
-      "Sear the roast for 2\u20133 minutes per side, including the edges, until deeply browned. Do not cook it through.",
+      "Sear the roast for 2–3 minutes per side, including the edges, until deeply browned. Do not cook it through.",
       "Place the browned roast in the slow cooker.",
       "Sprinkle the ranch seasoning and au jus gravy mix evenly over the roast.",
       "Place the stick of butter on top.",
       "Add the whole pepperoncinis around the roast and pour in the pepperoncini juice.",
       "Cover and cook on LOW until a fork slides in easily and twists the meat apart. Begin checking around 6 hours, but cook longer as needed.",
-      "If the roast is still firm late in the cook, switch to HIGH and check again after 45\u201360 minutes.",
+      "If the roast is still firm late in the cook, switch to HIGH and check again after 45–60 minutes.",
       "Shred or pull apart the tender meat and stir it into the cooking juices.",
       "Serve over mashed potatoes with extra cooking juices and sliced pepperoncinis."
     ],
     "journal": {
-      "general": "\u2605\u2605\u2605\u2605\u2605 Randy Favorite. The first test used a 2.47 lb chuck roast. Cook to tenderness rather than strictly by the clock: if a fork can lift the roast without pulling it apart, it needs more time. The center became tender before the thicker outer portions, so continue cooking until all sections pull apart easily. The flavor was spot on. Next time use more pepperoncinis, add sliced pepperoncinis to each serving, and save every drop of the cooking juices for gravy and reheating leftover mashed potatoes. Served with mashed potatoes boiled exactly 18 minutes and finished with a hand mixer.",
+      "general": "★★★★★ Randy Favorite. The first test used a 2.47 lb chuck roast. Cook to tenderness rather than strictly by the clock: if a fork can lift the roast without pulling it apart, it needs more time. The center became tender before the thicker outer portions, so continue cooking until all sections pull apart easily. The flavor was spot on. Next time use more pepperoncinis, add sliced pepperoncinis to each serving, and save every drop of the cooking juices for gravy and reheating leftover mashed potatoes. Served with mashed potatoes boiled exactly 18 minutes and finished with a hand mixer.",
       "cookLog": [
         {
           "date": "2026-08-01T20:15:00",
@@ -128,7 +128,7 @@
       ]
     },
     "shopping": [
-      "Chuck roast, 3\u20134 lb",
+      "Chuck roast, 3–4 lb",
       "Hidden Valley Ranch seasoning packet",
       "Au jus gravy mix packet",
       "Butter, 1 stick",
@@ -138,7 +138,7 @@
   },
   {
     "id": "simple-mashed-potatoes",
-    "title": "Randy\u0027s Simple Mashed Potatoes",
+    "title": "Randy's Simple Mashed Potatoes",
     "categories": [
       "Sides",
       "Home Favorite"
@@ -153,15 +153,15 @@
     "ingredients": [
       "3 lb russet potatoes",
       "6 tablespoons butter",
-      "\u00BD cup whole milk, warmed",
-      "\u00BC cup sour cream",
+      "½ cup whole milk, warmed",
+      "¼ cup sour cream",
       "1 tablespoon salt for the cooking water, plus more to taste",
       "Black pepper to taste"
     ],
     "steps": [
       "Peel the potatoes and cut them into roughly 2-inch chunks.",
       "Put the potatoes in a large pot, cover with cold water, and add about 1 tablespoon salt.",
-      "Bring to a boil and cook for 18\u201320 minutes, until a fork slides into the potatoes easily.",
+      "Bring to a boil and cook for 18–20 minutes, until a fork slides into the potatoes easily.",
       "Drain well. Return the potatoes to the hot pot over low heat for about 1 minute to dry them slightly.",
       "Add the butter, warm milk, and sour cream.",
       "Mash until smooth, then season with salt and black pepper.",
@@ -217,7 +217,7 @@
       "1 teaspoon black pepper"
     ],
     "steps": [
-      "Preheat the oven to 350\u00B0F.",
+      "Preheat the oven to 350°F.",
       "Slice the rolls in half horizontally, keeping the tops and bottoms together as two slabs.",
       "Place the bottom slab in a 9 x 13-inch baking dish.",
       "Spread the scrambled eggs evenly over the rolls, then layer on the ham, white cheddar, bacon, and spinach.",
@@ -227,7 +227,7 @@
       "Cut into 12 individual sliders and serve warm."
     ],
     "journal": {
-      "general": "La Jefa requested these again, so they are automatically a favorite. Adapted from Tasty\u0027s Breakfast Sliders recipe. Take our own photo next time and record any changes Randy and Lisa prefer.",
+      "general": "La Jefa requested these again, so they are automatically a favorite. Adapted from Tasty's Breakfast Sliders recipe. Take our own photo next time and record any changes Randy and Lisa prefer.",
       "cookLog": []
     },
     "shopping": [
@@ -250,7 +250,7 @@
   },
   {
     "id": "camp-breakfast-tacos",
-    "title": "Randy\u0027s Camp Breakfast Tacos",
+    "title": "Randy's Camp Breakfast Tacos",
     "categories": [
       "Breakfast",
       "Camping",
@@ -261,13 +261,13 @@
     "imageAlt": "",
     "summary": "Built at home, finished over the campfire. Crispy tortilla, bacon, eggs, cheese, and plenty of picante.",
     "prep": "25 min",
-    "cook": "12\u201315 min",
+    "cook": "12–15 min",
     "serves": "4",
     "ingredients": [
       "4 large flour tortillas",
       "8 slices thick-cut bacon",
       "6 eggs",
-      "1\u00BD cups shredded sharp cheddar cheese",
+      "1½ cups shredded sharp cheddar cheese",
       "2 tablespoons butter",
       "Salt",
       "Black pepper",
@@ -281,11 +281,11 @@
       "Roll each burrito tightly, folding the ends in as you roll.",
       "Wrap each burrito individually in heavy-duty aluminum foil and refrigerate overnight.",
       "At camp, place the foil-wrapped tacos over medium-low grill heat or indirect campfire coals.",
-      "Turn every 3\u20134 minutes for 12\u201315 minutes until heated through.",
+      "Turn every 3–4 minutes for 12–15 minutes until heated through.",
       "Open carefully and add plenty of picante sauce before eating."
     ],
     "journal": {
-      "general": "Designed for camping. Assemble everything at home so breakfast at camp is almost effortless. Let the eggs cool slightly before rolling so the tortillas stay firm. Heavy-duty foil works best. Picante sauce isn\u0027t optional\u2014it gets added after opening the foil at camp.",
+      "general": "Designed for camping. Assemble everything at home so breakfast at camp is almost effortless. Let the eggs cool slightly before rolling so the tortillas stay firm. Heavy-duty foil works best. Picante sauce isn't optional—it gets added after opening the foil at camp.",
       "cookLog": [
         {
           "date": "2026-08-04T14:44:24.2448360-05:00",
@@ -315,11 +315,12 @@
     "categories": [
       "Dinner",
       "Pork",
-      "Slow Cooker"
+      "Slow Cooker",
+      "La Jefa Approved"
     ],
     "badge": "La Jefa Approved",
     "image": "assets/slow-cooker-carnitas.jpg",
-    "imageAlt": "",
+    "imageAlt": "Turkey taco topped with avocado, cilantro, cotija cheese, and salsa verde, with crispy carnitas in the background",
     "summary": "Tender, flavorful slow-cooked pork finished under the broiler for crisp, browned edges.",
     "prep": "10 min",
     "cook": "6–8 hr",
@@ -366,5 +367,58 @@
     "protein": "pork",
     "method": "slow-cooker",
     "status": []
+  },
+  {
+    "id": "turkey-bacon-avocado-sammie",
+    "title": "Turkey, Bacon & Avocado Sammie",
+    "categories": [
+      "Lunch",
+      "Turkey",
+      "Quick"
+    ],
+    "badge": "Approved",
+    "image": "assets/turkey-bacon-avocado-sammie.jpeg",
+    "imageAlt": "Toasted turkey sandwich layered with melted pepper jack, crispy bacon, and avocado",
+    "summary": "A hot turkey sandwich with melted pepper jack, crispy bacon, and cool avocado on toasted bread.",
+    "prep": "10 min",
+    "cook": "10 min",
+    "serves": "1",
+    "ingredients": [
+      "2 slices white sandwich bread",
+      "3–4 oz sliced turkey",
+      "2–3 oz pepper jack cheese, sliced",
+      "3–4 slices bacon, cooked until crisp",
+      "About 1/2 avocado, mashed, or prepared guacamole",
+      "Salt and black pepper to taste"
+    ],
+    "steps": [
+      "Cook the bacon until crisp, then drain it on paper towels.",
+      "Place the sliced turkey on one slice of bread and arrange the pepper jack cheese over the turkey.",
+      "Place both bread halves in a toaster oven, keeping the plain slice separate.",
+      "Toast until the bread is golden and the pepper jack is fully melted.",
+      "Spread the mashed avocado or guacamole over the plain toasted slice.",
+      "Place the crispy bacon over the melted cheese.",
+      "Season the avocado lightly with salt and black pepper, if needed.",
+      "Close the sandwich, press gently, and serve immediately."
+    ],
+    "journal": {
+      "general": "Toast the sandwich open-faced so the bread gets crisp while the pepper jack melts. Add the bacon and avocado after heating so the bacon stays crisp and the avocado stays cool.",
+      "cookLog": []
+    },
+    "shopping": [
+      "White sandwich bread",
+      "Sliced turkey",
+      "Pepper jack cheese",
+      "Bacon",
+      "Avocado or prepared guacamole",
+      "Salt",
+      "Black pepper"
+    ],
+    "meal": "lunch",
+    "protein": "turkey",
+    "method": "toaster-oven",
+    "status": [
+      "quick"
+    ]
   }
 ]
