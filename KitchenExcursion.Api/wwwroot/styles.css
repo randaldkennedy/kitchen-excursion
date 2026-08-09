@@ -106,6 +106,41 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
 .site-footer { border-top: 1px solid var(--line); text-align: center; color: var(--muted); padding: 28px 16px 44px; }
 .site-footer p { margin: 4px 0; }
 
+.site-footer {
+  position: relative;
+}
+
+.footer-link,
+.back-to-top {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.footer-link:hover,
+.back-to-top:hover {
+  text-decoration: underline;
+}
+
+.footer-link {
+  display: inline-block;
+  margin-top: 18px;
+}
+
+.back-to-top {
+  position: absolute;
+  right: 32px;
+  bottom: 44px;
+}
+
+@media (max-width: 650px) {
+  .back-to-top {
+    position: static;
+    display: block;
+    margin-top: 12px;
+  }
+}
+
 @media (max-width: 760px) {
   .brand-header__inner { align-items: flex-start; flex-direction: column; justify-content: center; gap: 4px; padding: 16px 0; }
   .brand__tagline { font-size: .86rem; }
