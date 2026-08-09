@@ -257,8 +257,8 @@
       "Home Favorite"
     ],
     "badge": "New",
-    "image": "",
-    "imageAlt": "",
+    "image": "assets/camp-breakfast-tacos.jpg",
+"imageAlt": "Camp breakfast taco on a paper plate beside a Coleman stove, with a lightly charred tortilla",
     "summary": "Built at home, finished over the campfire. Crispy tortilla, bacon, eggs, cheese, and plenty of picante.",
     "prep": "25 min",
     "cook": "12–15 min",
@@ -280,17 +280,18 @@
       "Divide the eggs, bacon, and cheese evenly among the tortillas.",
       "Roll each burrito tightly, folding the ends in as you roll.",
       "Wrap each burrito individually in heavy-duty aluminum foil and refrigerate overnight.",
-      "At camp, place the foil-wrapped tacos over medium-low grill heat or indirect campfire coals.",
-      "Turn every 3–4 minutes for 12–15 minutes until heated through.",
+      "At camp, indirect heat over campfire embers or a grill is preferred.", 
+      "If only have a Coleman stove, place the foil-wrapped tacos on a skillet or griddle over the lowest possible flame instead of directly over the burner.",
+      "Turn every 2–3 minutes and begin checking after 8–10 minutes. Heat only until the centers are hot and the cheese is melted.",
       "Open carefully and add plenty of picante sauce before eating."
     ],
     "journal": {
       "general": "Designed for camping. Assemble everything at home so breakfast at camp is almost effortless. Let the eggs cool slightly before rolling so the tortillas stay firm. Heavy-duty foil works best. Picante sauce isn't optional—it gets added after opening the foil at camp.",
       "cookLog": [
         {
-          "date": "2026-08-04T14:44:24.2448360-05:00",
+          "date": "2026-08-09T17:45:00-05:00",
           "author": "Randy",
-          "note": "test 1"
+          "note": "Coleman stove was way too hot. Tortillas burned and stuck to the foil before the centers warmed through. Next time use a skillet or griddle over the lowest flame and turn every 2–3 minutes. Lightly grease the foil or use parchment inside the foil."
         }
       ]
     },
