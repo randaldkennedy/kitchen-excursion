@@ -44,7 +44,7 @@ const filterGroups = [
   { key: 'meal', label: 'Meal', values: ['breakfast', 'lunch', 'dinner', 'side', 'dessert'] },
   { key: 'protein', label: 'Protein', values: ['pork', 'beef', 'chicken', 'turkey','seafood', 'meatless'] },
   { key: 'method', label: 'Method', values: ['oven', 'stovetop', 'slow-cooker', 'grill', 'air-fryer', 'microwave'] },
-  { key: 'status', label: 'Status', values: ['favorite', 'la-jefa-approved', 'quick'] }
+  { key: 'status', label: 'Status', values: ['favorite', 'la-jefa-approved', 'maybe', 'quick'] }
 ];
 
 const filterLabels = {
@@ -68,6 +68,7 @@ const filterLabels = {
   microwave: 'Microwave',
   favorite: 'Favorites',
   'la-jefa-approved': 'La Jefa Approved',
+  maybe: 'Maybe',
   quick: 'Quick'
 };
 
