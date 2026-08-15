@@ -258,7 +258,7 @@
     ],
     "badge": "New",
     "image": "assets/camp-breakfast-tacos.jpg",
-"imageAlt": "Camp breakfast taco on a paper plate beside a Coleman stove, with a lightly charred tortilla",
+    "imageAlt": "Camp breakfast taco on a paper plate beside a Coleman stove, with a lightly charred tortilla",
     "summary": "Built at home, finished over the campfire. Crispy tortilla, bacon, eggs, cheese, and plenty of picante.",
     "prep": "25 min",
     "cook": "12–15 min",
@@ -280,7 +280,7 @@
       "Divide the eggs, bacon, and cheese evenly among the tortillas.",
       "Roll each burrito tightly, folding the ends in as you roll.",
       "Wrap each burrito individually in heavy-duty aluminum foil and refrigerate overnight.",
-      "At camp, indirect heat over campfire embers or a grill is preferred.", 
+      "At camp, indirect heat over campfire embers or a grill is preferred.",
       "If only have a Coleman stove, place the foil-wrapped tacos on a skillet or griddle over the lowest possible flame instead of directly over the burner.",
       "Turn every 2–3 minutes and begin checking after 8–10 minutes. Heat only until the centers are hot and the cheese is melted.",
       "Open carefully and add plenty of picante sauce before eating."
@@ -420,6 +420,86 @@
     "method": "toaster-oven",
     "status": [
       "quick"
+    ]
+  },
+  {
+    "id": "creamy-italian-sausage-potato-soup",
+    "title": "Creamy Italian Sausage & Potato Soup",
+    "categories": [
+      "Dinner",
+      "Soup",
+      "Pork"
+    ],
+    "meal": "dinner",
+    "protein": "pork",
+    "method": "stovetop",
+    "status": [
+      "maybe",
+      "la-jefa-approved"
+    ],
+    "badge": "La Jefa Approved",
+    "image": "assets/italian-sausage-potato-soup.jpeg",
+    "imageAlt": "Creamy Italian sausage and potato soup with spinach",
+    "summary": "Creamy potato soup with sweet Italian sausage, Parmesan, and spinach. Lisa loved it; next time Randy wants less sausage.",
+    "prep": "15 min",
+    "cook": "30–35 min",
+    "serves": "2–3",
+    "ingredients": [
+      "3 medium russet potatoes, scrubbed and cut into bite-size pieces",
+      "3 sweet Italian sausage links, casings removed",
+      "1 small yellow onion, diced",
+      "2–3 cloves garlic, minced",
+      "3 cups chicken broth",
+      "2 cups whole milk",
+      "1½ tablespoons all-purpose flour",
+      "½ cup grated Parmesan cheese, plus more for serving",
+      "2 generous handfuls fresh spinach or chopped kale",
+      "1 teaspoon Italian seasoning",
+      "½ teaspoon smoked paprika",
+      "¼ teaspoon crushed red pepper flakes, or to taste",
+      "½ teaspoon black pepper, plus more to taste",
+      "Salt, as needed",
+      "1 tablespoon butter or olive oil, only if needed for sautéing"
+    ],
+    "steps": [
+      "Heat a Dutch oven or soup pot over medium-high heat. Remove the sausage from the casings and cook, breaking it into bite-size chunks, until well browned, about 6–8 minutes.",
+      "Remove the sausage to a plate, leaving about 1–2 tablespoons of rendered fat in the pot. If the pot is dry, add a little butter or olive oil.",
+      "Cook the onion in the sausage drippings for 4–5 minutes, until softened and beginning to brown. Add the garlic and cook another 30–60 seconds.",
+      "Sprinkle the flour over the onions and stir constantly for about 1 minute. Add the Italian seasoning, smoked paprika, red pepper flakes, and black pepper.",
+      "Slowly pour in the chicken broth, stirring and scraping up all the browned bits from the bottom of the pot.",
+      "Add the potatoes. Bring to a gentle boil, reduce to a simmer, and cook uncovered for 12–15 minutes, or until the potatoes are fork-tender.",
+      "Return the sausage and any accumulated juices to the pot. Reduce the heat to low and stir in the milk.",
+      "Heat gently for 5–7 minutes. Do not let the soup come to a hard boil after adding the milk. Stir in the Parmesan until melted.",
+      "Add the spinach or kale. Cook another 2–3 minutes for spinach or 4–5 minutes for kale, until wilted and tender.",
+      "Taste before salting. The sausage, chicken broth, and Parmesan may already provide enough. Adjust the black pepper, red pepper, and salt to taste.",
+      "Ladle into bowls and finish with Parmesan and plenty of freshly cracked black pepper."
+    ],
+    "journal": {
+      "general": "First cook: used 5 sausage links instead of the recommended 3. Randy thought the sausage overpowered the soup and use 3 links next time. Lisa said, ‘It’s delicious.’ Keep this in the Maybe category for Randy, but it is La Jefa Approved. For a thicker soup, mash several potato chunks against the side of the pot near the end and stir them back in. For a brothier soup, add another ½–1 cup chicken broth. Reheat gently over medium-low heat with a splash of milk if needed.",
+      "cookLog": [
+        {
+          "date": "2026-08-14T18:30:00-05:00",
+          "author": "Randy",
+          "note": "First cook. Used 5 sausage links. Too much sausage for me—the sausage was overpowering. Next time use 3 links. Lisa said, ‘It’s delicious.’ Maybe make again with less sausage."
+        }
+      ]
+    },
+    "shopping": [
+      "Russet potatoes, 3 medium",
+      "Sweet Italian sausage, 3 links",
+      "Small yellow onion",
+      "Garlic",
+      "Chicken broth",
+      "Whole milk",
+      "All-purpose flour",
+      "Parmesan cheese",
+      "Fresh spinach or kale",
+      "Italian seasoning",
+      "Smoked paprika",
+      "Crushed red pepper flakes",
+      "Black pepper",
+      "Salt",
+      "Butter or olive oil"
     ]
   }
 ]
