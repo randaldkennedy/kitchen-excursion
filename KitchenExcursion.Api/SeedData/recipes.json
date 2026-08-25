@@ -501,5 +501,76 @@
       "Salt",
       "Butter or olive oil"
     ]
+  },
+  {
+    "id": "green-chile-chicken-enchilada-casserole",
+    "title": "Green Chile Chicken Enchilada Casserole",
+    "categories": [
+      "Dinner",
+      "Chicken",
+      "Casserole"
+    ],
+    "meal": "dinner",
+    "protein": "chicken",
+    "method": "oven",
+    "status": [],
+    "badge": "New",
+    "image": "",
+    "imageAlt": "",
+    "summary": "Layered corn tortillas, green chile chicken, roasted poblano, Monterey Jack, crema, and Cotija. Built to freeze and reheat well.",
+    "prep": "30 min",
+    "cook": "30–35 min",
+    "serves": "6",
+    "ingredients": [
+      "3 cups cooked shredded chicken (about 1½ lb raw chicken, or meat from 1 rotisserie chicken)",
+      "10–12 corn tortillas",
+      "1 poblano pepper",
+      "1 small yellow or white onion, diced",
+      "3 cloves garlic, minced",
+      "1 can (15 oz) green enchilada sauce or about 2 cups salsa verde",
+      "1 can (4 oz) diced green chiles",
+      "1 teaspoon ground cumin",
+      "½ teaspoon Mexican oregano",
+      "¼–½ teaspoon crushed red pepper or chipotle powder, optional",
+      "½ teaspoon black pepper",
+      "1½ cups shredded Monterey Jack or Oaxaca cheese",
+      "½ cup Mexican crema or sour cream, plus more for serving",
+      "½ cup crumbled Cotija cheese, plus more for serving",
+      "1 tablespoon oil",
+      "½ cup chopped fresh cilantro",
+      "1 lime, cut into wedges",
+      "1 jalapeño, thinly sliced, optional",
+      "Salt, only as needed"
+    ],
+    "steps": [
+      "Heat the oven to 425°F. Roast the poblano until blistered and charred in spots, turning as needed, about 10–15 minutes. Place it in a covered bowl for 5–10 minutes, then peel away loose skin, remove the stem and seeds, and dice it. Reduce the oven to 375°F.",
+      "Heat the oil in a skillet over medium heat. Cook the onion for 4–5 minutes until softened. Add the garlic and cook for 30–60 seconds.",
+      "Add the shredded chicken, roasted poblano, diced green chiles, cumin, Mexican oregano, black pepper, and optional red pepper or chipotle. Stir in about ¾ cup of the green enchilada sauce and ¼ cup crema. Heat for 2–3 minutes, then taste before adding any salt.",
+      "Spread a thin layer of green enchilada sauce over the bottom of an 8×8- or 9×9-inch baking dish.",
+      "Tear or cut the corn tortillas as needed to cover the bottom. Add half of the chicken mixture, about one-third of the Monterey Jack, and a light drizzle of crema.",
+      "Add another tortilla layer, the remaining chicken mixture, another third of the Monterey Jack, and another light drizzle of crema.",
+      "Finish with a final tortilla layer. Pour the remaining green enchilada sauce over the top and sprinkle with the remaining Monterey Jack and about ½ cup Cotija.",
+      "Cover loosely with foil and bake at 375°F for 20 minutes. Remove the foil and bake another 10–15 minutes, until bubbling around the edges and the Monterey Jack is melted.",
+      "Rest for 10 minutes before cutting. Finish with cilantro, extra Cotija, lime, crema, and sliced jalapeño if desired.",
+      "For leftovers, cool completely and freeze individual portions in airtight containers. Thaw overnight when possible and reheat covered until hot; add a spoonful of salsa verde before reheating if it seems dry."
+    ],
+    "journal": {
+      "general": "First test planned for 2026-08-25. Randy already has Cotija to use. Keep the Cotija as a salty finishing cheese rather than the main melting cheese; Monterey Jack or Oaxaca provides the melted layers. Intended as a freezer-friendly casserole. Add cook notes and a photo after dinner.",
+      "cookLog": []
+    },
+    "shopping": [
+      "Cooked shredded chicken or rotisserie chicken",
+      "Corn tortillas",
+      "Poblano pepper",
+      "Small yellow or white onion",
+      "Garlic",
+      "Green enchilada sauce or salsa verde",
+      "Diced green chiles, 4 oz can",
+      "Monterey Jack or Oaxaca cheese",
+      "Mexican crema or sour cream",
+      "Fresh cilantro",
+      "Lime",
+      "Jalapeño, optional"
+    ]
   }
 ]
