@@ -563,5 +563,88 @@
       "Lime",
       "Jalapeño, optional"
     ]
+  },
+  {
+    "id": "salisbury-steak-mushroom-onion-gravy",
+    "title": "Salisbury Steak with Mushroom-Onion Gravy",
+    "categories": [
+      "Dinner",
+      "Beef"
+    ],
+    "meal": "dinner",
+    "protein": "beef",
+    "method": "stovetop",
+    "status": [],
+    "badge": "Approved",
+    "image": "assets/salisbury-steak-mushroom-onion-gravy.jpg",
+    "imageAlt": "Salisbury steak with mushroom-onion gravy served over creamy mashed potatoes",
+    "summary": "Savory Salisbury steak smothered in rich mushroom-onion gravy and served with creamy mashed potatoes.",
+    "prep": "20 min + 20–30 min chill",
+    "cook": "30–35 min",
+    "serves": "2–3",
+    "ingredients": [
+      "1 lb ground beef, 80/20 or 85/15",
+      "⅓ cup plain breadcrumbs",
+      "1 egg",
+      "2 tablespoons whole milk",
+      "1 tablespoon Worcestershire sauce",
+      "1 teaspoon Dijon mustard",
+      "½ teaspoon garlic powder",
+      "½ teaspoon onion powder",
+      "½ teaspoon black pepper",
+      "½ teaspoon salt",
+      "1 tablespoon butter or oil for browning",
+      "8 oz sliced mushrooms",
+      "1 cup thinly sliced white or yellow onion (about 1 medium yellow onion or 1½–2 small white onions)",
+      "2 tablespoons butter",
+      "2 tablespoons all-purpose flour",
+      "2 cups beef broth",
+      "1 tablespoon Worcestershire sauce for the gravy",
+      "½ teaspoon Dijon mustard for the gravy",
+      "½ teaspoon black pepper for the gravy",
+      "Salt only if needed after tasting",
+      "Randy's Simple Mashed Potatoes, for serving"
+    ],
+    "steps": [
+      "Stir the breadcrumbs and milk together in a large bowl and let them sit for 2–3 minutes. Giving the crumbs a chance to soak up the milk makes a better binder and should help keep the patties together.",
+      "Add the egg, Worcestershire, Dijon, garlic powder, onion powder, black pepper, and salt. Mix that together first, then add the ground beef and gently work everything together just until combined. Don't knead the hell out of it or we'll trade fragile patties for hamburger hockey pucks.",
+      "Shape the mixture into 3 thick oval patties, roughly ¾ inch thick. Press the edges firmly and close up any visible cracks. Put the patties on a plate and refrigerate them for 20–30 minutes before cooking. The first batch wanted to fall apart, so we're giving these guys a chance to firm up before they hit the skillet.",
+      "Heat a large skillet over medium-high heat with 1 tablespoon butter or oil. Add the cold patties and then leave them alone for 3–4 minutes. We want a good brown crust before we even think about moving them.",
+      "Slide a wide spatula completely underneath each patty and carefully flip it once. Brown the second side for about 3 minutes. They do not need to be cooked through yet. Move them to a plate with the wide spatula and don't clean the skillet—that browned stuff on the bottom belongs in our gravy.",
+      "Turn the heat down to medium and add 2 tablespoons butter. Add the sliced onion and cook for 3–4 minutes until it starts to soften. Add the mushrooms and cook another 5–6 minutes. Let the mushrooms sit long enough to actually brown instead of constantly screwing with them.",
+      "Sprinkle the flour over the mushrooms and onions and stir for about 1 minute. It'll look a little pasty and ugly. That's fine. Slowly pour in the beef broth while stirring and scraping every browned bit off the bottom of the skillet.",
+      "Stir in the Worcestershire, Dijon, and black pepper. Bring the gravy to a gentle simmer and give it a couple minutes to start thickening.",
+      "Nestle the Salisbury steaks back into the gravy and spoon some mushrooms and onions over the tops. Turn the heat to medium-low, cover, and simmer for 12–15 minutes, until the centers reach 160°F.",
+      "If the gravy gets too thick while the steaks cook, add a splash of beef broth. If it's too thin when they're done, remove the lid and simmer it for another couple minutes.",
+      "Taste the gravy before reaching for the salt. The first cook needed absolutely none—the beef broth and Worcestershire brought plenty. Add salt only if your batch actually needs it.",
+      "Use a wide spatula to lift the finished steaks from the gravy; they're tender after simmering and the first batch proved they'll break if we get careless. Serve with Randy's Simple Mashed Potatoes and spoon plenty of mushroom-onion gravy over the steak and potatoes."
+    ],
+    "journal": {
+      "general": "First cook was rich, very savory, and pretty damn good. No additional salt was added to the Salisbury steak or gravy after cooking began; only the mashed potatoes were salted, and the finished gravy did not need any. The patties were fragile during browning and one broke while plating. Next time hydrate the breadcrumbs with milk first, chill the shaped patties for 20–30 minutes, press the edges firmly, leave them alone long enough to form a crust, and use a wide spatula for flipping and serving.",
+      "cookLog": [
+        {
+          "date": "2026-08-27T19:13:00-05:00",
+          "author": "Randy",
+          "note": "First cook. Pretty damn good and really savory. Added no extra salt to the steaks or gravy; only the mashed potatoes were salted, and the gravy didn't need any. Patties wanted to fall apart while browning and one broke while plating. Next time chill the patties 20–30 minutes, hydrate the breadcrumbs with milk before mixing, form the edges firmly, and use a wide spatula for flipping and serving."
+        }
+      ]
+    },
+    "shopping": [
+      "Ground beef, 1 lb",
+      "Plain breadcrumbs",
+      "Eggs",
+      "Whole milk",
+      "Worcestershire sauce",
+      "Dijon mustard",
+      "Garlic powder",
+      "Onion powder",
+      "Black pepper",
+      "Butter or oil",
+      "Sliced mushrooms, 8 oz",
+      "White or yellow onion",
+      "All-purpose flour",
+      "Beef broth",
+      "Ingredients for Randy's Simple Mashed Potatoes"
+    ]
   }
 ]
