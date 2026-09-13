@@ -391,3 +391,108 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
 .form-field textarea::placeholder {
     color: #8a8179;
 }
+
+/* Recipe ratings */
+.recipe-rating,
+.recipe-rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recipe-rating {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.recipe-rating__stars,
+.recipe-rating-summary__stars,
+.cook-rating__stars {
+  color: #9a5a20;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+.recipe-rating-summary {
+  width: fit-content;
+  margin-top: 14px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--soft);
+}
+
+.recipe-rating-summary__label {
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.recipe-rating-summary--empty {
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.cook-ratings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.cook-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  font-size: .88rem;
+}
+
+.cook-rating__empty {
+  margin: 10px 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.cook-rating-form {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(150px, auto) auto;
+  gap: 10px;
+  align-items: end;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.cook-rating-form label {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.cook-rating-form input,
+.cook-rating-form select {
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+}
+
+@media (max-width: 650px) {
+  .cook-rating-form {
+    grid-template-columns: 1fr;
+  }
+
+  .recipe-rating-summary {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}
