@@ -212,6 +212,70 @@ function updateFilterToggleLabel() {
   filterToggle.textContent = `${arrow} Filters${count}`;
 }
 
+function starText(value) {
+  const stars = Number(value);
+  if (!Number.isFinite(stars)) return '';
+
+  const rounded = Math.max(0, Math.min(5, Math.round(stars)));
+  return `${'★'.repeat(rounded)}${'☆'.repeat(5 - rounded)}`;
+}
+
+function recipeRatingHtml(recipe) {
+  if (recipe.rating === null || recipe.rating === undefined) return '';
+
+  return `
+    <div class="recipe-rating" aria-label="Average rating ${recipe.rating} out of 5">
+      <span class="recipe-rating__stars">${starText(recipe.rating)}</span>
+      <strong>${Number(recipe.rating).toFixed(1)}</strong>
+    </div>
+  `;
+}
+
+function recalculateRecipeRating(recipe) {
+  const ratings = (recipe.journal?.cookLog || [])
+    .flatMap(entry => entry.ratings || [])
+    .map(rating => Number(rating.stars))
+    .filter(Number.isFinite);
+
+  recipe.rating = ratings.length
+    ? Math.round((ratings.reduce((sum, stars) => sum + stars, 0) / ratings.length) * 10) / 10
+    : null;
+}
+
+async function saveCookRating(recipe, cookLogId, rater, stars) {
+  const response = await fetch(
+    `${API}/recipes/${encodeURIComponent(recipe.id)}/cook-log/${cookLogId}/ratings/${encodeURIComponent(rater)}`,
+    {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ stars })
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const savedRating = await response.json();
+  const entry = recipe.journal?.cookLog?.find(item => Number(item.id) === Number(cookLogId));
+
+  if (entry) {
+    entry.ratings ??= [];
+    const existing = entry.ratings.find(
+      rating => rating.rater.toLowerCase() === savedRating.rater.toLowerCase()
+    );
+
+    if (existing) {
+      existing.stars = savedRating.stars;
+      existing.rater = savedRating.rater;
+    } else {
+      entry.ratings.push(savedRating);
+    }
+  }
+
+  recalculateRecipeRating(recipe);
+}
+
 function render() {
   const filtered = filteredRecipes();
   recipeCount.textContent = `${filtered.length} recipe${filtered.length === 1 ? '' : 's'}`;
@@ -233,6 +297,12 @@ function render() {
     }
     node.querySelector('.badge').textContent = recipe.badge;
     node.querySelector('.recipe-meta').textContent = `${recipe.prep} prep • ${recipe.cook} cook • serves ${recipe.serves}`;
+    const ratingWrap = document.createElement('div');
+    ratingWrap.innerHTML = recipeRatingHtml(recipe);
+    const cardRating = ratingWrap.firstElementChild;
+    if (cardRating) {
+      node.querySelector('.recipe-meta').insertAdjacentElement('afterend', cardRating);
+    }
     node.querySelector('.recipe-title').textContent = recipe.title;
     img.style.cursor = 'pointer';
     img.addEventListener('click', () => openRecipe(recipe));
@@ -270,6 +340,21 @@ function openRecipe(recipe) {
           minute: '2-digit'
         });
 
+        const ratings = entry.ratings || [];
+        const ratingsHtml = ratings.length
+          ? `
+              <div class="cook-ratings">
+                ${ratings.map(rating => `
+                  <span class="cook-rating" title="${rating.stars} out of 5">
+                    <strong>${rating.rater}</strong>
+                    <span class="cook-rating__stars">${starText(rating.stars)}</span>
+                    <span>${rating.stars}</span>
+                  </span>
+                `).join('')}
+              </div>
+            `
+          : '<p class="cook-rating__empty">No ratings yet.</p>';
+
         return `
           <article class="cook-log__entry">
             <div class="cook-log__meta">
@@ -280,6 +365,28 @@ function openRecipe(recipe) {
             </div>
 
             <p>${entry.note.replace(/\s+/g, ' ').trim()}</p>
+
+            ${ratingsHtml}
+
+            <form class="cook-rating-form" data-cook-log-id="${entry.id}">
+              <label>
+                <span>Name</span>
+                <input name="rater" type="text" value="Randy" required>
+              </label>
+
+              <label>
+                <span>Stars</span>
+                <select name="stars" required>
+                  <option value="5">★★★★★ — 5</option>
+                  <option value="4">★★★★☆ — 4</option>
+                  <option value="3">★★★☆☆ — 3</option>
+                  <option value="2">★★☆☆☆ — 2</option>
+                  <option value="1">★☆☆☆☆ — 1</option>
+                </select>
+              </label>
+
+              <button class="secondary-btn" type="submit">Save rating</button>
+            </form>
           </article>
         `;
       }).join('')
@@ -294,6 +401,16 @@ function openRecipe(recipe) {
       `
     : '';
 
+  const overallRatingHtml = recipe.rating === null || recipe.rating === undefined
+    ? '<p class="recipe-rating-summary recipe-rating-summary--empty">Not rated yet</p>'
+    : `
+        <div class="recipe-rating-summary">
+          <span class="recipe-rating-summary__label">Overall rating</span>
+          <span class="recipe-rating-summary__stars">${starText(recipe.rating)}</span>
+          <strong>${Number(recipe.rating).toFixed(1)}</strong>
+        </div>
+      `;
+
   dialogContent.innerHTML = `
     <div class="recipe-detail">
       <p class="eyebrow">${recipe.badge}</p>
@@ -302,6 +419,8 @@ function openRecipe(recipe) {
       <p class="subtitle">
         ${recipe.prep} prep • ${recipe.cook} cook • serves ${recipe.serves}
       </p>
+
+      ${overallRatingHtml}
 
       <div class="detail-grid">
         <section class="detail-section">
@@ -372,12 +491,47 @@ function openRecipe(recipe) {
     cookLogNote.focus();
   });
 
-  lockRecipePageScroll();
-  recipeDialog.showModal();
+  dialogContent.querySelectorAll('.cook-rating-form').forEach(form => {
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+
+      const rater = form.elements.rater.value.trim();
+      const stars = Number(form.elements.stars.value);
+      const cookLogId = Number(form.dataset.cookLogId);
+
+      if (!rater || !Number.isInteger(stars) || stars < 1 || stars > 5) return;
+
+      const saveButton = form.querySelector('button[type="submit"]');
+      saveButton.disabled = true;
+      saveButton.textContent = 'Saving…';
+
+      try {
+        await saveCookRating(recipe, cookLogId, rater, stars);
+        render();
+        openRecipe(recipe);
+
+        const reopenedEntries = dialogContent.querySelector('.cook-log__entries');
+        const reopenedToggle = dialogContent.querySelector('.cook-log__toggle');
+        reopenedEntries?.classList.remove('cook-log__entries--collapsed');
+        reopenedToggle?.setAttribute('aria-expanded', 'true');
+        if (reopenedToggle) reopenedToggle.textContent = `▼ Cook Log (${cookLog.length})`;
+      } catch (error) {
+        console.error(error);
+        alert('The rating could not be saved.');
+        saveButton.disabled = false;
+        saveButton.textContent = 'Save rating';
+      }
+    });
+  });
+
+  if (!recipeDialog.open) {
+    lockRecipePageScroll();
+    recipeDialog.showModal();
+  }
 
   requestAnimationFrame(() => {
-  dialogContent.scrollTop = 0;
-});
+    dialogContent.scrollTop = 0;
+  });
 }
   
 function openCooking(recipe) {

@@ -36,6 +36,19 @@ jobs:
       - name: Build
         run: dotnet build "${{ env.PROJECT_PATH }}" --configuration Release --no-restore
 
+      - name: Install EF Core tools
+        run: dotnet tool install --global dotnet-ef --version 10.*
+
+      - name: Apply Kitchen database migrations
+        env:
+          KITCHEN_CONNECTION_STRING: ${{ secrets.KITCHEN_EXCURSION_CONNECTION_STRING }}
+        run: |
+          dotnet ef database update `
+            --project "${{ env.PROJECT_PATH }}" `
+            --startup-project "${{ env.PROJECT_PATH }}" `
+            --context KitchenExcursionContext `
+            --connection "$env:KITCHEN_CONNECTION_STRING"
+
       - name: Publish
         run: dotnet publish "${{ env.PROJECT_PATH }}" --configuration Release --no-build --output "${{ env.PUBLISH_PATH }}"
 
@@ -46,7 +59,7 @@ jobs:
 
           $buildInfo = @{
             app = "Kitchen Excursion"
-            version = "0.3.1"
+            version = "0.5.0"
             commit = $commit
             builtAt = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
           } | ConvertTo-Json
