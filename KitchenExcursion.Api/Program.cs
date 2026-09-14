@@ -1,7 +1,7 @@
 using KitchenExcursion.Api.Data;
 using KitchenExcursion.Api.Endpoints;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,6 +57,7 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseCors();
 
+app.MapAuthEndpoints();
 app.MapRecipeEndpoints();
 
 app.MapGet("/api/version", async (IWebHostEnvironment environment) =>
