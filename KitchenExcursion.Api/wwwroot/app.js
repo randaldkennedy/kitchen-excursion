@@ -18,6 +18,119 @@ const closeRecipeDialog = document.querySelector('#closeRecipeDialog');
 
 const API = '/api';
 
+const kitchenAccountButton = document.getElementById('kitchenAccountButton');
+const kitchenAccountMenu = document.getElementById('kitchenAccountMenu');
+const kitchenAccountInitial = document.getElementById('kitchenAccountInitial');
+const kitchenAccountName = document.getElementById('kitchenAccountName');
+const kitchenAccountMenuName = document.getElementById('kitchenAccountMenuName');
+const kitchenAccountEmail = document.getElementById('kitchenAccountEmail');
+const kitchenAccountAction = document.getElementById('kitchenAccountAction');
+
+let kitchenUserIsAuthenticated = false;
+
+function closeKitchenAccountMenu() {
+  if (!kitchenAccountMenu) return;
+  kitchenAccountMenu.hidden = true;
+  kitchenAccountButton?.setAttribute('aria-expanded', 'false');
+}
+
+function setKitchenAnonymousAccount() {
+  kitchenUserIsAuthenticated = false;
+
+  if (kitchenAccountInitial) kitchenAccountInitial.textContent = '→';
+  if (kitchenAccountName) kitchenAccountName.textContent = 'Sign in';
+  if (kitchenAccountMenuName) kitchenAccountMenuName.textContent = 'Kitchen Excursion';
+  if (kitchenAccountEmail) kitchenAccountEmail.textContent = 'Sign in to save your activity.';
+  if (kitchenAccountAction) {
+    kitchenAccountAction.href = '/api/auth/login';
+    kitchenAccountAction.textContent = 'Sign in';
+  }
+
+  kitchenAccountButton?.setAttribute('aria-label', 'Sign in to Kitchen Excursion');
+}
+
+function setKitchenAuthenticatedAccount(user) {
+  kitchenUserIsAuthenticated = true;
+
+  const displayName = user.givenName || user.name || user.email || 'Account';
+  const initial = displayName.trim().charAt(0).toUpperCase() || '?';
+
+  if (kitchenAccountInitial) kitchenAccountInitial.textContent = initial;
+  if (kitchenAccountName) kitchenAccountName.textContent = displayName;
+  if (kitchenAccountMenuName) kitchenAccountMenuName.textContent = displayName;
+  if (kitchenAccountEmail) kitchenAccountEmail.textContent = user.email || '';
+  if (kitchenAccountAction) {
+    kitchenAccountAction.href = '/api/auth/logout';
+    kitchenAccountAction.textContent = 'Sign out';
+  }
+
+  kitchenAccountButton?.setAttribute('aria-label', 'Open account menu');
+}
+
+async function loadKitchenAuthenticatedUser() {
+  try {
+    const statusResponse = await fetch('/api/auth/status');
+
+    if (!statusResponse.ok) {
+      setKitchenAnonymousAccount();
+      return;
+    }
+
+    const status = await statusResponse.json();
+
+    if (!status.isAuthenticated) {
+      setKitchenAnonymousAccount();
+      return;
+    }
+
+    const userResponse = await fetch('/api/auth/me');
+
+    if (!userResponse.ok) {
+      setKitchenAnonymousAccount();
+      return;
+    }
+
+    const user = await userResponse.json();
+    setKitchenAuthenticatedAccount(user);
+  } catch (error) {
+    console.error('Unable to load Kitchen authenticated user.', error);
+    setKitchenAnonymousAccount();
+  }
+}
+
+kitchenAccountButton?.addEventListener('click', event => {
+  event.stopPropagation();
+
+  if (!kitchenUserIsAuthenticated) {
+    window.location.assign('/api/auth/login');
+    return;
+  }
+
+  if (!kitchenAccountMenu) return;
+
+  const isOpen = !kitchenAccountMenu.hidden;
+  kitchenAccountMenu.hidden = isOpen;
+  kitchenAccountButton.setAttribute('aria-expanded', String(!isOpen));
+});
+
+document.addEventListener('click', event => {
+  if (
+    kitchenAccountMenu &&
+    !kitchenAccountMenu.hidden &&
+    !kitchenAccountMenu.contains(event.target) &&
+    !kitchenAccountButton?.contains(event.target)
+  ) {
+    closeKitchenAccountMenu();
+  }
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    closeKitchenAccountMenu();
+  }
+});
+
+
 let activeCookLogRecipe = null;
 let recipePageScrollY = 0;
 
@@ -639,5 +752,6 @@ cookLogForm.addEventListener('submit', async event => {
 
   
 
+loadKitchenAuthenticatedUser();
 loadRecipes();
 updateFilterToggleLabel();

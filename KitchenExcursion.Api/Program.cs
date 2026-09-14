@@ -1,8 +1,36 @@
 using KitchenExcursion.Api.Data;
 using KitchenExcursion.Api.Endpoints;
+using KitchenExcursion.Api.Services.Authentication;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web;
 
 var builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services
+        .AddAuthentication(DevelopmentAuthenticationHandler.SchemeName)
+        .AddScheme<AuthenticationSchemeOptions, DevelopmentAuthenticationHandler>(
+            DevelopmentAuthenticationHandler.SchemeName,
+            _ => { });
+}
+else
+{
+    builder.Services
+        .AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+        .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+
+    builder.Services.Configure<OpenIdConnectOptions>(
+        OpenIdConnectDefaults.AuthenticationScheme,
+        options =>
+        {
+            options.SignedOutRedirectUri = "https://laultimaexcursion.com";
+        });
+}
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddCors(options =>
 {
@@ -35,10 +63,14 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseCors();
 
+app.MapAuthEndpoints();
 app.MapRecipeEndpoints();
 
 app.MapGet("/api/version", async (IWebHostEnvironment environment) =>

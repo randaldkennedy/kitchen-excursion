@@ -1,13 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
- <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-SVM7VE5P7S"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-SVM7VE5P7S');
   </script>
 
@@ -25,7 +24,36 @@
         <span class="brand__kicker">La Última Excursión</span>
         <span class="brand__title">Kitchen</span>
       </a>
-      <p class="brand__tagline">The journey continues… in the kitchen.</p>
+
+      <div class="brand-header__right">
+        <p class="brand__tagline">The journey continues… in the kitchen.</p>
+
+        <div class="kitchen-account">
+          <button
+            id="kitchenAccountButton"
+            class="kitchen-account__button"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Open account menu"
+          >
+            <span id="kitchenAccountInitial" class="kitchen-account__avatar">?</span>
+            <span id="kitchenAccountName" class="kitchen-account__name">Account</span>
+            <span class="kitchen-account__caret" aria-hidden="true">▾</span>
+          </button>
+
+          <div id="kitchenAccountMenu" class="kitchen-account__menu" hidden>
+            <div class="kitchen-account__identity">
+              <strong id="kitchenAccountMenuName">Account</strong>
+              <span id="kitchenAccountEmail"></span>
+            </div>
+
+            <a id="kitchenAccountAction" class="kitchen-account__logout" href="/api/auth/login">
+              Sign in
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -45,25 +73,25 @@
         <span>Search recipes</span>
         <input id="searchInput" type="search" placeholder="Try pork, slow cooker, mashed potatoes…">
       </label>
-      <div class="filter-panel">
-  <button
-    id="filterToggle"
-    class="secondary-btn filter-toggle"
-    type="button"
-    aria-expanded="false"
-    aria-controls="filters"
-  >
-    ▶ Filters
-  </button>
 
-  <div
-    id="filters"
-    class="filters filters--collapsed"
-    role="group"
-    aria-label="Filter recipes"
-  ></div>
-</div>
-  </div>
+      <div class="filter-panel">
+        <button
+          id="filterToggle"
+          class="secondary-btn filter-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="filters"
+        >
+          ▶ Filters
+        </button>
+
+        <div
+          id="filters"
+          class="filters filters--collapsed"
+          role="group"
+          aria-label="Filter recipes"
+        ></div>
+      </div>
     </section>
 
     <section class="section-heading">
@@ -78,38 +106,36 @@
   </main>
 
   <footer class="site-footer">
-  <div>
-    <p><strong>Kitchen Excursion</strong> · A La Última Excursión Project</p>
-    <p>Family favorites today. Road-trip and camp meals tomorrow.</p>
-  </div>
+    <div>
+      <p><strong>Kitchen Excursion</strong> · A La Última Excursión Project</p>
+      <p>Family favorites today. Road-trip and camp meals tomorrow.</p>
+    </div>
 
-  <a href="https://laultimaexcursion.com" class="footer-link">
-    ← Back to La Última Excursión
-  </a>
+    <a href="https://laultimaexcursion.com" class="footer-link">
+      ← Back to La Última Excursión
+    </a>
 
-  <a href="#top" class="back-to-top">
-    ↑ Back to top
-  </a>
-</footer>
+    <a href="#top" class="back-to-top">
+      ↑ Back to top
+    </a>
+  </footer>
 
-<dialog id="recipeDialog" class="recipe-dialog">
+  <dialog id="recipeDialog" class="recipe-dialog">
+    <button
+      id="closeRecipeDialog"
+      class="dialog-close"
+      type="button"
+      aria-label="Close recipe"
+    >
+      ✕
+    </button>
 
-<button
-  id="closeRecipeDialog"
-  class="dialog-close"
-  type="button"
-  aria-label="Close recipe"
->
-  ✕
-</button>
+    <article id="dialogContent"></article>
 
-  <article id="dialogContent"></article>
-
-  <form method="dialog" class="dialog-actions">
-    <button class="secondary-btn" value="close">Close</button>
-  </form>
-
-</dialog>
+    <form method="dialog" class="dialog-actions">
+      <button class="secondary-btn" value="close">Close</button>
+    </form>
+  </dialog>
 
   <dialog id="cookingDialog" class="cooking-dialog">
     <div class="cooking-shell">
@@ -124,63 +150,62 @@
     </div>
   </dialog>
 
- <dialog id="shoppingDialog" class="recipe-dialog shopping-dialog">
- <button
-    class="dialog-close"
-    type="button"
-    onclick="shoppingDialog.close()"
-    aria-label="Close"
-  >X
-  </button>
+  <dialog id="shoppingDialog" class="recipe-dialog shopping-dialog">
+    <button
+      class="dialog-close"
+      type="button"
+      onclick="shoppingDialog.close()"
+      aria-label="Close"
+    >
+      X
+    </button>
 
-  <article id="dialogContent"></article>
+    <form method="dialog" class="dialog-actions">
+      <button class="secondary-btn" value="close">Close</button>
+    </form>
 
-  <form method="dialog" class="dialog-actions">
-    <button class="secondary-btn" value="close">Close</button>
-  </form>
+    <article id="shoppingContent"></article>
+  </dialog>
 
-  <article id="shoppingContent"></article>
-</dialog>
+  <dialog id="cookLogDialog" class="recipe-dialog cook-log-dialog">
+    <button
+      class="dialog-close"
+      type="button"
+      onclick="cookLogDialog.close()"
+      aria-label="Close"
+      title="Close"
+    >
+      ✕
+    </button>
 
-<dialog id="cookLogDialog" class="recipe-dialog cook-log-dialog">
-  <button
-    class="dialog-close"
-    type="button"
-    onclick="cookLogDialog.close()"
-    aria-label="Close"
-    title="Close"
-  >
-    ✕
-  </button>
+    <form id="cookLogForm">
+      <p class="eyebrow">Cook Log</p>
+      <h2>Add Entry</h2>
 
-  <form id="cookLogForm">
-    <p class="eyebrow">Cook Log</p>
-    <h2>Add Entry</h2>
-
-    <label class="form-field">
+      <label class="form-field">
         <textarea
-        id="cookLogNote"
-        rows="6"
-        required
-        placeholder="What worked? What would you change next time?"
-      ></textarea>
-    </label>
+          id="cookLogNote"
+          rows="6"
+          required
+          placeholder="What worked? What would you change next time?"
+        ></textarea>
+      </label>
 
-    <div class="dialog-actions">
-      <button
-        class="secondary-btn"
-        type="button"
-        onclick="cookLogDialog.close()"
-      >
-        Cancel
-      </button>
+      <div class="dialog-actions">
+        <button
+          class="secondary-btn"
+          type="button"
+          onclick="cookLogDialog.close()"
+        >
+          Cancel
+        </button>
 
-      <button class="primary-btn" type="submit">
-        Save Entry
-      </button>
-    </div>
-  </form>
-</dialog>
+        <button class="primary-btn" type="submit">
+          Save Entry
+        </button>
+      </div>
+    </form>
+  </dialog>
 
   <template id="recipeCardTemplate">
     <article class="recipe-card">
