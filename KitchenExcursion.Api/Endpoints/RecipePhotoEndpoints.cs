@@ -44,16 +44,17 @@ public static class RecipePhotoEndpoints
         IAttachmentStorageService storage,
         CancellationToken cancellationToken)
     {
-        var recipeExists = await kitchenDb.Recipes
+        var recipe = await kitchenDb.Recipes
             .AsNoTracking()
-            .AnyAsync(r => r.Slug == id, cancellationToken);
+            .SingleOrDefaultAsync(r => r.Slug == id, cancellationToken);
 
-        if (!recipeExists)
+        if (recipe is null)
             return Results.NotFound();
 
         var attachment = await platformDb.Attachments
             .AsNoTracking()
             .Where(a =>
+                a.HouseholdId == recipe.HouseholdId &&
                 a.App == AppName &&
                 a.Category == Category &&
                 a.EntityType == EntityType &&
@@ -115,22 +116,21 @@ public static class RecipePhotoEndpoints
             platformDb,
             cancellationToken);
 
-        if (currentUser is null || currentUser.DefaultHouseholdId is null)
+        if (currentUser is null)
             return Results.Unauthorized();
 
-        var householdId = currentUser.DefaultHouseholdId.Value;
-
-        var belongsToHousehold = await platformDb.HouseholdMembers
+        var belongsToRecipeHousehold = await platformDb.HouseholdMembers
             .AnyAsync(
-                hm => hm.HouseholdId == householdId && hm.UserId == currentUser.Id,
+                hm => hm.HouseholdId == recipe.HouseholdId &&
+                      hm.UserId == currentUser.Id,
                 cancellationToken);
 
-        if (!belongsToHousehold)
+        if (!belongsToRecipeHousehold)
             return Results.Forbid();
 
         var previous = await platformDb.Attachments
             .Where(a =>
-                a.HouseholdId == householdId &&
+                a.HouseholdId == recipe.HouseholdId &&
                 a.App == AppName &&
                 a.Category == Category &&
                 a.EntityType == EntityType &&
@@ -143,7 +143,7 @@ public static class RecipePhotoEndpoints
         await using var content = file.OpenReadStream();
 
         var stored = await storage.UploadAsync(
-            householdId,
+            recipe.HouseholdId,
             AppName,
             Category,
             file.FileName,
@@ -153,7 +153,7 @@ public static class RecipePhotoEndpoints
 
         var attachment = new Attachment
         {
-            HouseholdId = householdId,
+            HouseholdId = recipe.HouseholdId,
             UploadedByUserId = currentUser.Id,
             App = AppName,
             Category = Category,

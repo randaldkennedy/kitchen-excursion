@@ -222,8 +222,8 @@
   <form id="recipeEditorForm" class="recipe-editor-form">
     <header class="recipe-editor-header">
       <p class="eyebrow">Kitchen Excursion</p>
-      <h2>Add Recipe</h2>
-      <p class="recipe-editor-intro">Enter the recipe here and save it straight to Kitchen. Ingredients, instructions, and shopping items are one item per line.</p>
+      <h2 id="recipeEditorTitle">Add Recipe</h2>
+      <p id="recipeEditorIntro" class="recipe-editor-intro">Enter the recipe here and save it straight to Kitchen. Ingredients and instructions are one item per line.</p>
 
       <div class="recipe-editor-tabs" role="tablist" aria-label="Recipe sections">
         <button class="recipe-editor-tab active" type="button" role="tab" aria-selected="true" aria-controls="recipeTabDetails" data-recipe-tab="details">Details</button>
@@ -338,6 +338,12 @@
             <span>Summary</span>
             <textarea name="summary" rows="3" placeholder="A crisp, savory-sweet Monte Cristo with ham, turkey, Swiss, mild Dijon, powdered sugar, and raspberry preserves."></textarea>
           </label>
+
+          <label id="recipeChangeNoteField" class="form-field form-field--wide" hidden>
+            <span>What changed?</span>
+            <input name="changeNote" type="text" maxlength="500" placeholder="More mushrooms, less salt, clearer instructions...">
+            <small>Optional. This note appears in the recipe revision history.</small>
+          </label>
         </div>
 
         <fieldset class="recipe-editor-status">
@@ -350,15 +356,11 @@
       </section>
 
       <section id="recipeTabIngredients" class="recipe-editor-panel" role="tabpanel" data-recipe-panel="ingredients" hidden>
-        <div class="form-grid form-grid--two recipe-editor-lists">
+        <div class="form-grid recipe-editor-lists">
           <label class="form-field">
             <span>Ingredients</span>
             <textarea name="ingredients" rows="16" placeholder="4 slices sturdy white bread&#10;4 slices deli ham&#10;4 slices deli turkey&#10;4 slices Swiss cheese"></textarea>
-          </label>
-
-          <label class="form-field">
-            <span>Shopping list</span>
-            <textarea name="shopping" rows="16" placeholder="Sturdy white bread&#10;Deli ham&#10;Deli turkey&#10;Swiss cheese&#10;Mild Dijon&#10;Eggs&#10;Whole milk&#10;Powdered sugar&#10;Raspberry preserves"></textarea>
+            <small>Kitchen builds the shopping list from these ingredients automatically.</small>
           </label>
         </div>
       </section>
