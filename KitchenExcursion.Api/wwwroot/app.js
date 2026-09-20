@@ -15,121 +15,25 @@ const filterToggle = document.querySelector('#filterToggle');
 const cookLogForm = document.querySelector('#cookLogForm');
 const cookLogNote = document.querySelector('#cookLogNote');
 const closeRecipeDialog = document.querySelector('#closeRecipeDialog');
+const addRecipeButton = document.querySelector('#addRecipeButton');
+const recipeEditorDialog = document.querySelector('#recipeEditorDialog');
+const recipeEditorForm = document.querySelector('#recipeEditorForm');
+const recipeTitle = document.querySelector('#recipeTitle');
+const recipeSlug = document.querySelector('#recipeSlug');
+const recipeEditorStatus = document.querySelector('#recipeEditorStatus');
+const closeRecipeEditor = document.querySelector('#closeRecipeEditor');
+const cancelRecipeEditor = document.querySelector('#cancelRecipeEditor');
+const saveRecipeButton = document.querySelector('#saveRecipeButton');
+const accountButton = document.querySelector('#accountButton');
+const accountMenu = document.querySelector('#accountMenu');
+const accountName = document.querySelector('#accountName');
+const accountInitial = document.querySelector('#accountInitial');
+const accountMenuName = document.querySelector('#accountMenuName');
+const accountEmail = document.querySelector('#accountEmail');
+const recipeEditorTabs = [...document.querySelectorAll('[data-recipe-tab]')];
+const recipeEditorPanels = [...document.querySelectorAll('[data-recipe-panel]')];
 
 const API = '/api';
-
-const kitchenAccountButton = document.getElementById('kitchenAccountButton');
-const kitchenAccountMenu = document.getElementById('kitchenAccountMenu');
-const kitchenAccountInitial = document.getElementById('kitchenAccountInitial');
-const kitchenAccountName = document.getElementById('kitchenAccountName');
-const kitchenAccountMenuName = document.getElementById('kitchenAccountMenuName');
-const kitchenAccountEmail = document.getElementById('kitchenAccountEmail');
-const kitchenAccountAction = document.getElementById('kitchenAccountAction');
-
-let kitchenUserIsAuthenticated = false;
-
-function closeKitchenAccountMenu() {
-  if (!kitchenAccountMenu) return;
-  kitchenAccountMenu.hidden = true;
-  kitchenAccountButton?.setAttribute('aria-expanded', 'false');
-}
-
-function setKitchenAnonymousAccount() {
-  kitchenUserIsAuthenticated = false;
-
-  if (kitchenAccountInitial) kitchenAccountInitial.textContent = '→';
-  if (kitchenAccountName) kitchenAccountName.textContent = 'Sign in';
-  if (kitchenAccountMenuName) kitchenAccountMenuName.textContent = 'Kitchen Excursion';
-  if (kitchenAccountEmail) kitchenAccountEmail.textContent = 'Sign in to save your activity.';
-  if (kitchenAccountAction) {
-    kitchenAccountAction.href = '/api/auth/login';
-    kitchenAccountAction.textContent = 'Sign in';
-  }
-
-  kitchenAccountButton?.setAttribute('aria-label', 'Sign in to Kitchen Excursion');
-}
-
-function setKitchenAuthenticatedAccount(user) {
-  kitchenUserIsAuthenticated = true;
-
-  const displayName = user.givenName || user.name || user.email || 'Account';
-  const initial = displayName.trim().charAt(0).toUpperCase() || '?';
-
-  if (kitchenAccountInitial) kitchenAccountInitial.textContent = initial;
-  if (kitchenAccountName) kitchenAccountName.textContent = displayName;
-  if (kitchenAccountMenuName) kitchenAccountMenuName.textContent = displayName;
-  if (kitchenAccountEmail) kitchenAccountEmail.textContent = user.email || '';
-  if (kitchenAccountAction) {
-    kitchenAccountAction.href = '/api/auth/logout';
-    kitchenAccountAction.textContent = 'Sign out';
-  }
-
-  kitchenAccountButton?.setAttribute('aria-label', 'Open account menu');
-}
-
-async function loadKitchenAuthenticatedUser() {
-  try {
-    const statusResponse = await fetch('/api/auth/status');
-
-    if (!statusResponse.ok) {
-      setKitchenAnonymousAccount();
-      return;
-    }
-
-    const status = await statusResponse.json();
-
-    if (!status.isAuthenticated) {
-      setKitchenAnonymousAccount();
-      return;
-    }
-
-    const userResponse = await fetch('/api/auth/me');
-
-    if (!userResponse.ok) {
-      setKitchenAnonymousAccount();
-      return;
-    }
-
-    const user = await userResponse.json();
-    setKitchenAuthenticatedAccount(user);
-  } catch (error) {
-    console.error('Unable to load Kitchen authenticated user.', error);
-    setKitchenAnonymousAccount();
-  }
-}
-
-kitchenAccountButton?.addEventListener('click', event => {
-  event.stopPropagation();
-
-  if (!kitchenUserIsAuthenticated) {
-    window.location.assign('/api/auth/login');
-    return;
-  }
-
-  if (!kitchenAccountMenu) return;
-
-  const isOpen = !kitchenAccountMenu.hidden;
-  kitchenAccountMenu.hidden = isOpen;
-  kitchenAccountButton.setAttribute('aria-expanded', String(!isOpen));
-});
-
-document.addEventListener('click', event => {
-  if (
-    kitchenAccountMenu &&
-    !kitchenAccountMenu.hidden &&
-    !kitchenAccountMenu.contains(event.target) &&
-    !kitchenAccountButton?.contains(event.target)
-  ) {
-    closeKitchenAccountMenu();
-  }
-});
-
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape') {
-    closeKitchenAccountMenu();
-  }
-});
-
 
 let activeCookLogRecipe = null;
 let recipePageScrollY = 0;
@@ -146,6 +50,8 @@ filterToggle.addEventListener('click', () => {
 
 
 let recipes = [];
+let kitchenUserIsAuthenticated = false;
+let kitchenCurrentUser = null;
 const activeFilters = {
   meal: 'all',
   protein: 'all',
@@ -184,6 +90,77 @@ const filterLabels = {
   maybe: 'Maybe',
   quick: 'Quick'
 };
+
+function showAnonymousAccountState() {
+  kitchenUserIsAuthenticated = false;
+  kitchenCurrentUser = null;
+
+  if (accountName) accountName.textContent = 'Sign in';
+  if (accountInitial) accountInitial.textContent = '→';
+  if (accountMenu) accountMenu.hidden = true;
+  accountButton?.setAttribute('aria-expanded', 'false');
+  accountButton?.setAttribute('aria-label', 'Sign in to Kitchen Excursion');
+
+  if (addRecipeButton) addRecipeButton.hidden = true;
+}
+
+function showAuthenticatedAccountState(user) {
+  kitchenUserIsAuthenticated = true;
+  kitchenCurrentUser = user;
+
+  const displayName = user.givenName || user.email || 'Account';
+  const initial = user.givenName?.trim()?.charAt(0)?.toUpperCase() || '?';
+
+  if (accountName) accountName.textContent = displayName;
+  if (accountInitial) accountInitial.textContent = initial;
+  if (accountMenuName) accountMenuName.textContent = displayName;
+  if (accountEmail) accountEmail.textContent = user.email || '';
+  accountButton?.setAttribute('aria-label', 'Open account menu');
+
+  if (addRecipeButton) addRecipeButton.hidden = false;
+}
+
+async function loadAuthenticatedUser() {
+  try {
+    const statusResponse = await fetch(`${API}/auth/status`);
+
+    if (!statusResponse.ok) {
+      showAnonymousAccountState();
+      return false;
+    }
+
+    const status = await statusResponse.json();
+    if (!status.isAuthenticated) {
+      showAnonymousAccountState();
+      return false;
+    }
+
+    const response = await fetch(`${API}/auth/me`);
+    if (!response.ok) {
+      showAnonymousAccountState();
+      return false;
+    }
+
+    const user = await response.json();
+    if (!user.isAuthenticated) {
+      showAnonymousAccountState();
+      return false;
+    }
+
+    showAuthenticatedAccountState(user);
+    return true;
+  } catch (error) {
+    console.error('Unable to load authenticated user.', error);
+    showAnonymousAccountState();
+    return false;
+  }
+}
+
+function requireKitchenSignIn() {
+  if (kitchenUserIsAuthenticated) return true;
+  window.location.assign(`${API}/auth/login`);
+  return false;
+}
 
 async function loadRecipes() {
   try {
@@ -355,6 +332,13 @@ function recalculateRecipeRating(recipe) {
     : null;
 }
 
+function handleUnauthorizedResponse(response) {
+  if (response.status !== 401) return false;
+  showAnonymousAccountState();
+  window.location.assign(`${API}/auth/login`);
+  return true;
+}
+
 async function saveCookRating(recipe, cookLogId, rater, stars) {
   const response = await fetch(
     `${API}/recipes/${encodeURIComponent(recipe.id)}/cook-log/${cookLogId}/ratings/${encodeURIComponent(rater)}`,
@@ -364,6 +348,8 @@ async function saveCookRating(recipe, cookLogId, rater, stars) {
       body: JSON.stringify({ stars })
     }
   );
+
+  if (handleUnauthorizedResponse(response)) return;
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
@@ -387,6 +373,173 @@ async function saveCookRating(recipe, cookLogId, rater, stars) {
   }
 
   recalculateRecipeRating(recipe);
+}
+
+function slugifyRecipeTitle(value) {
+  return value
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 160);
+}
+
+function linesToArray(value) {
+  return value
+    .split(/\r?\n/)
+    .map(item => item.trim())
+    .filter(Boolean);
+}
+
+function commaListToArray(value) {
+  return value
+    .split(',')
+    .map(item => item.trim())
+    .filter(Boolean);
+}
+
+
+function setRecipeEditorTab(tabName, focusTab = false) {
+  recipeEditorTabs.forEach(tab => {
+    const isActive = tab.dataset.recipeTab === tabName;
+    tab.classList.toggle('active', isActive);
+    tab.setAttribute('aria-selected', String(isActive));
+
+    if (isActive && focusTab) {
+      tab.focus();
+    }
+  });
+
+  recipeEditorPanels.forEach(panel => {
+    const isActive = panel.dataset.recipePanel === tabName;
+    panel.classList.toggle('active', isActive);
+    panel.hidden = !isActive;
+  });
+
+  const content = recipeEditorDialog.querySelector('.recipe-editor-content');
+  if (content) content.scrollTop = 0;
+}
+
+function openRecipeEditor() {
+  if (!requireKitchenSignIn()) return;
+
+  recipeEditorForm.reset();
+  recipeEditorForm.elements.rater.value = 'Randy';
+  recipeEditorStatus.textContent = '';
+  recipeSlug.dataset.userEdited = 'false';
+  setRecipeEditorTab('details');
+  recipeEditorDialog.showModal();
+  recipeTitle.focus();
+}
+
+async function saveNewRecipe(event) {
+  event.preventDefault();
+
+  const form = new FormData(recipeEditorForm);
+  const id = String(form.get('id') || '').trim();
+  const title = String(form.get('title') || '').trim();
+
+  if (!id || !title) {
+    setRecipeEditorTab('details');
+    recipeEditorStatus.textContent = 'Title and recipe ID are required.';
+    (title ? recipeSlug : recipeTitle).focus();
+    return;
+  }
+
+  const payload = {
+    id,
+    title,
+    categories: commaListToArray(String(form.get('categories') || '')),
+    meal: String(form.get('meal') || '') || null,
+    protein: String(form.get('protein') || '') || null,
+    method: String(form.get('method') || '') || null,
+    status: form.getAll('status'),
+    badge: String(form.get('badge') || '') || null,
+    image: String(form.get('image') || '') || null,
+    imageAlt: String(form.get('imageAlt') || '') || null,
+    summary: String(form.get('summary') || '') || null,
+    prep: String(form.get('prep') || '') || null,
+    cook: String(form.get('cook') || '') || null,
+    serves: String(form.get('serves') || '') || null,
+    ingredients: linesToArray(String(form.get('ingredients') || '')),
+    steps: linesToArray(String(form.get('steps') || '')),
+    journal: {
+      general: String(form.get('generalNotes') || '') || null
+    },
+    shopping: linesToArray(String(form.get('shopping') || ''))
+  };
+
+  saveRecipeButton.disabled = true;
+  saveRecipeButton.textContent = 'Saving…';
+  recipeEditorStatus.textContent = '';
+
+  try {
+    const createResponse = await fetch(`${API}/recipes`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (handleUnauthorizedResponse(createResponse)) return;
+
+    if (!createResponse.ok) {
+      let message = `HTTP ${createResponse.status}`;
+      try {
+        const body = await createResponse.json();
+        message = body.message || message;
+      } catch {}
+      throw new Error(message);
+    }
+
+    const created = await createResponse.json();
+    const cookLogNote = String(form.get('cookLogNote') || '').trim();
+    const rater = String(form.get('rater') || '').trim();
+    const starsValue = String(form.get('stars') || '').trim();
+
+    if (cookLogNote) {
+      const ratings = starsValue && rater
+        ? [{ rater, stars: Number(starsValue) }]
+        : [];
+
+      const cookResponse = await fetch(
+        `${API}/recipes/${encodeURIComponent(created.id)}/cook-log`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            author: rater || 'Randy',
+            note: cookLogNote,
+            ratings
+          })
+        }
+      );
+
+      if (handleUnauthorizedResponse(cookResponse)) return;
+
+      if (!cookResponse.ok) {
+        throw new Error(`Recipe saved, but the first cook log failed (HTTP ${cookResponse.status}).`);
+      }
+    }
+
+    const refreshedResponse = await fetch(`${API}/recipes/${encodeURIComponent(created.id)}`);
+    if (!refreshedResponse.ok) throw new Error(`Recipe saved, but reload failed (HTTP ${refreshedResponse.status}).`);
+    const refreshed = await refreshedResponse.json();
+
+    recipes.push(refreshed);
+    buildFilters();
+    render();
+
+    recipeEditorDialog.close();
+    openRecipe(refreshed);
+  } catch (error) {
+    console.error(error);
+    recipeEditorStatus.textContent = error.message || 'The recipe could not be saved.';
+  } finally {
+    saveRecipeButton.disabled = false;
+    saveRecipeButton.textContent = 'Save Recipe';
+  }
 }
 
 function render() {
@@ -481,6 +634,7 @@ function openRecipe(recipe) {
 
             ${ratingsHtml}
 
+            ${kitchenUserIsAuthenticated ? `
             <form class="cook-rating-form" data-cook-log-id="${entry.id}">
               <label>
                 <span>Name</span>
@@ -500,6 +654,7 @@ function openRecipe(recipe) {
 
               <button class="secondary-btn" type="submit">Save rating</button>
             </form>
+            ` : ''}
           </article>
         `;
       }).join('')
@@ -563,12 +718,14 @@ function openRecipe(recipe) {
             ▶ Cook Log (${cookLog.length})
           </button>
 
+          ${kitchenUserIsAuthenticated ? `
           <button
             class="secondary-btn cook-log__add"
             type="button"
           >
             + Add Entry
           </button>
+          ` : ''}
         </div>
 
         <div class="cook-log__entries cook-log__entries--collapsed">
@@ -710,6 +867,71 @@ closeRecipeDialog.addEventListener('click', () => {
   recipeDialog.close();
 });
 
+accountButton?.addEventListener('click', event => {
+  event.stopPropagation();
+
+  if (!kitchenUserIsAuthenticated) {
+    window.location.assign(`${API}/auth/login`);
+    return;
+  }
+
+  if (!accountMenu) return;
+
+  const isOpen = !accountMenu.hidden;
+  accountMenu.hidden = isOpen;
+  accountButton.setAttribute('aria-expanded', String(!isOpen));
+});
+
+document.addEventListener('click', event => {
+  if (
+    accountMenu &&
+    !accountMenu.hidden &&
+    !accountMenu.contains(event.target) &&
+    !accountButton?.contains(event.target)
+  ) {
+    accountMenu.hidden = true;
+    accountButton?.setAttribute('aria-expanded', 'false');
+  }
+});
+
+addRecipeButton?.addEventListener('click', openRecipeEditor);
+
+
+recipeEditorTabs.forEach((tab, index) => {
+  tab.addEventListener('click', () => {
+    setRecipeEditorTab(tab.dataset.recipeTab);
+  });
+
+  tab.addEventListener('keydown', event => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+
+    event.preventDefault();
+
+    let nextIndex = index;
+    if (event.key === 'ArrowLeft') nextIndex = (index - 1 + recipeEditorTabs.length) % recipeEditorTabs.length;
+    if (event.key === 'ArrowRight') nextIndex = (index + 1) % recipeEditorTabs.length;
+    if (event.key === 'Home') nextIndex = 0;
+    if (event.key === 'End') nextIndex = recipeEditorTabs.length - 1;
+
+    setRecipeEditorTab(recipeEditorTabs[nextIndex].dataset.recipeTab, true);
+  });
+});
+
+
+closeRecipeEditor?.addEventListener('click', () => recipeEditorDialog.close());
+cancelRecipeEditor?.addEventListener('click', () => recipeEditorDialog.close());
+
+recipeTitle?.addEventListener('input', () => {
+  if (recipeSlug.dataset.userEdited === 'true') return;
+  recipeSlug.value = slugifyRecipeTitle(recipeTitle.value);
+});
+
+recipeSlug?.addEventListener('input', () => {
+  recipeSlug.dataset.userEdited = 'true';
+});
+
+recipeEditorForm?.addEventListener('submit', saveNewRecipe);
+
 cookLogForm.addEventListener('submit', async event => {
   event.preventDefault();
 
@@ -732,6 +954,8 @@ cookLogForm.addEventListener('submit', async event => {
       }
     );
 
+    if (handleUnauthorizedResponse(response)) return;
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
@@ -752,6 +976,7 @@ cookLogForm.addEventListener('submit', async event => {
 
   
 
-loadKitchenAuthenticatedUser();
-loadRecipes();
-updateFilterToggleLabel();
+Promise.all([
+  loadAuthenticatedUser(),
+  loadRecipes()
+]).then(() => updateFilterToggleLabel());

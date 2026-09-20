@@ -1,6 +1,9 @@
+using KitchenExcursion.Api.Data;
+using KitchenExcursion.Api.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.EntityFrameworkCore;
 
 namespace KitchenExcursion.Api.Endpoints;
 
@@ -30,7 +33,9 @@ public static class AuthEndpoints
         })
         .AllowAnonymous();
 
-        app.MapGet("/api/auth/me", (HttpContext httpContext) =>
+        app.MapGet("/api/auth/me", async (
+            HttpContext httpContext,
+            LaUltimaExcursionDbContext platformDb) =>
         {
             var principal = httpContext.User;
 
@@ -54,12 +59,80 @@ public static class AuthEndpoints
                 )?.Value
                 ?? principal.FindFirst("given_name")?.Value;
 
+            if (string.IsNullOrWhiteSpace(entraObjectId))
+            {
+                return Results.BadRequest(
+                    "Authenticated user is missing the Entra object identifier.");
+            }
+
+            var user = await platformDb.Users
+                .Include(u => u.HouseholdMemberships)
+                .SingleOrDefaultAsync(
+                    u => u.EntraObjectId == entraObjectId);
+
+            if (user == null)
+            {
+                user = new AppUser
+                {
+                    EntraObjectId = entraObjectId,
+                    Email = email ?? string.Empty,
+                    GivenName = givenName
+                };
+
+                platformDb.Users.Add(user);
+                await platformDb.SaveChangesAsync();
+            }
+            else
+            {
+                user.Email = email ?? user.Email;
+                user.GivenName = givenName ?? user.GivenName;
+            }
+
+            if (user.HouseholdMemberships.Count == 0)
+            {
+                var householdName =
+                    !string.IsNullOrWhiteSpace(user.GivenName)
+                        ? $"{user.GivenName}'s Household"
+                        : "My Household";
+
+                var household = new Household
+                {
+                    Name = householdName
+                };
+
+                var membership = new HouseholdMember
+                {
+                    User = user,
+                    Household = household,
+                    Role = "Owner"
+                };
+
+                platformDb.Households.Add(household);
+                platformDb.HouseholdMembers.Add(membership);
+
+                await platformDb.SaveChangesAsync();
+
+                user.DefaultHouseholdId = household.Id;
+            }
+            else if (user.DefaultHouseholdId == null)
+            {
+                user.DefaultHouseholdId =
+                    user.HouseholdMemberships
+                        .OrderBy(hm => hm.JoinedUtc)
+                        .Select(hm => (int?)hm.HouseholdId)
+                        .FirstOrDefault();
+            }
+
+            await platformDb.SaveChangesAsync();
+
             return Results.Ok(new
             {
                 isAuthenticated = true,
-                entraObjectId,
-                email,
-                givenName
+                userId = user.Id,
+                user.EntraObjectId,
+                user.Email,
+                user.GivenName,
+                user.DefaultHouseholdId
             });
         })
         .RequireAuthorization();

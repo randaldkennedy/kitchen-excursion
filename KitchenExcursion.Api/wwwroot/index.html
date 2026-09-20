@@ -1,24 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
+ <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SVM7VE5P7S"></script>
   <script>
-  const isLocal =
-    location.hostname === "localhost" ||
-    location.hostname === "127.0.0.1";
-
-  if (!isLocal) {
-    const gaScript = document.createElement("script");
-    gaScript.async = true;
-    gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-SVM7VE5P7S";
-    document.head.appendChild(gaScript);
-
     window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-    gtag("js", new Date());
-    gtag("config", "G-SVM7VE5P7S");
-  }
+    gtag('config', 'G-SVM7VE5P7S');
   </script>
 
   <meta charset="utf-8">
@@ -35,36 +25,7 @@
         <span class="brand__kicker">La Última Excursión</span>
         <span class="brand__title">Kitchen</span>
       </a>
-
-      <div class="brand-header__right">
-        <p class="brand__tagline">The journey continues… in the kitchen.</p>
-
-        <div class="kitchen-account">
-          <button
-            id="kitchenAccountButton"
-            class="kitchen-account__button"
-            type="button"
-            aria-haspopup="true"
-            aria-expanded="false"
-            aria-label="Open account menu"
-          >
-            <span id="kitchenAccountInitial" class="kitchen-account__avatar">?</span>
-            <span id="kitchenAccountName" class="kitchen-account__name">Account</span>
-            <span class="kitchen-account__caret" aria-hidden="true">▾</span>
-          </button>
-
-          <div id="kitchenAccountMenu" class="kitchen-account__menu" hidden>
-            <div class="kitchen-account__identity">
-              <strong id="kitchenAccountMenuName">Account</strong>
-              <span id="kitchenAccountEmail"></span>
-            </div>
-
-            <a id="kitchenAccountAction" class="kitchen-account__logout" href="/api/auth/login">
-              Sign in
-            </a>
-          </div>
-        </div>
-      </div>
+      <p class="brand__tagline">The journey continues… in the kitchen.</p>
     </div>
   </header>
 
@@ -76,7 +37,29 @@
         <p class="project-label">A La Última Excursión Project</p>
         <p class="subtitle">Real recipes. Real notes. Damn good food.</p>
       </div>
-      <button id="installHint" class="secondary-btn hero__button" type="button">Add to phone</button>
+      <div class="hero__actions">
+        <button id="addRecipeButton" class="primary-btn auth-only" type="button" hidden>+ Add recipe</button>
+        <button id="installHint" class="secondary-btn hero__button" type="button">Add to phone</button>
+
+        <div class="kitchen-account">
+          <button
+            id="accountButton"
+            class="secondary-btn kitchen-account__button"
+            type="button"
+            aria-expanded="false"
+            aria-label="Sign in to Kitchen Excursion"
+          >
+            <span id="accountInitial" class="kitchen-account__initial">→</span>
+            <span id="accountName">Sign in</span>
+          </button>
+
+          <div id="accountMenu" class="kitchen-account__menu" hidden>
+            <strong id="accountMenuName">Account</strong>
+            <span id="accountEmail" class="kitchen-account__email"></span>
+            <a href="/api/auth/logout">Sign out</a>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="toolbar" aria-label="Recipe controls">
@@ -84,25 +67,25 @@
         <span>Search recipes</span>
         <input id="searchInput" type="search" placeholder="Try pork, slow cooker, mashed potatoes…">
       </label>
-
       <div class="filter-panel">
-        <button
-          id="filterToggle"
-          class="secondary-btn filter-toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="filters"
-        >
-          ▶ Filters
-        </button>
+  <button
+    id="filterToggle"
+    class="secondary-btn filter-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="filters"
+  >
+    ▶ Filters
+  </button>
 
-        <div
-          id="filters"
-          class="filters filters--collapsed"
-          role="group"
-          aria-label="Filter recipes"
-        ></div>
-      </div>
+  <div
+    id="filters"
+    class="filters filters--collapsed"
+    role="group"
+    aria-label="Filter recipes"
+  ></div>
+</div>
+  </div>
     </section>
 
     <section class="section-heading">
@@ -117,36 +100,38 @@
   </main>
 
   <footer class="site-footer">
-    <div>
-      <p><strong>Kitchen Excursion</strong> · A La Última Excursión Project</p>
-      <p>Family favorites today. Road-trip and camp meals tomorrow.</p>
-    </div>
+  <div>
+    <p><strong>Kitchen Excursion</strong> · A La Última Excursión Project</p>
+    <p>Family favorites today. Road-trip and camp meals tomorrow.</p>
+  </div>
 
-    <a href="https://laultimaexcursion.com" class="footer-link">
-      ← Back to La Última Excursión
-    </a>
+  <a href="https://laultimaexcursion.com" class="footer-link">
+    ← Back to La Última Excursión
+  </a>
 
-    <a href="#top" class="back-to-top">
-      ↑ Back to top
-    </a>
-  </footer>
+  <a href="#top" class="back-to-top">
+    ↑ Back to top
+  </a>
+</footer>
 
-  <dialog id="recipeDialog" class="recipe-dialog">
-    <button
-      id="closeRecipeDialog"
-      class="dialog-close"
-      type="button"
-      aria-label="Close recipe"
-    >
-      ✕
-    </button>
+<dialog id="recipeDialog" class="recipe-dialog">
 
-    <article id="dialogContent"></article>
+<button
+  id="closeRecipeDialog"
+  class="dialog-close"
+  type="button"
+  aria-label="Close recipe"
+>
+  ✕
+</button>
 
-    <form method="dialog" class="dialog-actions">
-      <button class="secondary-btn" value="close">Close</button>
-    </form>
-  </dialog>
+  <article id="dialogContent"></article>
+
+  <form method="dialog" class="dialog-actions">
+    <button class="secondary-btn" value="close">Close</button>
+  </form>
+
+</dialog>
 
   <dialog id="cookingDialog" class="cooking-dialog">
     <div class="cooking-shell">
@@ -161,62 +146,260 @@
     </div>
   </dialog>
 
-  <dialog id="shoppingDialog" class="recipe-dialog shopping-dialog">
-    <button
-      class="dialog-close"
-      type="button"
-      onclick="shoppingDialog.close()"
-      aria-label="Close"
-    >
-      X
-    </button>
+ <dialog id="shoppingDialog" class="recipe-dialog shopping-dialog">
+ <button
+    class="dialog-close"
+    type="button"
+    onclick="shoppingDialog.close()"
+    aria-label="Close"
+  >X
+  </button>
 
-    <form method="dialog" class="dialog-actions">
-      <button class="secondary-btn" value="close">Close</button>
-    </form>
+  <article id="dialogContent"></article>
 
-    <article id="shoppingContent"></article>
-  </dialog>
+  <form method="dialog" class="dialog-actions">
+    <button class="secondary-btn" value="close">Close</button>
+  </form>
 
-  <dialog id="cookLogDialog" class="recipe-dialog cook-log-dialog">
-    <button
-      class="dialog-close"
-      type="button"
-      onclick="cookLogDialog.close()"
-      aria-label="Close"
-      title="Close"
-    >
-      ✕
-    </button>
+  <article id="shoppingContent"></article>
+</dialog>
 
-    <form id="cookLogForm">
-      <p class="eyebrow">Cook Log</p>
-      <h2>Add Entry</h2>
+<dialog id="cookLogDialog" class="recipe-dialog cook-log-dialog">
+  <button
+    class="dialog-close"
+    type="button"
+    onclick="cookLogDialog.close()"
+    aria-label="Close"
+    title="Close"
+  >
+    ✕
+  </button>
 
-      <label class="form-field">
+  <form id="cookLogForm">
+    <p class="eyebrow">Cook Log</p>
+    <h2>Add Entry</h2>
+
+    <label class="form-field">
         <textarea
-          id="cookLogNote"
-          rows="6"
-          required
-          placeholder="What worked? What would you change next time?"
-        ></textarea>
-      </label>
+        id="cookLogNote"
+        rows="6"
+        required
+        placeholder="What worked? What would you change next time?"
+      ></textarea>
+    </label>
 
-      <div class="dialog-actions">
-        <button
-          class="secondary-btn"
-          type="button"
-          onclick="cookLogDialog.close()"
-        >
-          Cancel
-        </button>
+    <div class="dialog-actions">
+      <button
+        class="secondary-btn"
+        type="button"
+        onclick="cookLogDialog.close()"
+      >
+        Cancel
+      </button>
 
-        <button class="primary-btn" type="submit">
-          Save Entry
-        </button>
+      <button class="primary-btn" type="submit">
+        Save Entry
+      </button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="recipeEditorDialog" class="recipe-dialog recipe-editor-dialog">
+  <button
+    id="closeRecipeEditor"
+    class="dialog-close"
+    type="button"
+    aria-label="Close recipe editor"
+    title="Close"
+  >
+    ✕
+  </button>
+
+  <form id="recipeEditorForm" class="recipe-editor-form">
+    <header class="recipe-editor-header">
+      <p class="eyebrow">Kitchen Excursion</p>
+      <h2>Add Recipe</h2>
+      <p class="recipe-editor-intro">Enter the recipe here and save it straight to Kitchen. Ingredients, instructions, and shopping items are one item per line.</p>
+
+      <div class="recipe-editor-tabs" role="tablist" aria-label="Recipe sections">
+        <button class="recipe-editor-tab active" type="button" role="tab" aria-selected="true" aria-controls="recipeTabDetails" data-recipe-tab="details">Details</button>
+        <button class="recipe-editor-tab" type="button" role="tab" aria-selected="false" aria-controls="recipeTabIngredients" data-recipe-tab="ingredients">Ingredients</button>
+        <button class="recipe-editor-tab" type="button" role="tab" aria-selected="false" aria-controls="recipeTabInstructions" data-recipe-tab="instructions">Instructions</button>
+        <button class="recipe-editor-tab" type="button" role="tab" aria-selected="false" aria-controls="recipeTabCookLog" data-recipe-tab="cooklog">Cook Log</button>
       </div>
-    </form>
-  </dialog>
+    </header>
+
+    <div class="recipe-editor-content">
+      <section id="recipeTabDetails" class="recipe-editor-panel active" role="tabpanel" data-recipe-panel="details">
+        <div class="form-grid form-grid--two">
+          <label class="form-field form-field--wide">
+            <span>Title *</span>
+            <input id="recipeTitle" name="title" type="text" required maxlength="240" placeholder="Monte Cristo Sandwiches">
+          </label>
+
+          <label class="form-field form-field--wide">
+            <span>Recipe ID / slug *</span>
+            <input id="recipeSlug" name="id" type="text" required maxlength="160" placeholder="monte-cristo-sandwiches">
+          </label>
+
+          <label class="form-field">
+            <span>Meal</span>
+            <select name="meal">
+              <option value="">—</option>
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="side">Side</option>
+              <option value="dessert">Dessert</option>
+            </select>
+          </label>
+
+          <label class="form-field">
+            <span>Protein</span>
+            <select name="protein">
+              <option value="">—</option>
+              <option value="pork">Pork</option>
+              <option value="beef">Beef</option>
+              <option value="chicken">Chicken</option>
+              <option value="turkey">Turkey</option>
+              <option value="seafood">Seafood</option>
+              <option value="meatless">Meatless</option>
+              <option value="ham-turkey">Ham / Turkey</option>
+            </select>
+          </label>
+
+          <label class="form-field">
+            <span>Method</span>
+            <select name="method">
+              <option value="">—</option>
+              <option value="oven">Oven</option>
+              <option value="stovetop">Stovetop</option>
+              <option value="slow-cooker">Slow Cooker</option>
+              <option value="grill">Grill</option>
+              <option value="air-fryer">Air Fryer</option>
+              <option value="microwave">Microwave</option>
+            </select>
+          </label>
+
+          <label class="form-field">
+            <span>Badge</span>
+            <input name="badge" type="text" placeholder="Approved">
+          </label>
+
+          <label class="form-field form-field--wide">
+            <span>Categories</span>
+            <input name="categories" type="text" placeholder="Lunch, Sandwich">
+            <small>Comma separated.</small>
+          </label>
+
+          <label class="form-field">
+            <span>Prep time</span>
+            <input name="prep" type="text" placeholder="10 min">
+          </label>
+
+          <label class="form-field">
+            <span>Cook time</span>
+            <input name="cook" type="text" placeholder="8 min">
+          </label>
+
+          <label class="form-field">
+            <span>Serves</span>
+            <input name="serves" type="text" placeholder="2">
+          </label>
+
+          <label class="form-field">
+            <span>Image path</span>
+            <input name="image" type="text" placeholder="assets/monte-cristo-sandwiches.jpg">
+            <small>Optional for now. Photo upload will use the Road-style attachment system later.</small>
+          </label>
+
+          <label class="form-field form-field--wide">
+            <span>Image alt text</span>
+            <input name="imageAlt" type="text" placeholder="Monte Cristo sandwich with powdered sugar and raspberry preserves">
+          </label>
+
+          <label class="form-field form-field--wide">
+            <span>Summary</span>
+            <textarea name="summary" rows="3" placeholder="A crisp, savory-sweet Monte Cristo with ham, turkey, Swiss, mild Dijon, powdered sugar, and raspberry preserves."></textarea>
+          </label>
+        </div>
+
+        <fieldset class="recipe-editor-status">
+          <legend>Status</legend>
+          <label><input type="checkbox" name="status" value="favorite"> Randy Favorite</label>
+          <label><input type="checkbox" name="status" value="la-jefa-approved"> La Jefa Approved</label>
+          <label><input type="checkbox" name="status" value="maybe"> Maybe</label>
+          <label><input type="checkbox" name="status" value="quick"> Quick</label>
+        </fieldset>
+      </section>
+
+      <section id="recipeTabIngredients" class="recipe-editor-panel" role="tabpanel" data-recipe-panel="ingredients" hidden>
+        <div class="form-grid form-grid--two recipe-editor-lists">
+          <label class="form-field">
+            <span>Ingredients</span>
+            <textarea name="ingredients" rows="16" placeholder="4 slices sturdy white bread&#10;4 slices deli ham&#10;4 slices deli turkey&#10;4 slices Swiss cheese"></textarea>
+          </label>
+
+          <label class="form-field">
+            <span>Shopping list</span>
+            <textarea name="shopping" rows="16" placeholder="Sturdy white bread&#10;Deli ham&#10;Deli turkey&#10;Swiss cheese&#10;Mild Dijon&#10;Eggs&#10;Whole milk&#10;Powdered sugar&#10;Raspberry preserves"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section id="recipeTabInstructions" class="recipe-editor-panel" role="tabpanel" data-recipe-panel="instructions" hidden>
+        <div class="form-grid recipe-editor-lists">
+          <label class="form-field">
+            <span>Instructions</span>
+            <textarea name="steps" rows="16" placeholder="Spread a thin layer of mild Dijon on the inside of the bread.&#10;Build each sandwich with Swiss, ham, turkey, and Swiss.&#10;Whisk the eggs and milk..."></textarea>
+          </label>
+
+          <label class="form-field">
+            <span>Recipe notes</span>
+            <textarea name="generalNotes" rows="8" placeholder="Keep the Dijon light. Dip the bread briefly so it doesn't turn soggy."></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section id="recipeTabCookLog" class="recipe-editor-panel recipe-editor-cooklog" role="tabpanel" data-recipe-panel="cooklog" hidden>
+        <h3>First cook (optional)</h3>
+        <p>Add the first cook note and rating at the same time. Leave the note blank to skip it.</p>
+
+        <label class="form-field">
+          <span>Cook log note</span>
+          <textarea name="cookLogNote" rows="8" placeholder="Pretty damn tasty. Mild Dijon worked well, raspberry preserves were the right call, and the bread stayed crisp. Keeper."></textarea>
+        </label>
+
+        <div class="form-grid form-grid--two">
+          <label class="form-field">
+            <span>Rater</span>
+            <input name="rater" type="text" value="Randy">
+          </label>
+
+          <label class="form-field">
+            <span>Stars</span>
+            <select name="stars">
+              <option value="">Not rated yet</option>
+              <option value="5">★★★★★ — 5</option>
+              <option value="4">★★★★☆ — 4</option>
+              <option value="3">★★★☆☆ — 3</option>
+              <option value="2">★★☆☆☆ — 2</option>
+              <option value="1">★☆☆☆☆ — 1</option>
+            </select>
+          </label>
+        </div>
+      </section>
+    </div>
+
+    <footer class="recipe-editor-footer">
+      <p id="recipeEditorStatus" class="recipe-editor-message" role="status"></p>
+      <div class="recipe-editor-footer__actions">
+        <button id="cancelRecipeEditor" class="secondary-btn" type="button">Cancel</button>
+        <button id="saveRecipeButton" class="primary-btn" type="submit">Save Recipe</button>
+      </div>
+    </footer>
+  </form>
+</dialog>
 
   <template id="recipeCardTemplate">
     <article class="recipe-card">
