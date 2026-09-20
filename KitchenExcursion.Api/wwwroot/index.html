@@ -25,7 +25,30 @@
         <span class="brand__kicker">La Última Excursión</span>
         <span class="brand__title">Kitchen</span>
       </a>
-      <p class="brand__tagline">The journey continues… in the kitchen.</p>
+
+      <div class="brand-header__right">
+        <p class="brand__tagline">The journey continues… in the kitchen.</p>
+
+        <div class="kitchen-account">
+          <button
+            id="accountButton"
+            class="kitchen-account__button"
+            type="button"
+            aria-expanded="false"
+            aria-label="Sign in to Kitchen Excursion"
+          >
+            <span id="accountInitial" class="kitchen-account__initial">→</span>
+            <span id="accountName">Sign in</span>
+            <span class="kitchen-account__chevron" aria-hidden="true">⌄</span>
+          </button>
+
+          <div id="accountMenu" class="kitchen-account__menu" hidden>
+            <strong id="accountMenuName">Account</strong>
+            <span id="accountEmail" class="kitchen-account__email"></span>
+            <a href="/api/auth/logout">Sign out</a>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -40,25 +63,6 @@
       <div class="hero__actions">
         <button id="addRecipeButton" class="primary-btn auth-only" type="button" hidden>+ Add recipe</button>
         <button id="installHint" class="secondary-btn hero__button" type="button">Add to phone</button>
-
-        <div class="kitchen-account">
-          <button
-            id="accountButton"
-            class="secondary-btn kitchen-account__button"
-            type="button"
-            aria-expanded="false"
-            aria-label="Sign in to Kitchen Excursion"
-          >
-            <span id="accountInitial" class="kitchen-account__initial">→</span>
-            <span id="accountName">Sign in</span>
-          </button>
-
-          <div id="accountMenu" class="kitchen-account__menu" hidden>
-            <strong id="accountMenuName">Account</strong>
-            <span id="accountEmail" class="kitchen-account__email"></span>
-            <a href="/api/auth/logout">Sign out</a>
-          </div>
-        </div>
       </div>
     </section>
 
