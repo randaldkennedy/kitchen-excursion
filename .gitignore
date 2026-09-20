@@ -9,4 +9,6 @@
 # User-specific files
 *.user
 *.suo
-**/deploy.zip
+**/deploy.zipKitchenExcursion.Api/App_Data/
+KitchenExcursion.Api/App_Data/
+KitchenExcursion.Api/deploy.zip

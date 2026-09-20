@@ -14,6 +14,7 @@ public class LaUltimaExcursionDbContext : DbContext
     public DbSet<AppUser> Users => Set<AppUser>();
     public DbSet<Household> Households => Set<Household>();
     public DbSet<HouseholdMember> HouseholdMembers => Set<HouseholdMember>();
+    public DbSet<Attachment> Attachments => Set<Attachment>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -45,5 +46,27 @@ public class LaUltimaExcursionDbContext : DbContext
             .HasOne(hm => hm.User)
             .WithMany(u => u.HouseholdMemberships)
             .HasForeignKey(hm => hm.UserId);
+
+        modelBuilder.Entity<Attachment>(entity =>
+        {
+            entity.HasIndex(a => new { a.HouseholdId, a.App, a.Category });
+            entity.HasIndex(a => new { a.HouseholdId, a.EntityType, a.EntityId });
+            entity.HasIndex(a => a.BlobName).IsUnique();
+
+            entity.HasOne(a => a.Household)
+                .WithMany()
+                .HasForeignKey(a => a.HouseholdId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(a => a.UploadedByUser)
+                .WithMany()
+                .HasForeignKey(a => a.UploadedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(a => a.Supersedes)
+                .WithMany()
+                .HasForeignKey(a => a.SupersedesId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
     }
 }

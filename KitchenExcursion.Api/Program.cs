@@ -1,6 +1,7 @@
 using KitchenExcursion.Api.Data;
 using KitchenExcursion.Api.Endpoints;
 using KitchenExcursion.Api.Services.Authentication;
+using KitchenExcursion.Api.Services.Attachments;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
@@ -63,6 +64,15 @@ builder.Services.AddDbContext<LaUltimaExcursionDbContext>(options =>
             sqlOptions.EnableRetryOnFailure();
         }));
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddSingleton<IAttachmentStorageService, DevelopmentAttachmentStorageService>();
+}
+else
+{
+    builder.Services.AddSingleton<IAttachmentStorageService, AzureBlobAttachmentStorageService>();
+}
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -81,6 +91,7 @@ app.UseCors();
 
 app.MapAuthEndpoints();
 app.MapRecipeEndpoints();
+app.MapRecipePhotoEndpoints();
 
 app.MapGet("/api/version", async (IWebHostEnvironment environment) =>
 {

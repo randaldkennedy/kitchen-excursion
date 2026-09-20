@@ -311,11 +311,23 @@
             <input name="serves" type="text" placeholder="2">
           </label>
 
-          <label class="form-field">
-            <span>Image path</span>
-            <input name="image" type="text" placeholder="assets/monte-cristo-sandwiches.jpg">
-            <small>Optional for now. Photo upload will use the Road-style attachment system later.</small>
-          </label>
+          <div class="form-field recipe-photo-field">
+            <span>Hero photo</span>
+            <label class="recipe-photo-picker">
+              <input
+                id="recipeHeroPhoto"
+                name="heroPhoto"
+                type="file"
+                accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+              >
+              <span class="secondary-btn recipe-photo-picker__button">Choose photo</span>
+              <span id="recipeHeroPhotoName" class="recipe-photo-picker__name">No photo selected</span>
+            </label>
+            <div id="recipeHeroPreviewWrap" class="recipe-photo-preview" hidden>
+              <img id="recipeHeroPreview" alt="Selected recipe photo preview">
+            </div>
+            <small>JPG, PNG, or WebP. Maximum 15 MB.</small>
+          </div>
 
           <label class="form-field form-field--wide">
             <span>Image alt text</span>
