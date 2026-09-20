@@ -30,6 +30,10 @@ const accountName = document.querySelector('#accountName');
 const accountInitial = document.querySelector('#accountInitial');
 const accountMenuName = document.querySelector('#accountMenuName');
 const accountEmail = document.querySelector('#accountEmail');
+const recipeHeroPhoto = document.querySelector('#recipeHeroPhoto');
+const recipeHeroPhotoName = document.querySelector('#recipeHeroPhotoName');
+const recipeHeroPreviewWrap = document.querySelector('#recipeHeroPreviewWrap');
+const recipeHeroPreview = document.querySelector('#recipeHeroPreview');
 const recipeEditorTabs = [...document.querySelectorAll('[data-recipe-tab]')];
 const recipeEditorPanels = [...document.querySelectorAll('[data-recipe-panel]')];
 
@@ -37,6 +41,7 @@ const API = '/api';
 
 let activeCookLogRecipe = null;
 let recipePageScrollY = 0;
+let recipeHeroPreviewUrl = null;
 
 
 filterToggle.addEventListener('click', () => {
@@ -422,10 +427,65 @@ function setRecipeEditorTab(tabName, focusTab = false) {
   if (content) content.scrollTop = 0;
 }
 
+function resetRecipeHeroPhoto() {
+  if (recipeHeroPreviewUrl) {
+    URL.revokeObjectURL(recipeHeroPreviewUrl);
+    recipeHeroPreviewUrl = null;
+  }
+
+  if (recipeHeroPhoto) recipeHeroPhoto.value = '';
+  if (recipeHeroPhotoName) recipeHeroPhotoName.textContent = 'No photo selected';
+  if (recipeHeroPreview) recipeHeroPreview.removeAttribute('src');
+  if (recipeHeroPreviewWrap) recipeHeroPreviewWrap.hidden = true;
+}
+
+function updateRecipeHeroPreview() {
+  if (!recipeHeroPhoto) return;
+
+  const file = recipeHeroPhoto.files?.[0];
+
+  if (recipeHeroPreviewUrl) {
+    URL.revokeObjectURL(recipeHeroPreviewUrl);
+    recipeHeroPreviewUrl = null;
+  }
+
+  if (!file) {
+    if (recipeHeroPhotoName) recipeHeroPhotoName.textContent = 'No photo selected';
+    if (recipeHeroPreview) recipeHeroPreview.removeAttribute('src');
+    if (recipeHeroPreviewWrap) recipeHeroPreviewWrap.hidden = true;
+    return;
+  }
+
+  const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
+  const maxBytes = 15 * 1024 * 1024;
+
+  if (!allowedTypes.has(file.type)) {
+    recipeHeroPhoto.value = '';
+    recipeEditorStatus.textContent = 'Hero photo must be a JPG, PNG, or WebP image.';
+    updateRecipeHeroPreview();
+    return;
+  }
+
+  if (file.size > maxBytes) {
+    recipeHeroPhoto.value = '';
+    recipeEditorStatus.textContent = 'Hero photo must be 15 MB or smaller.';
+    updateRecipeHeroPreview();
+    return;
+  }
+
+  recipeEditorStatus.textContent = '';
+  if (recipeHeroPhotoName) recipeHeroPhotoName.textContent = file.name;
+
+  recipeHeroPreviewUrl = URL.createObjectURL(file);
+  if (recipeHeroPreview) recipeHeroPreview.src = recipeHeroPreviewUrl;
+  if (recipeHeroPreviewWrap) recipeHeroPreviewWrap.hidden = false;
+}
+
 function openRecipeEditor() {
   if (!requireKitchenSignIn()) return;
 
   recipeEditorForm.reset();
+  resetRecipeHeroPhoto();
   recipeEditorForm.elements.rater.value = 'Randy';
   recipeEditorStatus.textContent = '';
   recipeSlug.dataset.userEdited = 'false';
@@ -457,7 +517,7 @@ async function saveNewRecipe(event) {
     method: String(form.get('method') || '') || null,
     status: form.getAll('status'),
     badge: String(form.get('badge') || '') || null,
-    image: String(form.get('image') || '') || null,
+    image: null,
     imageAlt: String(form.get('imageAlt') || '') || null,
     summary: String(form.get('summary') || '') || null,
     prep: String(form.get('prep') || '') || null,
@@ -470,6 +530,8 @@ async function saveNewRecipe(event) {
     },
     shopping: linesToArray(String(form.get('shopping') || ''))
   };
+
+  const heroPhotoFile = recipeHeroPhoto?.files?.[0] ?? null;
 
   saveRecipeButton.disabled = true;
   saveRecipeButton.textContent = 'Saving…';
@@ -494,6 +556,34 @@ async function saveNewRecipe(event) {
     }
 
     const created = await createResponse.json();
+
+    if (heroPhotoFile) {
+      recipeEditorStatus.textContent = 'Uploading photo…';
+
+      const photoForm = new FormData();
+      photoForm.append('file', heroPhotoFile);
+
+      const photoResponse = await fetch(
+        `${API}/recipes/${encodeURIComponent(created.id)}/hero-photo`,
+        {
+          method: 'POST',
+          body: photoForm
+        }
+      );
+
+      if (handleUnauthorizedResponse(photoResponse)) return;
+
+      if (!photoResponse.ok) {
+        let photoMessage = `HTTP ${photoResponse.status}`;
+        try {
+          const body = await photoResponse.json();
+          photoMessage = body.message || photoMessage;
+        } catch {}
+
+        throw new Error(`Recipe saved, but the hero photo failed to upload: ${photoMessage}`);
+      }
+    }
+
     const cookLogNote = String(form.get('cookLogNote') || '').trim();
     const rater = String(form.get('rater') || '').trim();
     const starsValue = String(form.get('stars') || '').trim();
@@ -893,6 +983,8 @@ document.addEventListener('click', event => {
     accountButton?.setAttribute('aria-expanded', 'false');
   }
 });
+
+recipeHeroPhoto?.addEventListener('change', updateRecipeHeroPreview);
 
 addRecipeButton?.addEventListener('click', openRecipeEditor);
 
