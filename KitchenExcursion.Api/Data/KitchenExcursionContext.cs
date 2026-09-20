@@ -12,6 +12,7 @@ public class KitchenExcursionContext : DbContext
     }
 
     public DbSet<Recipe> Recipes => Set<Recipe>();
+    public DbSet<RecipeRevision> RecipeRevisions => Set<RecipeRevision>();
     public DbSet<RecipeCategory> RecipeCategories => Set<RecipeCategory>();
     public DbSet<RecipeStatus> RecipeStatuses => Set<RecipeStatus>();
     public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
@@ -27,10 +28,22 @@ public class KitchenExcursionContext : DbContext
         modelBuilder.Entity<Recipe>(entity =>
         {
             entity.HasIndex(r => r.Slug).IsUnique();
+            entity.HasIndex(r => r.HouseholdId);
+
             entity.Property(r => r.Slug).HasMaxLength(160);
+            entity.Property(r => r.Image).HasMaxLength(500);
+
+            entity.HasOne(r => r.CurrentRevision)
+                .WithMany()
+                .HasForeignKey(r => r.CurrentRevisionId)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
+
+        modelBuilder.Entity<RecipeRevision>(entity =>
+        {
+            entity.HasIndex(r => new { r.RecipeId, r.RevisionNumber }).IsUnique();
             entity.Property(r => r.Title).HasMaxLength(240);
             entity.Property(r => r.Badge).HasMaxLength(80);
-            entity.Property(r => r.Image).HasMaxLength(500);
             entity.Property(r => r.ImageAlt).HasMaxLength(500);
             entity.Property(r => r.PrepTime).HasMaxLength(80);
             entity.Property(r => r.CookTime).HasMaxLength(80);
@@ -38,52 +51,58 @@ public class KitchenExcursionContext : DbContext
             entity.Property(r => r.Meal).HasMaxLength(80);
             entity.Property(r => r.Protein).HasMaxLength(80);
             entity.Property(r => r.Method).HasMaxLength(80);
+            entity.Property(r => r.ChangeNote).HasMaxLength(500);
+
+            entity.HasOne(r => r.Recipe)
+                .WithMany(r => r.Revisions)
+                .HasForeignKey(r => r.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<RecipeCategory>(entity =>
         {
             entity.Property(c => c.Name).HasMaxLength(120);
-            entity.HasIndex(c => new { c.RecipeId, c.SortOrder }).IsUnique();
-            entity.HasOne(c => c.Recipe)
+            entity.HasIndex(c => new { c.RecipeRevisionId, c.SortOrder }).IsUnique();
+            entity.HasOne(c => c.Revision)
                 .WithMany(r => r.Categories)
-                .HasForeignKey(c => c.RecipeId)
+                .HasForeignKey(c => c.RecipeRevisionId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<RecipeStatus>(entity =>
         {
             entity.Property(s => s.Value).HasMaxLength(80);
-            entity.HasIndex(s => new { s.RecipeId, s.SortOrder }).IsUnique();
-            entity.HasOne(s => s.Recipe)
+            entity.HasIndex(s => new { s.RecipeRevisionId, s.SortOrder }).IsUnique();
+            entity.HasOne(s => s.Revision)
                 .WithMany(r => r.Statuses)
-                .HasForeignKey(s => s.RecipeId)
+                .HasForeignKey(s => s.RecipeRevisionId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<RecipeIngredient>(entity =>
         {
-            entity.HasIndex(i => new { i.RecipeId, i.SortOrder }).IsUnique();
-            entity.HasOne(i => i.Recipe)
+            entity.HasIndex(i => new { i.RecipeRevisionId, i.SortOrder }).IsUnique();
+            entity.HasOne(i => i.Revision)
                 .WithMany(r => r.Ingredients)
-                .HasForeignKey(i => i.RecipeId)
+                .HasForeignKey(i => i.RecipeRevisionId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<RecipeStep>(entity =>
         {
-            entity.HasIndex(s => new { s.RecipeId, s.SortOrder }).IsUnique();
-            entity.HasOne(s => s.Recipe)
+            entity.HasIndex(s => new { s.RecipeRevisionId, s.SortOrder }).IsUnique();
+            entity.HasOne(s => s.Revision)
                 .WithMany(r => r.Steps)
-                .HasForeignKey(s => s.RecipeId)
+                .HasForeignKey(s => s.RecipeRevisionId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<RecipeShoppingItem>(entity =>
         {
-            entity.HasIndex(i => new { i.RecipeId, i.SortOrder }).IsUnique();
-            entity.HasOne(i => i.Recipe)
+            entity.HasIndex(i => new { i.RecipeRevisionId, i.SortOrder }).IsUnique();
+            entity.HasOne(i => i.Revision)
                 .WithMany(r => r.ShoppingItems)
-                .HasForeignKey(i => i.RecipeId)
+                .HasForeignKey(i => i.RecipeRevisionId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -104,6 +123,7 @@ public class KitchenExcursionContext : DbContext
             entity.ToTable(t => t.HasCheckConstraint(
                 "CK_RecipeCookRatings_Stars",
                 "[Stars] >= 1 AND [Stars] <= 5"));
+
             entity.HasOne(r => r.CookLog)
                 .WithMany(c => c.Ratings)
                 .HasForeignKey(r => r.RecipeCookLogId)

@@ -21,6 +21,9 @@ const recipeEditorForm = document.querySelector('#recipeEditorForm');
 const recipeTitle = document.querySelector('#recipeTitle');
 const recipeSlug = document.querySelector('#recipeSlug');
 const recipeEditorStatus = document.querySelector('#recipeEditorStatus');
+const recipeEditorTitle = document.querySelector('#recipeEditorTitle');
+const recipeEditorIntro = document.querySelector('#recipeEditorIntro');
+const recipeChangeNoteField = document.querySelector('#recipeChangeNoteField');
 const closeRecipeEditor = document.querySelector('#closeRecipeEditor');
 const cancelRecipeEditor = document.querySelector('#cancelRecipeEditor');
 const saveRecipeButton = document.querySelector('#saveRecipeButton');
@@ -42,6 +45,7 @@ const API = '/api';
 let activeCookLogRecipe = null;
 let recipePageScrollY = 0;
 let recipeHeroPreviewUrl = null;
+let editingRecipe = null;
 
 
 filterToggle.addEventListener('click', () => {
@@ -427,16 +431,23 @@ function setRecipeEditorTab(tabName, focusTab = false) {
   if (content) content.scrollTop = 0;
 }
 
-function resetRecipeHeroPhoto() {
+function resetRecipeHeroPhoto(currentImage = null) {
   if (recipeHeroPreviewUrl) {
     URL.revokeObjectURL(recipeHeroPreviewUrl);
     recipeHeroPreviewUrl = null;
   }
 
   if (recipeHeroPhoto) recipeHeroPhoto.value = '';
-  if (recipeHeroPhotoName) recipeHeroPhotoName.textContent = 'No photo selected';
-  if (recipeHeroPreview) recipeHeroPreview.removeAttribute('src');
-  if (recipeHeroPreviewWrap) recipeHeroPreviewWrap.hidden = true;
+
+  if (currentImage) {
+    if (recipeHeroPhotoName) recipeHeroPhotoName.textContent = 'Current photo';
+    if (recipeHeroPreview) recipeHeroPreview.src = currentImage;
+    if (recipeHeroPreviewWrap) recipeHeroPreviewWrap.hidden = false;
+  } else {
+    if (recipeHeroPhotoName) recipeHeroPhotoName.textContent = 'No photo selected';
+    if (recipeHeroPreview) recipeHeroPreview.removeAttribute('src');
+    if (recipeHeroPreviewWrap) recipeHeroPreviewWrap.hidden = true;
+  }
 }
 
 function updateRecipeHeroPreview() {
@@ -481,20 +492,74 @@ function updateRecipeHeroPreview() {
   if (recipeHeroPreviewWrap) recipeHeroPreviewWrap.hidden = false;
 }
 
-function openRecipeEditor() {
-  if (!requireKitchenSignIn()) return;
+function setFieldValue(name, value) {
+  const field = recipeEditorForm.elements[name];
+  if (field) field.value = value ?? '';
+}
 
+function openRecipeEditor(recipe = null) {
+  if (!requireKitchenSignIn()) return;
+  if (recipe && !recipe.canEdit) return;
+
+  editingRecipe = recipe;
   recipeEditorForm.reset();
-  resetRecipeHeroPhoto();
-  recipeEditorForm.elements.rater.value = 'Randy';
   recipeEditorStatus.textContent = '';
-  recipeSlug.dataset.userEdited = 'false';
+
+  const cookLogTab = recipeEditorTabs.find(tab => tab.dataset.recipeTab === 'cooklog');
+  const cookLogPanel = recipeEditorPanels.find(panel => panel.dataset.recipePanel === 'cooklog');
+
+  if (recipe) {
+    recipeEditorTitle.textContent = 'Edit Recipe';
+    recipeEditorIntro.textContent =
+      'Update the recipe and save a new revision. The previous version stays in history.';
+    saveRecipeButton.textContent = 'Save Revision';
+    recipeChangeNoteField.hidden = false;
+    if (cookLogTab) cookLogTab.hidden = true;
+    if (cookLogPanel) cookLogPanel.hidden = true;
+
+    setFieldValue('title', recipe.title);
+    setFieldValue('id', recipe.id);
+    setFieldValue('meal', recipe.meal);
+    setFieldValue('protein', recipe.protein);
+    setFieldValue('method', recipe.method);
+    setFieldValue('badge', recipe.badge);
+    setFieldValue('categories', (recipe.categories || []).join(', '));
+    setFieldValue('prep', recipe.prep);
+    setFieldValue('cook', recipe.cook);
+    setFieldValue('serves', recipe.serves);
+    setFieldValue('imageAlt', recipe.imageAlt);
+    setFieldValue('summary', recipe.summary);
+    setFieldValue('ingredients', (recipe.ingredients || []).join('\n'));
+    setFieldValue('steps', (recipe.steps || []).join('\n\n'));
+    setFieldValue('generalNotes', recipe.journal?.general || '');
+    setFieldValue('changeNote', '');
+
+    recipeEditorForm.querySelectorAll('input[name="status"]').forEach(input => {
+      input.checked = (recipe.status || []).includes(input.value);
+    });
+
+    recipeSlug.dataset.userEdited = 'true';
+    resetRecipeHeroPhoto(recipe.image);
+  } else {
+    recipeEditorTitle.textContent = 'Add Recipe';
+    recipeEditorIntro.textContent =
+      'Enter the recipe here and save it straight to Kitchen. Ingredients and instructions are one item per line.';
+    saveRecipeButton.textContent = 'Save Recipe';
+    recipeChangeNoteField.hidden = true;
+    if (cookLogTab) cookLogTab.hidden = false;
+    if (cookLogPanel) cookLogPanel.hidden = false;
+
+    recipeEditorForm.elements.rater.value = kitchenCurrentUser?.givenName || 'Randy';
+    recipeSlug.dataset.userEdited = 'false';
+    resetRecipeHeroPhoto();
+  }
+
   setRecipeEditorTab('details');
   recipeEditorDialog.showModal();
   recipeTitle.focus();
 }
 
-async function saveNewRecipe(event) {
+async function saveRecipe(event) {
   event.preventDefault();
 
   const form = new FormData(recipeEditorForm);
@@ -517,7 +582,6 @@ async function saveNewRecipe(event) {
     method: String(form.get('method') || '') || null,
     status: form.getAll('status'),
     badge: String(form.get('badge') || '') || null,
-    image: null,
     imageAlt: String(form.get('imageAlt') || '') || null,
     summary: String(form.get('summary') || '') || null,
     prep: String(form.get('prep') || '') || null,
@@ -528,34 +592,42 @@ async function saveNewRecipe(event) {
     journal: {
       general: String(form.get('generalNotes') || '') || null
     },
-    shopping: linesToArray(String(form.get('shopping') || ''))
+    changeNote: editingRecipe
+      ? String(form.get('changeNote') || '').trim() || null
+      : null
   };
 
   const heroPhotoFile = recipeHeroPhoto?.files?.[0] ?? null;
+  const originalId = editingRecipe?.id ?? null;
 
   saveRecipeButton.disabled = true;
-  saveRecipeButton.textContent = 'Saving…';
+  saveRecipeButton.textContent = editingRecipe ? 'Saving revision…' : 'Saving…';
   recipeEditorStatus.textContent = '';
 
   try {
-    const createResponse = await fetch(`${API}/recipes`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    const recipeResponse = await fetch(
+      editingRecipe
+        ? `${API}/recipes/${encodeURIComponent(originalId)}`
+        : `${API}/recipes`,
+      {
+        method: editingRecipe ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }
+    );
 
-    if (handleUnauthorizedResponse(createResponse)) return;
+    if (handleUnauthorizedResponse(recipeResponse)) return;
 
-    if (!createResponse.ok) {
-      let message = `HTTP ${createResponse.status}`;
+    if (!recipeResponse.ok) {
+      let message = `HTTP ${recipeResponse.status}`;
       try {
-        const body = await createResponse.json();
+        const body = await recipeResponse.json();
         message = body.message || message;
       } catch {}
       throw new Error(message);
     }
 
-    const created = await createResponse.json();
+    const savedRecipe = await recipeResponse.json();
 
     if (heroPhotoFile) {
       recipeEditorStatus.textContent = 'Uploading photo…';
@@ -564,7 +636,7 @@ async function saveNewRecipe(event) {
       photoForm.append('file', heroPhotoFile);
 
       const photoResponse = await fetch(
-        `${API}/recipes/${encodeURIComponent(created.id)}/hero-photo`,
+        `${API}/recipes/${encodeURIComponent(savedRecipe.id)}/hero-photo`,
         {
           method: 'POST',
           body: photoForm
@@ -580,57 +652,81 @@ async function saveNewRecipe(event) {
           photoMessage = body.message || photoMessage;
         } catch {}
 
-        throw new Error(`Recipe saved, but the hero photo failed to upload: ${photoMessage}`);
+        throw new Error(
+          `${editingRecipe ? 'Revision' : 'Recipe'} saved, but the hero photo failed to upload: ${photoMessage}`
+        );
       }
     }
 
-    const cookLogNote = String(form.get('cookLogNote') || '').trim();
-    const rater = String(form.get('rater') || '').trim();
-    const starsValue = String(form.get('stars') || '').trim();
+    if (!editingRecipe) {
+      const cookLogNote = String(form.get('cookLogNote') || '').trim();
+      const rater = String(form.get('rater') || '').trim();
+      const starsValue = String(form.get('stars') || '').trim();
 
-    if (cookLogNote) {
-      const ratings = starsValue && rater
-        ? [{ rater, stars: Number(starsValue) }]
-        : [];
+      if (cookLogNote) {
+        const ratings = starsValue && rater
+          ? [{ rater, stars: Number(starsValue) }]
+          : [];
 
-      const cookResponse = await fetch(
-        `${API}/recipes/${encodeURIComponent(created.id)}/cook-log`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            author: rater || 'Randy',
-            note: cookLogNote,
-            ratings
-          })
+        const cookResponse = await fetch(
+          `${API}/recipes/${encodeURIComponent(savedRecipe.id)}/cook-log`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              author: rater || kitchenCurrentUser?.givenName || 'Cook',
+              note: cookLogNote,
+              ratings
+            })
+          }
+        );
+
+        if (handleUnauthorizedResponse(cookResponse)) return;
+
+        if (!cookResponse.ok) {
+          throw new Error(
+            `Recipe saved, but the first cook log failed (HTTP ${cookResponse.status}).`
+          );
         }
-      );
-
-      if (handleUnauthorizedResponse(cookResponse)) return;
-
-      if (!cookResponse.ok) {
-        throw new Error(`Recipe saved, but the first cook log failed (HTTP ${cookResponse.status}).`);
       }
     }
 
-    const refreshedResponse = await fetch(`${API}/recipes/${encodeURIComponent(created.id)}`);
-    if (!refreshedResponse.ok) throw new Error(`Recipe saved, but reload failed (HTTP ${refreshedResponse.status}).`);
+    const refreshedResponse = await fetch(
+      `${API}/recipes/${encodeURIComponent(savedRecipe.id)}`
+    );
+
+    if (!refreshedResponse.ok) {
+      throw new Error(
+        `${editingRecipe ? 'Revision' : 'Recipe'} saved, but reload failed (HTTP ${refreshedResponse.status}).`
+      );
+    }
+
     const refreshed = await refreshedResponse.json();
 
-    recipes.push(refreshed);
+    if (editingRecipe) {
+      const index = recipes.findIndex(recipe => recipe.id === originalId);
+      if (index >= 0) recipes[index] = refreshed;
+      else recipes.push(refreshed);
+    } else {
+      recipes.push(refreshed);
+    }
+
     buildFilters();
     render();
 
+    editingRecipe = null;
     recipeEditorDialog.close();
     openRecipe(refreshed);
   } catch (error) {
     console.error(error);
-    recipeEditorStatus.textContent = error.message || 'The recipe could not be saved.';
+    recipeEditorStatus.textContent =
+      error.message || 'The recipe could not be saved.';
   } finally {
     saveRecipeButton.disabled = false;
-    saveRecipeButton.textContent = 'Save Recipe';
+    saveRecipeButton.textContent = editingRecipe ? 'Save Revision' : 'Save Recipe';
   }
 }
+
 
 function render() {
   const filtered = filteredRecipes();
@@ -780,6 +876,27 @@ function openRecipe(recipe) {
 
       ${overallRatingHtml}
 
+      <div class="recipe-detail__actions">
+        <button class="secondary-btn revision-history__toggle" type="button">
+          Revision ${recipe.revisionNumber || 1}
+        </button>
+        ${recipe.canEdit ? `
+        <button class="primary-btn recipe-edit__button" type="button">
+          Edit recipe
+        </button>
+        <button
+          class="recipe-delete__button recipe-delete__icon"
+          type="button"
+          title="Delete Recipe"
+          aria-label="Delete Recipe"
+        >
+          🗑
+        </button>
+        ` : ''}
+      </div>
+
+      <div class="revision-history" hidden></div>
+
       <div class="detail-grid">
         <section class="detail-section">
           <h3>Ingredients</h3>
@@ -828,6 +945,120 @@ function openRecipe(recipe) {
   const toggle = dialogContent.querySelector('.cook-log__toggle');
   const entries = dialogContent.querySelector('.cook-log__entries');
   const addEntry = dialogContent.querySelector('.cook-log__add');
+  const editRecipeButton = dialogContent.querySelector('.recipe-edit__button');
+  const deleteRecipeButton = dialogContent.querySelector('.recipe-delete__button');
+  const revisionToggle = dialogContent.querySelector('.revision-history__toggle');
+  const revisionHistory = dialogContent.querySelector('.revision-history');
+
+  editRecipeButton?.addEventListener('click', () => {
+    recipeDialog.close();
+
+    // Let the browser finish removing the recipe dialog from the modal/top layer
+    // and restore the page scroll lock before opening the editor dialog.
+    requestAnimationFrame(() => {
+      openRecipeEditor(recipe);
+    });
+  });
+
+  deleteRecipeButton?.addEventListener('click', async () => {
+    const firstWarning = window.confirm(
+      `Delete “${recipe.title}”?\n\n` +
+      'This will permanently delete the recipe, its revision history, cook logs, ratings, and recipe photos.'
+    );
+
+    if (!firstWarning) return;
+
+    const finalWarning = window.confirm(
+      `LAST CHANCE\n\n` +
+      `Permanently delete “${recipe.title}”?\n\n` +
+      'This cannot be undone.'
+    );
+
+    if (!finalWarning) return;
+
+    deleteRecipeButton.disabled = true;
+    deleteRecipeButton.textContent = '…';
+
+    try {
+      const response = await fetch(
+        `${API}/recipes/${encodeURIComponent(recipe.id)}`,
+        { method: 'DELETE' }
+      );
+
+      if (handleUnauthorizedResponse(response)) return;
+
+      if (!response.ok) {
+        let message = `HTTP ${response.status}`;
+        try {
+          const body = await response.json();
+          message = body.message || message;
+        } catch {}
+
+        throw new Error(message);
+      }
+
+      recipes = recipes.filter(item => item.id !== recipe.id);
+      buildFilters();
+      render();
+      recipeDialog.close();
+    } catch (error) {
+      console.error(error);
+      window.alert(
+        `The recipe was not deleted.\n\n${error.message || 'Unknown error.'}`
+      );
+
+      deleteRecipeButton.disabled = false;
+      deleteRecipeButton.textContent = '🗑';
+    }
+  });
+
+  revisionToggle?.addEventListener('click', async () => {
+    if (!revisionHistory) return;
+
+    if (!revisionHistory.hidden) {
+      revisionHistory.hidden = true;
+      return;
+    }
+
+    revisionToggle.disabled = true;
+    revisionToggle.textContent = 'Loading history…';
+
+    try {
+      const response = await fetch(
+        `${API}/recipes/${encodeURIComponent(recipe.id)}/revisions`
+      );
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const history = await response.json();
+
+      revisionHistory.innerHTML = history.length
+        ? history.map(item => {
+            const when = new Date(item.createdUtc).toLocaleString();
+            const note = item.changeNote
+              ? `<div class="revision-history__note">${item.changeNote}</div>`
+              : '';
+
+            return `
+              <div class="revision-history__item">
+                <strong>Revision ${item.revisionNumber}</strong>
+                <span>${when} • ${item.createdBy}</span>
+                ${note}
+              </div>
+            `;
+          }).join('')
+        : '<p>No revision history yet.</p>';
+
+      revisionHistory.hidden = false;
+    } catch (error) {
+      console.error(error);
+      revisionHistory.innerHTML = '<p>Revision history could not be loaded.</p>';
+      revisionHistory.hidden = false;
+    } finally {
+      revisionToggle.disabled = false;
+      revisionToggle.textContent = `Revision ${recipe.revisionNumber || 1}`;
+    }
+  });
 
   toggle?.addEventListener('click', () => {
     const willExpand =
@@ -986,7 +1217,7 @@ document.addEventListener('click', event => {
 
 recipeHeroPhoto?.addEventListener('change', updateRecipeHeroPreview);
 
-addRecipeButton?.addEventListener('click', openRecipeEditor);
+addRecipeButton?.addEventListener('click', () => openRecipeEditor());
 
 
 recipeEditorTabs.forEach((tab, index) => {
@@ -1022,7 +1253,7 @@ recipeSlug?.addEventListener('input', () => {
   recipeSlug.dataset.userEdited = 'true';
 });
 
-recipeEditorForm?.addEventListener('submit', saveNewRecipe);
+recipeEditorForm?.addEventListener('submit', saveRecipe);
 
 cookLogForm.addEventListener('submit', async event => {
   event.preventDefault();
