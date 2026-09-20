@@ -48,10 +48,20 @@ builder.Services.AddDbContext<KitchenExcursionContext>(options =>
         builder.Configuration.GetConnectionString("KitchenExcursion"),
         sqlOptions =>
         {
+            sqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "kitchen");
             sqlOptions.EnableRetryOnFailure(
                 maxRetryCount: 5,
                 maxRetryDelay: TimeSpan.FromSeconds(15),
                 errorNumbersToAdd: null);
+        }));
+
+builder.Services.AddDbContext<LaUltimaExcursionDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("KitchenExcursion"),
+        sqlOptions =>
+        {
+            sqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "platform");
+            sqlOptions.EnableRetryOnFailure();
         }));
 
 builder.Services.AddOpenApi();
@@ -88,7 +98,7 @@ app.MapGet("/api/version", async (IWebHostEnvironment environment) =>
     return Results.Ok(new
     {
         app = "Kitchen Excursion",
-        version = "0.5.0",
+        version = "0.6.0",
         commit = "local",
         builtAt = DateTime.UtcNow
     });

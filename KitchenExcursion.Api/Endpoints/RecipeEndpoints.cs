@@ -9,19 +9,35 @@ public static class RecipeEndpoints
     public static IEndpointRouteBuilder MapRecipeEndpoints(
         this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/recipes", GetRecipesAsync);
-        app.MapGet("/api/recipes/{id}", GetRecipeAsync);
+        app.MapGet("/api/recipes", GetRecipesAsync)
+            .AllowAnonymous();
 
-        app.MapPost("/api/recipes", CreateRecipeAsync);
-        app.MapPut("/api/recipes/{id}", UpdateRecipeAsync);
-        app.MapDelete("/api/recipes/{id}", DeleteRecipeAsync);
+        app.MapGet("/api/recipes/{id}", GetRecipeAsync)
+            .AllowAnonymous();
 
-        app.MapPost("/api/recipes/{id}/cook-log", CreateCookLogAsync);
-        app.MapPut("/api/recipes/{id}/cook-log/{cookLogId:long}", UpdateCookLogAsync);
-        app.MapDelete("/api/recipes/{id}/cook-log/{cookLogId:long}", DeleteCookLogAsync);
+        app.MapPost("/api/recipes", CreateRecipeAsync)
+            .RequireAuthorization();
 
-        app.MapPut("/api/recipes/{id}/cook-log/{cookLogId:long}/ratings/{rater}", UpsertCookRatingAsync);
-        app.MapDelete("/api/recipes/{id}/cook-log/{cookLogId:long}/ratings/{rater}", DeleteCookRatingAsync);
+        app.MapPut("/api/recipes/{id}", UpdateRecipeAsync)
+            .RequireAuthorization();
+
+        app.MapDelete("/api/recipes/{id}", DeleteRecipeAsync)
+            .RequireAuthorization();
+
+        app.MapPost("/api/recipes/{id}/cook-log", CreateCookLogAsync)
+            .RequireAuthorization();
+
+        app.MapPut("/api/recipes/{id}/cook-log/{cookLogId:long}", UpdateCookLogAsync)
+            .RequireAuthorization();
+
+        app.MapDelete("/api/recipes/{id}/cook-log/{cookLogId:long}", DeleteCookLogAsync)
+            .RequireAuthorization();
+
+        app.MapPut("/api/recipes/{id}/cook-log/{cookLogId:long}/ratings/{rater}", UpsertCookRatingAsync)
+            .RequireAuthorization();
+
+        app.MapDelete("/api/recipes/{id}/cook-log/{cookLogId:long}/ratings/{rater}", DeleteCookRatingAsync)
+            .RequireAuthorization();
 
         return app;
     }
