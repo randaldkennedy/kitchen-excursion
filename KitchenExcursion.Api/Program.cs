@@ -48,7 +48,6 @@ builder.Services.AddDbContext<KitchenExcursionContext>(options =>
         builder.Configuration.GetConnectionString("KitchenExcursion"),
         sqlOptions =>
         {
-            sqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "kitchen");
             sqlOptions.EnableRetryOnFailure(
                 maxRetryCount: 5,
                 maxRetryDelay: TimeSpan.FromSeconds(15),
