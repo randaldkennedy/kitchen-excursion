@@ -1232,10 +1232,14 @@ function openRecipe(recipe) {
   }
 
   groceryButton?.addEventListener('click', async () => {
-    if (!recipe.ingredients?.length) {
+    const groceryItems = Array.isArray(recipe.shopping) && recipe.shopping.length
+      ? recipe.shopping
+      : recipe.ingredients || [];
+
+    if (!groceryItems.length) {
       showGroceryResultDialog(
         'Nothing to send',
-        'This recipe does not have any ingredients to send to Grocery.'
+        'This recipe does not have any shopping items to send to Grocery.'
       );
       return;
     }
@@ -1256,7 +1260,7 @@ function openRecipe(recipe) {
           body: JSON.stringify({
             recipeId: recipe.id,
             recipeTitle: recipe.title,
-            ingredients: recipe.ingredients
+            ingredients: groceryItems
           })
         }
       );
