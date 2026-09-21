@@ -669,9 +669,9 @@ public static class RecipeEndpoints
         AddIngredients(revision, request.Ingredients);
         AddSteps(revision, request.Steps);
 
-        // Shopping data remains available to Grocery, but Kitchen derives it from
-        // the recipe ingredients instead of asking the cook to type everything twice.
-        AddShoppingItems(revision, request.Ingredients);
+        // Preserve normalized shopping identities when the client/importer provides
+        // them. Older/manual clients can omit Shopping and fall back to ingredients.
+        AddShoppingItems(revision, request.Shopping ?? request.Ingredients);
 
         return revision;
     }
@@ -971,6 +971,7 @@ public static class RecipeEndpoints
         string? Cook,
         string? Serves,
         string[]? Ingredients,
+        string[]? Shopping,
         string[]? Steps,
         JournalWriteRequest? Journal,
         string? ChangeNote);
