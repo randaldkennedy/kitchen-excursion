@@ -68,6 +68,7 @@ let recipePageScrollY = 0;
 let recipeHeroPreviewUrl = null;
 let editingRecipe = null;
 let pendingRecipeSource = null;
+let pendingRecipeShopping = null;
 
 
 filterToggle.addEventListener('click', () => {
@@ -545,6 +546,9 @@ function openRecipeEditor(recipe = null) {
 
   editingRecipe = recipe;
   pendingRecipeSource = null;
+  pendingRecipeShopping = recipe && Array.isArray(recipe.shopping)
+    ? [...recipe.shopping]
+    : null;
   recipeEditorForm.reset();
   recipeEditorStatus.textContent = '';
 
@@ -633,6 +637,9 @@ function openRecipeImport() {
 function applyImportedRecipeDraft(draft, sourceFile) {
   openRecipeEditor();
   pendingRecipeSource = sourceFile;
+  pendingRecipeShopping = Array.isArray(draft.shopping)
+    ? [...draft.shopping]
+    : null;
 
   recipeEditorIntro.textContent =
     'Imported recipe draft. Review the details, ingredients, and instructions before saving.';
@@ -805,6 +812,7 @@ async function saveRecipe(event) {
     cook: String(form.get('cook') || '') || null,
     serves: String(form.get('serves') || '') || null,
     ingredients: linesToArray(String(form.get('ingredients') || '')),
+    shopping: pendingRecipeShopping,
     steps: linesToArray(String(form.get('steps') || '')),
     journal: {
       general: String(form.get('generalNotes') || '') || null

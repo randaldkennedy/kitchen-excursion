@@ -347,6 +347,10 @@ public static class RecipeImportEndpoints
                           "type": "array",
                           "items": { "type": "string" }
                         },
+                        "shopping": {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        },
                         "steps": {
                           "type": "array",
                           "items": { "type": "string" }
@@ -373,6 +377,7 @@ public static class RecipeImportEndpoints
                         "cook",
                         "serves",
                         "ingredients",
+                        "shopping",
                         "steps",
                         "generalNotes",
                         "warnings"
@@ -409,6 +414,7 @@ public static class RecipeImportEndpoints
         draft.GeneralNotes = Clean(draft.GeneralNotes);
         draft.Categories = CleanList(draft.Categories);
         draft.Ingredients = CleanList(draft.Ingredients);
+        draft.Shopping = CleanList(draft.Shopping);
         draft.Steps = CleanList(draft.Steps);
         draft.Warnings = CleanList(draft.Warnings);
 
@@ -428,7 +434,27 @@ public static class RecipeImportEndpoints
         - Correct obvious spacing/punctuation issues, but do not rewrite the recipe into a different recipe.
         - For handwriting, make the best faithful transcription you can.
         - If a word, quantity, ingredient, or direction is uncertain, keep the most likely transcription when useful AND add a concise warning.
-        - ingredients must contain one ingredient per array item.
+        - ingredients must contain one ingredient per array item and preserve recipe quantities/prep wording from the source.
+        - shopping must contain clean grocery purchase identities derived from ingredients, one purchasable need per array item.
+        - Shopping quantity rules are mandatory, not optional.
+        - ALWAYS preserve a source quantity/count when it determines how much of a primary purchasable item the shopper needs.
+        - In particular, ALWAYS preserve quantities for meat, poultry, seafood, produce counts, cans, jars, bags, boxes, packages, and sticks.
+        - Examples that MUST preserve quantity:
+          - "2 pounds lean ground beef" -> "2 lb lean ground beef"
+          - "3 lb chicken breasts" -> "3 lb chicken breasts"
+          - "2 cans diced tomatoes" -> "2 cans diced tomatoes"
+          - "1 stick butter" -> "1 stick butter"
+          - "3 avocados" -> "3 avocados"
+        - Omit small recipe measurements only when they describe the amount used from a normal pantry/store container and do not help decide how much to buy.
+        - Examples that should omit the recipe measurement:
+          - "1 tsp garlic salt" -> "Garlic salt"
+          - "1/4 cup ketchup" -> "Ketchup"
+          - "1 Tbsp Worcestershire sauce" -> "Worcestershire sauce"
+          - "2 eggs" -> "Eggs"
+        - Never remove a weight/count from meat, poultry, or seafood when that weight/count is present in the source ingredient.
+        - Split combined ingredients into separate shopping items when they are distinct products. Example: "Salt and black pepper to taste" becomes "Salt" and "Black pepper".
+        - Preserve meaningful product type or alternatives needed for shopping. Example: "avocado or prepared guacamole" may remain "Avocado or prepared guacamole".
+        - Do not add pantry assumptions or omit an ingredient merely because it is commonly kept on hand.
         - steps must contain one actual instruction per array item, without leading step numbers.
         - If the source mixes ingredients and directions, separate them carefully.
         - summary may be a short factual description derived from the recipe, but do not add claims not supported by the source.
@@ -588,6 +614,7 @@ public static class RecipeImportEndpoints
         public string? Cook { get; set; }
         public string? Serves { get; set; }
         public string[] Ingredients { get; set; } = Array.Empty<string>();
+        public string[] Shopping { get; set; } = Array.Empty<string>();
         public string[] Steps { get; set; } = Array.Empty<string>();
         public string? GeneralNotes { get; set; }
         public string[] Warnings { get; set; } = Array.Empty<string>();
