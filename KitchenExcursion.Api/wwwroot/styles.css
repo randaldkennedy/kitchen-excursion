@@ -1199,3 +1199,22 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
     width: 100%;
   }
 }
+
+
+/* Preserve formatting and safely style links in recipe notes. */
+.note-box__content {
+  margin-top: 4px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.note-box__content a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.note-box__content a:hover {
+  color: var(--accent-dark);
+}
