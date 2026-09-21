@@ -1030,3 +1030,124 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
   opacity: .45;
   transform: none;
 }
+
+
+/* Recipe import */
+.recipe-import-dialog {
+  width: min(720px, calc(100vw - 2rem));
+  height: auto;
+  max-height: calc(100dvh - 2rem);
+  overflow: hidden;
+}
+
+.recipe-import-form {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 2rem);
+}
+
+.recipe-import-header {
+  padding: 1.6rem 1.75rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.recipe-import-header h2 {
+  margin: .25rem 0 .5rem;
+}
+
+.recipe-import-header p:last-child {
+  margin: 0;
+  max-width: 610px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.recipe-import-modes {
+  display: flex;
+  gap: .35rem;
+  padding: 0 1.75rem;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+}
+
+.recipe-import-mode {
+  flex: 0 0 auto;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  padding: .85rem 1rem .7rem;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.recipe-import-mode.active {
+  color: var(--accent-dark);
+  border-bottom-color: var(--accent);
+}
+
+.recipe-import-body {
+  overflow-y: auto;
+  padding: 1.4rem 1.75rem;
+}
+
+.recipe-import-body .form-field textarea {
+  min-height: 260px;
+}
+
+.recipe-import-status {
+  min-height: 1.4rem;
+  margin-top: 1rem;
+  color: var(--accent);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.recipe-import-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: .75rem;
+  padding: .9rem 1.75rem;
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.recipe-editor-message--review {
+  color: var(--accent);
+}
+
+@media (max-width: 650px) {
+  .recipe-import-dialog {
+    width: calc(100% - 1rem);
+    max-height: calc(100dvh - 1rem);
+    margin: .5rem auto;
+  }
+
+  .recipe-import-header,
+  .recipe-import-body {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .recipe-import-modes {
+    padding: 0 1rem;
+  }
+
+  .recipe-import-footer {
+    padding: .75rem 1rem;
+  }
+}
+
+
+/* Original imported recipe source */
+.recipe-source__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.recipe-source__link[hidden] {
+  display: none;
+}

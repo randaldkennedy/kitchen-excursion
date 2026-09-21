@@ -62,6 +62,7 @@
       </div>
       <div class="hero__actions">
         <button id="addRecipeButton" class="primary-btn auth-only" type="button" hidden>+ Add recipe</button>
+        <button id="importRecipeButton" class="secondary-btn auth-only" type="button" hidden>Import recipe</button>
         <button id="installHint" class="secondary-btn hero__button" type="button">Add to phone</button>
       </div>
     </section>
@@ -415,6 +416,69 @@
         <button id="cancelRecipeEditor" class="secondary-btn" type="button">Cancel</button>
         <button id="saveRecipeButton" class="primary-btn" type="submit">Save Recipe</button>
       </div>
+    </footer>
+  </form>
+</dialog>
+
+
+<dialog id="recipeImportDialog" class="recipe-dialog recipe-import-dialog">
+  <button
+    id="closeRecipeImport"
+    class="dialog-close"
+    type="button"
+    aria-label="Close recipe import"
+    title="Close"
+  >
+    ✕
+  </button>
+
+  <form id="recipeImportForm" class="recipe-import-form">
+    <header class="recipe-import-header">
+      <p class="eyebrow">Kitchen Excursion</p>
+      <h2>Import Recipe</h2>
+      <p>Bring in a photo, scanned PDF, website, or pasted recipe. Kitchen will create a draft for you to review before anything is saved.</p>
+    </header>
+
+    <div class="recipe-import-modes" role="tablist" aria-label="Recipe import source">
+      <button class="recipe-import-mode active" type="button" data-import-mode="file" aria-selected="true">Photo / Scan</button>
+      <button class="recipe-import-mode" type="button" data-import-mode="url" aria-selected="false">Website</button>
+      <button class="recipe-import-mode" type="button" data-import-mode="text" aria-selected="false">Paste Text</button>
+    </div>
+
+    <div class="recipe-import-body">
+      <section data-import-panel="file">
+        <label class="form-field">
+          <span>Recipe photo or scanned PDF</span>
+          <input
+            id="recipeImportFile"
+            type="file"
+            accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,image/jpeg,image/png,image/webp,image/gif,application/pdf"
+          >
+          <small>JPEG, PNG, WebP, GIF, or PDF. Maximum 20 MB.</small>
+        </label>
+      </section>
+
+      <section data-import-panel="url" hidden>
+        <label class="form-field">
+          <span>Recipe website</span>
+          <input id="recipeImportUrl" type="url" placeholder="https://example.com/my-favorite-recipe">
+          <small>Kitchen looks for structured recipe data first, then falls back to the readable page text.</small>
+        </label>
+      </section>
+
+      <section data-import-panel="text" hidden>
+        <label class="form-field">
+          <span>Recipe text</span>
+          <textarea id="recipeImportText" rows="12" placeholder="Paste a recipe, email, note, or copied webpage text here..."></textarea>
+        </label>
+      </section>
+
+      <div id="recipeImportStatus" class="recipe-import-status" role="status"></div>
+    </div>
+
+    <footer class="recipe-import-footer">
+      <button id="cancelRecipeImport" class="secondary-btn" type="button">Cancel</button>
+      <button id="runRecipeImport" class="primary-btn" type="submit">Import Draft</button>
     </footer>
   </form>
 </dialog>

@@ -73,6 +73,13 @@ else
     builder.Services.AddSingleton<IAttachmentStorageService, AzureBlobAttachmentStorageService>();
 }
 
+builder.Services.AddHttpClient("RecipeImport", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(20);
+    client.DefaultRequestHeaders.UserAgent.ParseAdd(
+        "KitchenExcursion/1.0 (+https://kitchen.laultimaexcursion.com)");
+});
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -92,6 +99,7 @@ app.UseCors();
 app.MapAuthEndpoints();
 app.MapRecipeEndpoints();
 app.MapRecipePhotoEndpoints();
+app.MapRecipeImportEndpoints();
 
 app.MapGet("/api/version", async (IWebHostEnvironment environment) =>
 {
