@@ -1021,6 +1021,43 @@ function render() {
   });
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function formatRecipeNotes(value) {
+  const text = String(value || '');
+  const urlPattern = /https?:\/\/[^\s<]+/g;
+
+  let html = '';
+  let lastIndex = 0;
+
+  for (const match of text.matchAll(urlPattern)) {
+    const start = match.index ?? 0;
+    let url = match[0];
+    let trailing = '';
+
+    while (/[),.;!?]$/.test(url)) {
+      trailing = url.slice(-1) + trailing;
+      url = url.slice(0, -1);
+    }
+
+    html += escapeHtml(text.slice(lastIndex, start));
+    html += `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`;
+    html += escapeHtml(trailing);
+
+    lastIndex = start + match[0].length;
+  }
+
+  html += escapeHtml(text.slice(lastIndex));
+  return html;
+}
+
 function openRecipe(recipe) {
   const recipeNotes = recipe.journal?.general?.trim() || '';
   const cookLog = recipe.journal?.cookLog || [];
@@ -1098,7 +1135,7 @@ function openRecipe(recipe) {
     ? `
         <div class="note-box">
           <strong>Recipe notes:</strong>
-          ${recipeNotes}
+          <div class="note-box__content">${formatRecipeNotes(recipeNotes)}</div>
         </div>
       `
     : '';
