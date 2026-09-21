@@ -53,6 +53,10 @@ const recipeEditorTabs = [...document.querySelectorAll('[data-recipe-tab]')];
 const recipeEditorPanels = [...document.querySelectorAll('[data-recipe-panel]')];
 
 const API = '/api';
+const GROCERY_API =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:5037/api'
+    : 'https://grocery.laultimaexcursion.com/api';
 
 let activeCookLogRecipe = null;
 let recipePageScrollY = 0;
@@ -1111,6 +1115,11 @@ function openRecipe(recipe) {
         >
           View original recipe
         </a>
+        ${kitchenUserIsAuthenticated ? `
+        <button class="secondary-btn recipe-grocery__button" type="button">
+          Add ingredients to Grocery
+        </button>
+        ` : ''}
         ${recipe.canEdit ? `
         <button class="primary-btn recipe-edit__button" type="button">
           Edit recipe
@@ -1181,6 +1190,7 @@ function openRecipe(recipe) {
   const revisionToggle = dialogContent.querySelector('.revision-history__toggle');
   const revisionHistory = dialogContent.querySelector('.revision-history');
   const recipeSourceLink = dialogContent.querySelector('.recipe-source__link');
+  const groceryButton = dialogContent.querySelector('.recipe-grocery__button');
 
   if (recipeSourceLink) {
     fetch(`${API}/recipes/${encodeURIComponent(recipe.id)}/source-info`)
@@ -1198,6 +1208,74 @@ function openRecipe(recipe) {
         console.debug('No recipe source available.', error);
       });
   }
+
+  groceryButton?.addEventListener('click', async () => {
+    if (!recipe.ingredients?.length) {
+      window.alert('This recipe does not have any ingredients to send.');
+      return;
+    }
+
+    const originalText = groceryButton.textContent;
+    groceryButton.disabled = true;
+    groceryButton.textContent = 'Sending to Grocery…';
+
+    try {
+      const response = await fetch(
+        `${GROCERY_API}/shopping/things-we-need/from-recipe`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            recipeId: recipe.id,
+            recipeTitle: recipe.title,
+            ingredients: recipe.ingredients
+          })
+        }
+      );
+
+      if (response.status === 401) {
+        throw new Error(
+          'Grocery needs you to sign in first. Open Grocery Excursion, sign in, then try again.'
+        );
+      }
+
+      let body = null;
+      try {
+        body = await response.json();
+      } catch {}
+
+      if (!response.ok) {
+        throw new Error(
+          body?.error ||
+          body?.message ||
+          `Grocery returned HTTP ${response.status}.`
+        );
+      }
+
+      const added = Number(body?.addedCount || 0);
+      const skipped = Number(body?.skippedCount || 0);
+
+      window.alert(
+        `${recipe.title}\n\n` +
+        `${added} ingredient${added === 1 ? '' : 's'} added to Things We Need.` +
+        (skipped
+          ? `\n${skipped} already there and skipped.`
+          : '')
+      );
+    } catch (error) {
+      console.error(error);
+      window.alert(
+        `The ingredients were not sent to Grocery.\n\n` +
+        (error.message || 'Unknown error.')
+      );
+    } finally {
+      groceryButton.disabled = false;
+      groceryButton.textContent = originalText;
+    }
+  });
 
   editRecipeButton?.addEventListener('click', () => {
     recipeDialog.close();
