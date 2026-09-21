@@ -16,6 +16,18 @@ const cookLogForm = document.querySelector('#cookLogForm');
 const cookLogNote = document.querySelector('#cookLogNote');
 const closeRecipeDialog = document.querySelector('#closeRecipeDialog');
 const addRecipeButton = document.querySelector('#addRecipeButton');
+const importRecipeButton = document.querySelector('#importRecipeButton');
+const recipeImportDialog = document.querySelector('#recipeImportDialog');
+const recipeImportForm = document.querySelector('#recipeImportForm');
+const recipeImportFile = document.querySelector('#recipeImportFile');
+const recipeImportUrl = document.querySelector('#recipeImportUrl');
+const recipeImportText = document.querySelector('#recipeImportText');
+const recipeImportStatus = document.querySelector('#recipeImportStatus');
+const runRecipeImport = document.querySelector('#runRecipeImport');
+const closeRecipeImport = document.querySelector('#closeRecipeImport');
+const cancelRecipeImport = document.querySelector('#cancelRecipeImport');
+const recipeImportModes = [...document.querySelectorAll('[data-import-mode]')];
+const recipeImportPanels = [...document.querySelectorAll('[data-import-panel]')];
 const recipeEditorDialog = document.querySelector('#recipeEditorDialog');
 const recipeEditorForm = document.querySelector('#recipeEditorForm');
 const recipeTitle = document.querySelector('#recipeTitle');
@@ -46,6 +58,7 @@ let activeCookLogRecipe = null;
 let recipePageScrollY = 0;
 let recipeHeroPreviewUrl = null;
 let editingRecipe = null;
+let pendingRecipeSource = null;
 
 
 filterToggle.addEventListener('click', () => {
@@ -111,6 +124,7 @@ function showAnonymousAccountState() {
   accountButton?.setAttribute('aria-label', 'Sign in to Kitchen Excursion');
 
   if (addRecipeButton) addRecipeButton.hidden = true;
+  if (importRecipeButton) importRecipeButton.hidden = true;
 }
 
 function showAuthenticatedAccountState(user) {
@@ -127,6 +141,7 @@ function showAuthenticatedAccountState(user) {
   accountButton?.setAttribute('aria-label', 'Open account menu');
 
   if (addRecipeButton) addRecipeButton.hidden = false;
+  if (importRecipeButton) importRecipeButton.hidden = false;
 }
 
 async function loadAuthenticatedUser() {
@@ -485,6 +500,7 @@ function updateRecipeHeroPreview() {
   }
 
   recipeEditorStatus.textContent = '';
+  recipeEditorStatus.classList.remove('recipe-editor-message--review');
   if (recipeHeroPhotoName) recipeHeroPhotoName.textContent = file.name;
 
   recipeHeroPreviewUrl = URL.createObjectURL(file);
@@ -502,6 +518,7 @@ function openRecipeEditor(recipe = null) {
   if (recipe && !recipe.canEdit) return;
 
   editingRecipe = recipe;
+  pendingRecipeSource = null;
   recipeEditorForm.reset();
   recipeEditorStatus.textContent = '';
 
@@ -514,6 +531,7 @@ function openRecipeEditor(recipe = null) {
       'Update the recipe and save a new revision. The previous version stays in history.';
     saveRecipeButton.textContent = 'Save Revision';
     recipeChangeNoteField.hidden = false;
+    recipeChangeNoteField.style.display = '';
     if (cookLogTab) cookLogTab.hidden = true;
     if (cookLogPanel) cookLogPanel.hidden = true;
 
@@ -546,6 +564,7 @@ function openRecipeEditor(recipe = null) {
       'Enter the recipe here and save it straight to Kitchen. Ingredients and instructions are one item per line.';
     saveRecipeButton.textContent = 'Save Recipe';
     recipeChangeNoteField.hidden = true;
+    recipeChangeNoteField.style.display = 'none';
     if (cookLogTab) cookLogTab.hidden = false;
     if (cookLogPanel) cookLogPanel.hidden = false;
 
@@ -557,6 +576,178 @@ function openRecipeEditor(recipe = null) {
   setRecipeEditorTab('details');
   recipeEditorDialog.showModal();
   recipeTitle.focus();
+}
+
+
+function setRecipeImportMode(mode) {
+  recipeImportModes.forEach(button => {
+    const active = button.dataset.importMode === mode;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-selected', String(active));
+  });
+
+  recipeImportPanels.forEach(panel => {
+    panel.hidden = panel.dataset.importPanel !== mode;
+  });
+
+  recipeImportStatus.textContent = '';
+}
+
+function openRecipeImport() {
+  if (!requireKitchenSignIn()) return;
+
+  recipeImportForm.reset();
+  recipeImportStatus.textContent = '';
+  runRecipeImport.disabled = false;
+  runRecipeImport.textContent = 'Import Draft';
+  setRecipeImportMode('file');
+  recipeImportDialog.showModal();
+}
+
+function applyImportedRecipeDraft(draft, sourceFile) {
+  openRecipeEditor();
+  pendingRecipeSource = sourceFile;
+
+  recipeEditorIntro.textContent =
+    'Imported recipe draft. Review the details, ingredients, and instructions before saving.';
+  recipeChangeNoteField.hidden = true;
+  recipeChangeNoteField.style.display = 'none';
+
+  setFieldValue('title', draft.title);
+  setFieldValue('id', slugifyRecipeTitle(draft.title || ''));
+  setFieldValue('meal', draft.meal);
+  setFieldValue('protein', draft.protein);
+  setFieldValue('method', draft.method);
+  setFieldValue('badge', '');
+  setFieldValue('categories', (draft.categories || []).join(', '));
+  setFieldValue('prep', draft.prep);
+  setFieldValue('cook', draft.cook);
+  setFieldValue('serves', draft.serves);
+  setFieldValue('imageAlt', '');
+  setFieldValue('summary', draft.summary);
+  setFieldValue('ingredients', (draft.ingredients || []).join('\n'));
+  setFieldValue('steps', (draft.steps || []).join('\n\n'));
+  setFieldValue('generalNotes', draft.generalNotes || '');
+
+  recipeSlug.dataset.userEdited = 'false';
+
+  const warnings = draft.warnings || [];
+  recipeEditorStatus.classList.add('recipe-editor-message--review');
+  recipeEditorStatus.textContent = warnings.length
+    ? `Imported draft — review before saving. ${warnings.join(' • ')}`
+    : 'Imported draft — review it before saving.';
+
+  setRecipeEditorTab('details');
+}
+
+async function importRecipeDraft(event) {
+  event.preventDefault();
+
+  const activeMode =
+    recipeImportModes.find(button => button.classList.contains('active'))
+      ?.dataset.importMode || 'file';
+
+  let url;
+  let options;
+  let sourceFile;
+
+  if (activeMode === 'file') {
+    const file = recipeImportFile.files?.[0];
+
+    if (!file) {
+      recipeImportStatus.textContent = 'Choose a recipe photo or PDF first.';
+      return;
+    }
+
+    const form = new FormData();
+    form.append('file', file);
+    sourceFile = file;
+
+    url = `${API}/recipe-import/file`;
+    options = {
+      method: 'POST',
+      body: form
+    };
+  } else if (activeMode === 'url') {
+    const recipeUrl = recipeImportUrl.value.trim();
+
+    if (!recipeUrl) {
+      recipeImportStatus.textContent = 'Enter a recipe website first.';
+      return;
+    }
+
+    sourceFile = new File(
+      [recipeUrl],
+      'recipe-source-url.txt',
+      { type: 'text/uri-list' }
+    );
+
+    url = `${API}/recipe-import/url`;
+    options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: recipeUrl })
+    };
+  } else {
+    const text = recipeImportText.value.trim();
+
+    if (!text) {
+      recipeImportStatus.textContent = 'Paste some recipe text first.';
+      return;
+    }
+
+    sourceFile = new File(
+      [text],
+      'pasted-recipe.txt',
+      { type: 'text/plain' }
+    );
+
+    url = `${API}/recipe-import/text`;
+    options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    };
+  }
+
+  runRecipeImport.disabled = true;
+  runRecipeImport.textContent = 'Reading recipe…';
+  recipeImportStatus.textContent =
+    activeMode === 'url'
+      ? 'Loading and reading the recipe page…'
+      : 'Reading the recipe…';
+
+  try {
+    const response = await fetch(url, options);
+
+    if (handleUnauthorizedResponse(response)) return;
+
+    if (!response.ok) {
+      let message = `HTTP ${response.status}`;
+
+      try {
+        const body = await response.json();
+        message = body.message || body.error || message;
+      } catch {}
+
+      throw new Error(message);
+    }
+
+    const draft = await response.json();
+
+    recipeImportDialog.close();
+
+    requestAnimationFrame(() => {
+      applyImportedRecipeDraft(draft, sourceFile);
+    });
+  } catch (error) {
+    console.error(error);
+    recipeImportStatus.textContent =
+      error.message || 'Kitchen could not import that recipe.';
+  } finally {
+    runRecipeImport.disabled = false;
+    runRecipeImport.textContent = 'Import Draft';
+  }
 }
 
 async function saveRecipe(event) {
@@ -658,6 +849,36 @@ async function saveRecipe(event) {
       }
     }
 
+    if (!editingRecipe && pendingRecipeSource) {
+      recipeEditorStatus.textContent = 'Saving original recipe source…';
+
+      const sourceForm = new FormData();
+      sourceForm.append('file', pendingRecipeSource);
+
+      const sourceResponse = await fetch(
+        `${API}/recipes/${encodeURIComponent(savedRecipe.id)}/source`,
+        {
+          method: 'POST',
+          body: sourceForm
+        }
+      );
+
+      if (handleUnauthorizedResponse(sourceResponse)) return;
+
+      if (!sourceResponse.ok) {
+        let sourceMessage = `HTTP ${sourceResponse.status}`;
+
+        try {
+          const body = await sourceResponse.json();
+          sourceMessage = body.message || sourceMessage;
+        } catch {}
+
+        throw new Error(
+          `Recipe saved, but the original recipe source failed to upload: ${sourceMessage}`
+        );
+      }
+    }
+
     if (!editingRecipe) {
       const cookLogNote = String(form.get('cookLogNote') || '').trim();
       const rater = String(form.get('rater') || '').trim();
@@ -715,6 +936,7 @@ async function saveRecipe(event) {
     render();
 
     editingRecipe = null;
+    pendingRecipeSource = null;
     recipeEditorDialog.close();
     openRecipe(refreshed);
   } catch (error) {
@@ -880,6 +1102,15 @@ function openRecipe(recipe) {
         <button class="secondary-btn revision-history__toggle" type="button">
           Revision ${recipe.revisionNumber || 1}
         </button>
+        <a
+          class="secondary-btn recipe-source__link"
+          href="${API}/recipes/${encodeURIComponent(recipe.id)}/source"
+          target="_blank"
+          rel="noopener"
+          hidden
+        >
+          View original recipe
+        </a>
         ${recipe.canEdit ? `
         <button class="primary-btn recipe-edit__button" type="button">
           Edit recipe
@@ -949,6 +1180,24 @@ function openRecipe(recipe) {
   const deleteRecipeButton = dialogContent.querySelector('.recipe-delete__button');
   const revisionToggle = dialogContent.querySelector('.revision-history__toggle');
   const revisionHistory = dialogContent.querySelector('.revision-history');
+  const recipeSourceLink = dialogContent.querySelector('.recipe-source__link');
+
+  if (recipeSourceLink) {
+    fetch(`${API}/recipes/${encodeURIComponent(recipe.id)}/source-info`)
+      .then(response => response.ok ? response.json() : null)
+      .then(source => {
+        if (source?.exists) {
+          recipeSourceLink.hidden = false;
+          recipeSourceLink.textContent =
+            source.kind === 'website'
+              ? 'View source website'
+              : 'View original recipe';
+        }
+      })
+      .catch(error => {
+        console.debug('No recipe source available.', error);
+      });
+  }
 
   editRecipeButton?.addEventListener('click', () => {
     recipeDialog.close();
@@ -1218,6 +1467,17 @@ document.addEventListener('click', event => {
 recipeHeroPhoto?.addEventListener('change', updateRecipeHeroPreview);
 
 addRecipeButton?.addEventListener('click', () => openRecipeEditor());
+importRecipeButton?.addEventListener('click', openRecipeImport);
+
+recipeImportModes.forEach(button => {
+  button.addEventListener('click', () => {
+    setRecipeImportMode(button.dataset.importMode);
+  });
+});
+
+closeRecipeImport?.addEventListener('click', () => recipeImportDialog.close());
+cancelRecipeImport?.addEventListener('click', () => recipeImportDialog.close());
+recipeImportForm?.addEventListener('submit', importRecipeDraft);
 
 
 recipeEditorTabs.forEach((tab, index) => {
@@ -1241,8 +1501,14 @@ recipeEditorTabs.forEach((tab, index) => {
 });
 
 
-closeRecipeEditor?.addEventListener('click', () => recipeEditorDialog.close());
-cancelRecipeEditor?.addEventListener('click', () => recipeEditorDialog.close());
+closeRecipeEditor?.addEventListener('click', () => {
+  pendingRecipeSource = null;
+  recipeEditorDialog.close();
+});
+cancelRecipeEditor?.addEventListener('click', () => {
+  pendingRecipeSource = null;
+  recipeEditorDialog.close();
+});
 
 recipeTitle?.addEventListener('input', () => {
   if (recipeSlug.dataset.userEdited === 'true') return;
