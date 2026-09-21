@@ -1151,3 +1151,51 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
 .recipe-source__link[hidden] {
   display: none;
 }
+
+
+/* Kitchen → Grocery result dialog */
+.grocery-result-dialog {
+  width: min(480px, calc(100% - 32px));
+  border: 0;
+  border-radius: 22px;
+  padding: 0;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 30px 80px rgba(20, 12, 8, .35);
+}
+
+.grocery-result-dialog::backdrop {
+  background: rgba(35, 24, 18, .58);
+  backdrop-filter: blur(2px);
+}
+
+.grocery-result-dialog__body {
+  padding: 32px;
+}
+
+.grocery-result-dialog__body h2 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.grocery-result-dialog__message {
+  margin: 14px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.grocery-result-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+@media (max-width: 520px) {
+  .grocery-result-dialog__body {
+    padding: 28px 22px 22px;
+  }
+
+  .grocery-result-dialog__actions .primary-btn {
+    width: 100%;
+  }
+}

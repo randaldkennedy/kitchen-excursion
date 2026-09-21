@@ -483,6 +483,29 @@
   </form>
 </dialog>
 
+
+<dialog id="groceryResultDialog" class="grocery-result-dialog">
+  <button
+    id="closeGroceryResult"
+    class="dialog-close"
+    type="button"
+    aria-label="Close Grocery result"
+    title="Close"
+  >
+    ✕
+  </button>
+
+  <div class="grocery-result-dialog__body">
+    <p class="eyebrow">Kitchen → Grocery</p>
+    <h2 id="groceryResultTitle">Sent to Grocery</h2>
+    <p id="groceryResultMessage" class="grocery-result-dialog__message"></p>
+
+    <div class="grocery-result-dialog__actions">
+      <button id="groceryResultOk" class="primary-btn" type="button">OK</button>
+    </div>
+  </div>
+</dialog>
+
   <template id="recipeCardTemplate">
     <article class="recipe-card">
       <div class="recipe-image-wrap">

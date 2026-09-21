@@ -51,6 +51,11 @@ const recipeHeroPreviewWrap = document.querySelector('#recipeHeroPreviewWrap');
 const recipeHeroPreview = document.querySelector('#recipeHeroPreview');
 const recipeEditorTabs = [...document.querySelectorAll('[data-recipe-tab]')];
 const recipeEditorPanels = [...document.querySelectorAll('[data-recipe-panel]')];
+const groceryResultDialog = document.querySelector('#groceryResultDialog');
+const groceryResultTitle = document.querySelector('#groceryResultTitle');
+const groceryResultMessage = document.querySelector('#groceryResultMessage');
+const closeGroceryResult = document.querySelector('#closeGroceryResult');
+const groceryResultOk = document.querySelector('#groceryResultOk');
 
 const API = '/api';
 const GROCERY_API =
@@ -515,6 +520,23 @@ function updateRecipeHeroPreview() {
 function setFieldValue(name, value) {
   const field = recipeEditorForm.elements[name];
   if (field) field.value = value ?? '';
+}
+
+function showGroceryResultDialog(title, message) {
+  if (!groceryResultDialog) return;
+
+  groceryResultTitle.textContent = title;
+  groceryResultMessage.textContent = message;
+
+  if (!groceryResultDialog.open) {
+    groceryResultDialog.showModal();
+  }
+
+  groceryResultOk?.focus();
+}
+
+function closeGroceryResultDialog() {
+  groceryResultDialog?.close();
 }
 
 function openRecipeEditor(recipe = null) {
@@ -1211,7 +1233,10 @@ function openRecipe(recipe) {
 
   groceryButton?.addEventListener('click', async () => {
     if (!recipe.ingredients?.length) {
-      window.alert('This recipe does not have any ingredients to send.');
+      showGroceryResultDialog(
+        'Nothing to send',
+        'This recipe does not have any ingredients to send to Grocery.'
+      );
       return;
     }
 
@@ -1258,18 +1283,21 @@ function openRecipe(recipe) {
       const added = Number(body?.addedCount || 0);
       const skipped = Number(body?.skippedCount || 0);
 
-      window.alert(
-        `${recipe.title}\n\n` +
+      const message =
         `${added} ingredient${added === 1 ? '' : 's'} added to Things We Need.` +
         (skipped
-          ? `\n${skipped} already there and skipped.`
-          : '')
+          ? ` ${skipped} ${skipped === 1 ? 'was' : 'were'} already on the list.`
+          : '');
+
+      showGroceryResultDialog(
+        added > 0 ? 'Sent to Grocery' : 'Already on the list',
+        `${recipe.title}: ${message}`
       );
     } catch (error) {
       console.error(error);
-      window.alert(
-        `The ingredients were not sent to Grocery.\n\n` +
-        (error.message || 'Unknown error.')
+      showGroceryResultDialog(
+        'Could not send to Grocery',
+        error.message || 'The ingredients were not sent to Grocery.'
       );
     } finally {
       groceryButton.disabled = false;
@@ -1647,3 +1675,12 @@ Promise.all([
   loadAuthenticatedUser(),
   loadRecipes()
 ]).then(() => updateFilterToggleLabel());
+
+
+closeGroceryResult?.addEventListener('click', closeGroceryResultDialog);
+groceryResultOk?.addEventListener('click', closeGroceryResultDialog);
+groceryResultDialog?.addEventListener('click', event => {
+  if (event.target === groceryResultDialog) {
+    closeGroceryResultDialog();
+  }
+});
