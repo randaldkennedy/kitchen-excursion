@@ -196,6 +196,43 @@ function requireKitchenSignIn() {
   return false;
 }
 
+function focusLinkedRecipe() {
+  const recipeId = new URLSearchParams(window.location.search)
+    .get('recipe')
+    ?.trim();
+
+  if (!recipeId) return;
+
+  const recipe = recipes.find(
+    item => String(item.id).toLowerCase() === recipeId.toLowerCase()
+  );
+
+  if (!recipe) return;
+
+  Object.keys(activeFilters).forEach(key => {
+    activeFilters[key] = 'all';
+  });
+
+  searchInput.value = recipe.title;
+
+  buildFilters();
+  render();
+  updateFilterToggleLabel();
+
+  requestAnimationFrame(() => {
+    const title = [...grid.querySelectorAll('.recipe-title')]
+      .find(element => element.textContent.trim() === recipe.title);
+
+    const target = title?.closest('.recipe-card') || title;
+
+    target?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+  });
+}
+
+
 async function loadRecipes() {
   try {
     const response = await fetch(`${API}/recipes`);
@@ -203,6 +240,7 @@ async function loadRecipes() {
     recipes = await response.json();
     buildFilters();
     render();
+    focusLinkedRecipe();
   } catch (error) {
     grid.innerHTML = `
       <div class="empty">
