@@ -1218,3 +1218,280 @@ h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: .95; letter-
 .note-box__content a:hover {
   color: var(--accent-dark);
 }
+
+
+/* Recipe / cook-log photo galleries */
+.recipe-photo-carousel {
+  position: relative;
+  margin: 18px 0 16px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #17120f;
+  min-height: 190px;
+}
+
+.recipe-photo-carousel[hidden] {
+  display: none;
+}
+
+.recipe-photo-carousel__image-button {
+  display: block;
+  width: 100%;
+  height: 200px;
+  padding: 0;
+  border: 0;
+  background: #17120f;
+  cursor: zoom-in;
+  position: relative;
+}
+
+.recipe-photo-carousel__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.recipe-photo-carousel__count {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(23, 18, 15, .82);
+  color: #fffaf4;
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.recipe-photo-carousel__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 253, 249, .92);
+  color: var(--accent-dark);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(-50%);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .18);
+}
+
+.recipe-photo-carousel__nav:hover {
+  background: #fff;
+}
+
+.recipe-photo-carousel__nav[hidden] {
+  display: none;
+}
+
+.recipe-photo-carousel__previous {
+  left: 12px;
+}
+
+.recipe-photo-carousel__next {
+  right: 12px;
+}
+
+.cook-log__photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.cook-log__photos[hidden] {
+  display: none;
+}
+
+.cook-log-photo {
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--soft);
+  cursor: zoom-in;
+}
+
+.cook-log-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cook-log__photo-actions {
+  margin: 10px 0 4px;
+}
+
+.cook-log__add-photos {
+  padding: 7px 11px;
+  font-size: .82rem;
+}
+
+.cook-log-dialog__status {
+  min-height: 1.2em;
+  margin: -4px 0 0;
+  color: var(--accent-dark);
+  font-size: .88rem;
+}
+
+/* Road-style full-screen Kitchen photo viewer */
+.recipe-photo-viewer {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #17120f;
+  color: #fffaf4;
+}
+
+.recipe-photo-viewer::backdrop {
+  background: rgba(0, 0, 0, .88);
+}
+
+.recipe-photo-viewer__shell {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  position: relative;
+}
+
+.recipe-photo-viewer__header {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  background: rgba(23, 18, 15, .98);
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.recipe-photo-viewer__title {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.recipe-photo-viewer__title strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recipe-photo-viewer__title span {
+  color: #cbbdb4;
+  font-size: .78rem;
+}
+
+.recipe-photo-viewer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.recipe-photo-viewer__actions .secondary-btn {
+  background: #2a211d;
+  border-color: #4a3a32;
+  color: #fffaf4;
+}
+
+.recipe-photo-viewer__delete {
+  border-color: #9d524b !important;
+}
+
+.recipe-photo-viewer__stage {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  cursor: default;
+}
+
+.recipe-photo-viewer__stage img {
+  display: block;
+  max-width: none;
+  max-height: none;
+  user-select: none;
+}
+
+.recipe-photo-viewer__nav {
+  position: fixed;
+  top: 50%;
+  z-index: 6;
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(123, 63, 37, .42);
+  border-radius: 999px;
+  background: rgba(255, 253, 249, .92);
+  color: var(--accent-dark);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, .22);
+  font: inherit;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.recipe-photo-viewer__nav:hover {
+  background: #fff;
+  transform: translateY(-50%) scale(1.04);
+}
+
+.recipe-photo-viewer__nav[hidden] {
+  display: none;
+}
+
+.recipe-photo-viewer__nav--previous {
+  left: 20px;
+}
+
+.recipe-photo-viewer__nav--next {
+  right: 20px;
+}
+
+@media (max-width: 700px) {
+  .recipe-photo-viewer__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .recipe-photo-viewer__actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .recipe-photo-viewer__nav {
+    width: 44px;
+    height: 44px;
+    font-size: 1.65rem;
+  }
+
+  .recipe-photo-viewer__nav--previous {
+    left: 8px;
+  }
+
+  .recipe-photo-viewer__nav--next {
+    right: 8px;
+  }
+
+  .recipe-photo-carousel__image-button {
+    height: 180px;
+  }
+}

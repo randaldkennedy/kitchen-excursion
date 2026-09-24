@@ -56,6 +56,20 @@ const groceryResultTitle = document.querySelector('#groceryResultTitle');
 const groceryResultMessage = document.querySelector('#groceryResultMessage');
 const closeGroceryResult = document.querySelector('#closeGroceryResult');
 const groceryResultOk = document.querySelector('#groceryResultOk');
+const cookLogPhotos = document.querySelector('#cookLogPhotos');
+const cookLogStatus = document.querySelector('#cookLogStatus');
+const recipePhotoViewer = document.querySelector('#recipePhotoViewer');
+const recipePhotoViewerImage = document.querySelector('#recipePhotoViewerImage');
+const recipePhotoViewerFileName = document.querySelector('#recipePhotoViewerFileName');
+const recipePhotoViewerCount = document.querySelector('#recipePhotoViewerCount');
+const recipePhotoStage = document.querySelector('#recipePhotoStage');
+const recipePhotoPrevious = document.querySelector('#recipePhotoPrevious');
+const recipePhotoNext = document.querySelector('#recipePhotoNext');
+const recipePhotoZoomOut = document.querySelector('#recipePhotoZoomOut');
+const recipePhotoFit = document.querySelector('#recipePhotoFit');
+const recipePhotoZoomIn = document.querySelector('#recipePhotoZoomIn');
+const recipePhotoDelete = document.querySelector('#recipePhotoDelete');
+const recipePhotoClose = document.querySelector('#recipePhotoClose');
 
 const API = '/api';
 const GROCERY_API =
@@ -69,6 +83,11 @@ let recipeHeroPreviewUrl = null;
 let editingRecipe = null;
 let pendingRecipeSource = null;
 let pendingRecipeShopping = null;
+
+let recipePhotoViewerGallery = [];
+let recipePhotoViewerIndex = -1;
+let recipePhotoViewerRecipe = null;
+let recipePhotoViewerScale = 1;
 
 
 filterToggle.addEventListener('click', () => {
@@ -1104,6 +1123,342 @@ function formatRecipeNotes(value) {
   return html;
 }
 
+
+async function loadRecipePhotoGallery(recipeId) {
+  const response = await fetch(
+    `${API}/recipes/${encodeURIComponent(recipeId)}/photos`
+  );
+
+  if (!response.ok) {
+    if (response.status === 404) return [];
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const photos = await response.json();
+  return Array.isArray(photos) ? photos : [];
+}
+
+async function loadCookLogPhotoGallery(recipeId, cookLogId) {
+  const response = await fetch(
+    `${API}/recipes/${encodeURIComponent(recipeId)}/cook-log/${cookLogId}/photos`
+  );
+
+  if (!response.ok) {
+    if (response.status === 404) return [];
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const photos = await response.json();
+  return Array.isArray(photos) ? photos : [];
+}
+
+async function uploadCookLogPhotos(recipeId, cookLogId, files) {
+  const uploaded = [];
+
+  for (const file of files || []) {
+    const form = new FormData();
+    form.append('file', file);
+
+    const response = await fetch(
+      `${API}/recipes/${encodeURIComponent(recipeId)}/cook-log/${cookLogId}/photos`,
+      {
+        method: 'POST',
+        body: form
+      }
+    );
+
+    if (handleUnauthorizedResponse(response)) {
+      throw new Error('Sign in is required to upload cook-log photos.');
+    }
+
+    if (!response.ok) {
+      let message = `HTTP ${response.status}`;
+      try {
+        const body = await response.json();
+        message = body.message || message;
+      } catch {}
+
+      throw new Error(`${file.name}: ${message}`);
+    }
+
+    uploaded.push(await response.json());
+  }
+
+  return uploaded;
+}
+
+function normalizePhotoGallery(photos) {
+  const seen = new Set();
+
+  return (photos || [])
+    .map(photo => ({
+      attachmentId: Number(photo?.attachmentId),
+      fileName: photo?.fileName || 'Photo',
+      viewUrl: photo?.viewUrl || '',
+      isHero: Boolean(photo?.isHero),
+      cookLogId:
+        photo?.cookLogId === null || photo?.cookLogId === undefined
+          ? null
+          : Number(photo.cookLogId)
+    }))
+    .filter(photo =>
+      Number.isFinite(photo.attachmentId) &&
+      photo.attachmentId !== 0 &&
+      photo.viewUrl
+    )
+    .filter(photo => {
+      if (seen.has(photo.attachmentId)) return false;
+      seen.add(photo.attachmentId);
+      return true;
+    });
+}
+
+function paintRecipePhotoCarousel(carousel, recipe, photos, requestedIndex = 0) {
+  if (!carousel || !photos.length) {
+    if (carousel) carousel.hidden = true;
+    return;
+  }
+
+  let index = ((requestedIndex % photos.length) + photos.length) % photos.length;
+
+  const image = carousel.querySelector('.recipe-photo-carousel__image');
+  const imageButton = carousel.querySelector('.recipe-photo-carousel__image-button');
+  const count = carousel.querySelector('.recipe-photo-carousel__count');
+  const previous = carousel.querySelector('.recipe-photo-carousel__previous');
+  const next = carousel.querySelector('.recipe-photo-carousel__next');
+
+  const paint = () => {
+    const photo = photos[index];
+    if (!photo) return;
+
+    image.src = photo.viewUrl;
+    image.alt = photo.isHero
+      ? recipe.imageAlt || `${recipe.title} photo`
+      : `${recipe.title} cook-log photo`;
+
+    count.textContent =
+      photos.length === 1
+        ? '1 photo'
+        : `${index + 1} of ${photos.length} photos`;
+
+    previous.hidden = photos.length <= 1;
+    next.hidden = photos.length <= 1;
+  };
+
+  previous.onclick = event => {
+    event.stopPropagation();
+    index = (index - 1 + photos.length) % photos.length;
+    paint();
+  };
+
+  next.onclick = event => {
+    event.stopPropagation();
+    index = (index + 1) % photos.length;
+    paint();
+  };
+
+  imageButton.onclick = () => {
+    openRecipePhotoViewer(recipe, photos, photos[index].attachmentId);
+  };
+
+  carousel._paintPhotoIndex = nextIndex => {
+    index = ((nextIndex % photos.length) + photos.length) % photos.length;
+    paint();
+  };
+
+  carousel.hidden = false;
+  paint();
+}
+
+async function hydrateRecipePhotoCarousel(recipe) {
+  const carousel = dialogContent.querySelector('.recipe-photo-carousel');
+  if (!carousel) return;
+
+  try {
+    let photos = normalizePhotoGallery(
+      await loadRecipePhotoGallery(recipe.id)
+    );
+
+    const hasHeroAttachment = photos.some(photo => photo.isHero);
+
+    if (recipe.image && !hasHeroAttachment) {
+      photos = normalizePhotoGallery([
+        {
+          attachmentId: -1,
+          fileName: `${recipe.title} photo`,
+          viewUrl: recipe.image,
+          isHero: true,
+          cookLogId: null
+        },
+        ...photos
+      ]);
+    }
+
+    paintRecipePhotoCarousel(carousel, recipe, photos);
+  } catch (error) {
+    console.error('Could not load recipe photos.', error);
+    carousel.hidden = true;
+  }
+}
+
+async function hydrateCookLogPhotos(recipe) {
+  const containers = [
+    ...dialogContent.querySelectorAll('.cook-log__photos[data-cook-log-id]')
+  ];
+
+  await Promise.all(containers.map(async container => {
+    const cookLogId = Number(container.dataset.cookLogId);
+    if (!cookLogId) return;
+
+    try {
+      const photos = normalizePhotoGallery(
+        await loadCookLogPhotoGallery(recipe.id, cookLogId)
+      );
+
+      container.innerHTML = photos.length
+        ? photos.map(photo => `
+            <button
+              class="cook-log-photo"
+              type="button"
+              data-attachment-id="${photo.attachmentId}"
+              title="Open cook-log photos"
+            >
+              <img src="${photo.viewUrl}" alt="${escapeHtml(photo.fileName)}">
+            </button>
+          `).join('')
+        : '';
+
+      container.hidden = photos.length === 0;
+
+      container.querySelectorAll('.cook-log-photo').forEach(button => {
+        button.addEventListener('click', () => {
+          openRecipePhotoViewer(
+            recipe,
+            photos,
+            Number(button.dataset.attachmentId)
+          );
+        });
+      });
+    } catch (error) {
+      console.error(`Could not load photos for cook log ${cookLogId}.`, error);
+      container.hidden = true;
+    }
+  }));
+}
+
+function setRecipePhotoViewerScale(scale) {
+  if (!recipePhotoViewerImage?.naturalWidth || !recipePhotoViewerImage?.naturalHeight) {
+    return;
+  }
+
+  recipePhotoViewerScale = Math.max(0.1, Math.min(5, scale));
+  recipePhotoViewerImage.style.width =
+    `${Math.round(recipePhotoViewerImage.naturalWidth * recipePhotoViewerScale)}px`;
+  recipePhotoViewerImage.style.height =
+    `${Math.round(recipePhotoViewerImage.naturalHeight * recipePhotoViewerScale)}px`;
+}
+
+function fitRecipePhotoViewer() {
+  if (
+    !recipePhotoStage ||
+    !recipePhotoViewerImage?.naturalWidth ||
+    !recipePhotoViewerImage?.naturalHeight
+  ) {
+    return;
+  }
+
+  const horizontalPadding = 24;
+  const verticalPadding = 24;
+  const availableWidth = Math.max(1, recipePhotoStage.clientWidth - horizontalPadding);
+  const availableHeight = Math.max(1, recipePhotoStage.clientHeight - verticalPadding);
+
+  const scale = Math.min(
+    1,
+    availableWidth / recipePhotoViewerImage.naturalWidth,
+    availableHeight / recipePhotoViewerImage.naturalHeight
+  );
+
+  setRecipePhotoViewerScale(scale);
+  recipePhotoStage.scrollLeft = 0;
+  recipePhotoStage.scrollTop = 0;
+}
+
+function showRecipePhotoViewerItem(index) {
+  if (!recipePhotoViewerGallery.length) return;
+
+  const count = recipePhotoViewerGallery.length;
+  recipePhotoViewerIndex = ((index % count) + count) % count;
+  const photo = recipePhotoViewerGallery[recipePhotoViewerIndex];
+
+  recipePhotoViewerFileName.textContent = photo.fileName || 'Photo';
+  recipePhotoViewerCount.textContent =
+    count > 1
+      ? `${recipePhotoViewerIndex + 1} of ${count}`
+      : '1 of 1';
+
+  recipePhotoPrevious.hidden = count <= 1;
+  recipePhotoNext.hidden = count <= 1;
+
+  const canDelete =
+    Boolean(recipePhotoViewerRecipe?.canEdit) &&
+    Number.isFinite(photo.cookLogId) &&
+    photo.cookLogId > 0;
+
+  recipePhotoDelete.hidden = !canDelete;
+  recipePhotoDelete.dataset.attachmentId = String(photo.attachmentId);
+  recipePhotoDelete.dataset.cookLogId =
+    canDelete ? String(photo.cookLogId) : '';
+
+  recipePhotoViewerScale = 1;
+  recipePhotoStage.scrollLeft = 0;
+  recipePhotoStage.scrollTop = 0;
+  recipePhotoViewerImage.style.width = '';
+  recipePhotoViewerImage.style.height = '';
+  recipePhotoViewerImage.alt = photo.fileName || 'Recipe photo';
+  recipePhotoViewerImage.onload = () => {
+    requestAnimationFrame(fitRecipePhotoViewer);
+  };
+  recipePhotoViewerImage.src = photo.viewUrl;
+
+  if (recipePhotoViewerImage.complete && recipePhotoViewerImage.naturalWidth) {
+    requestAnimationFrame(fitRecipePhotoViewer);
+  }
+}
+
+function openRecipePhotoViewer(recipe, photos, attachmentId = null) {
+  const gallery = normalizePhotoGallery(photos);
+  if (!gallery.length || !recipePhotoViewer) return;
+
+  recipePhotoViewerRecipe = recipe;
+  recipePhotoViewerGallery = gallery;
+
+  let index = attachmentId === null
+    ? 0
+    : gallery.findIndex(photo =>
+        Number(photo.attachmentId) === Number(attachmentId)
+      );
+
+  if (index < 0) index = 0;
+
+  if (!recipePhotoViewer.open) {
+    recipePhotoViewer.showModal();
+  }
+
+  showRecipePhotoViewerItem(index);
+}
+
+function closeRecipePhotoViewer() {
+  if (!recipePhotoViewer) return;
+
+  recipePhotoViewer.close();
+  recipePhotoViewerImage?.removeAttribute('src');
+
+  recipePhotoViewerGallery = [];
+  recipePhotoViewerIndex = -1;
+  recipePhotoViewerRecipe = null;
+  recipePhotoViewerScale = 1;
+}
+
 function openRecipe(recipe) {
   const recipeNotes = recipe.journal?.general?.trim() || '';
   const cookLog = recipe.journal?.cookLog || [];
@@ -1151,7 +1506,23 @@ function openRecipe(recipe) {
 
             ${ratingsHtml}
 
+            <div
+              class="cook-log__photos"
+              data-cook-log-id="${entry.id}"
+              hidden
+            ></div>
+
             ${kitchenUserIsAuthenticated ? `
+            <div class="cook-log__photo-actions">
+              <button
+                class="secondary-btn cook-log__add-photos"
+                type="button"
+                data-cook-log-id="${entry.id}"
+              >
+                + Add photos
+              </button>
+            </div>
+
             <form class="cook-rating-form" data-cook-log-id="${entry.id}">
               <label>
                 <span>Name</span>
@@ -1198,14 +1569,37 @@ function openRecipe(recipe) {
 
   dialogContent.innerHTML = `
     <div class="recipe-detail">
-      <p class="eyebrow">${recipe.badge}</p>
-      <h2>${recipe.title}</h2>
+      ${recipe.badge ? `<p class="eyebrow">${escapeHtml(recipe.badge)}</p>` : ''}
+      <h2>${escapeHtml(recipe.title)}</h2>
 
       <p class="subtitle">
         ${recipe.prep} prep • ${recipe.cook} cook • serves ${recipe.serves}
       </p>
 
       ${overallRatingHtml}
+
+      <div class="recipe-photo-carousel" hidden>
+        <button
+          class="recipe-photo-carousel__nav recipe-photo-carousel__previous"
+          type="button"
+          aria-label="Previous recipe photo"
+        >‹</button>
+
+        <button
+          class="recipe-photo-carousel__image-button"
+          type="button"
+          title="Open recipe photos"
+        >
+          <img class="recipe-photo-carousel__image" alt="">
+          <span class="recipe-photo-carousel__count"></span>
+        </button>
+
+        <button
+          class="recipe-photo-carousel__nav recipe-photo-carousel__next"
+          type="button"
+          aria-label="Next recipe photo"
+        >›</button>
+      </div>
 
       <div class="recipe-detail__actions">
         <button class="secondary-btn revision-history__toggle" type="button">
@@ -1519,9 +1913,50 @@ function openRecipe(recipe) {
   addEntry?.addEventListener('click', () => {
     activeCookLogRecipe = recipe;
     cookLogForm.reset();
+    if (cookLogStatus) cookLogStatus.textContent = '';
 
     cookLogDialog.showModal();
     cookLogNote.focus();
+  });
+
+  dialogContent.querySelectorAll('.cook-log__add-photos').forEach(button => {
+    button.addEventListener('click', () => {
+      const cookLogId = Number(button.dataset.cookLogId);
+      if (!cookLogId) return;
+
+      const picker = document.createElement('input');
+      picker.type = 'file';
+      picker.accept = '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp';
+      picker.multiple = true;
+
+      picker.addEventListener('change', async () => {
+        const files = [...(picker.files || [])];
+        if (!files.length) return;
+
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Uploading…';
+
+        try {
+          await uploadCookLogPhotos(recipe.id, cookLogId, files);
+          await hydrateCookLogPhotos(recipe);
+          await hydrateRecipePhotoCarousel(recipe);
+        } catch (error) {
+          console.error(error);
+          button.textContent = error.message || 'Upload failed';
+          setTimeout(() => {
+            if (button.isConnected) button.textContent = originalText;
+          }, 2500);
+        } finally {
+          button.disabled = false;
+          if (button.textContent === 'Uploading…') {
+            button.textContent = originalText;
+          }
+        }
+      });
+
+      picker.click();
+    });
   });
 
   dialogContent.querySelectorAll('.cook-rating-form').forEach(form => {
@@ -1561,6 +1996,9 @@ function openRecipe(recipe) {
     lockRecipePageScroll();
     recipeDialog.showModal();
   }
+
+  hydrateRecipePhotoCarousel(recipe);
+  hydrateCookLogPhotos(recipe);
 
   requestAnimationFrame(() => {
     dialogContent.scrollTop = 0;
@@ -1718,8 +2156,14 @@ cookLogForm.addEventListener('submit', async event => {
   event.preventDefault();
 
   const note = cookLogNote.value.trim();
+  const files = [...(cookLogPhotos?.files || [])];
 
   if (!note || !activeCookLogRecipe) return;
+
+  const submitButton = cookLogForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.textContent = files.length ? 'Saving entry & photos…' : 'Saving entry…';
+  if (cookLogStatus) cookLogStatus.textContent = '';
 
   try {
     const response = await fetch(
@@ -1730,7 +2174,7 @@ cookLogForm.addEventListener('submit', async event => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          author: 'Randy',
+          author: kitchenCurrentUser?.givenName || 'Randy',
           note
         })
       }
@@ -1748,15 +2192,134 @@ cookLogForm.addEventListener('submit', async event => {
     activeCookLogRecipe.journal.cookLog ??= [];
     activeCookLogRecipe.journal.cookLog.unshift(savedEntry);
 
+    let uploadError = null;
+
+    if (files.length) {
+      try {
+        await uploadCookLogPhotos(
+          activeCookLogRecipe.id,
+          savedEntry.id,
+          files
+        );
+      } catch (error) {
+        uploadError = error;
+        console.error(error);
+      }
+    }
+
     cookLogDialog.close();
     openRecipe(activeCookLogRecipe);
+
+    const reopenedEntries = dialogContent.querySelector('.cook-log__entries');
+    const reopenedToggle = dialogContent.querySelector('.cook-log__toggle');
+    reopenedEntries?.classList.remove('cook-log__entries--collapsed');
+    reopenedToggle?.setAttribute('aria-expanded', 'true');
+    if (reopenedToggle) {
+      reopenedToggle.textContent =
+        `▼ Cook Log (${activeCookLogRecipe.journal.cookLog.length})`;
+    }
+
+    if (uploadError) {
+      const failedEntry = dialogContent.querySelector(
+        `.cook-log__entry .cook-log__add-photos[data-cook-log-id="${savedEntry.id}"]`
+      );
+      if (failedEntry) {
+        failedEntry.textContent = 'Entry saved — retry photos';
+      }
+    }
   } catch (error) {
     console.error(error);
-    alert('The cook log entry could not be saved.');
+    if (cookLogStatus) {
+      cookLogStatus.textContent =
+        error.message || 'The cook log entry could not be saved.';
+    }
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = 'Save Entry';
   }
 });
 
-  
+
+
+
+recipePhotoPrevious?.addEventListener('click', () => {
+  if (recipePhotoViewerGallery.length > 1) {
+    showRecipePhotoViewerItem(recipePhotoViewerIndex - 1);
+  }
+});
+
+recipePhotoNext?.addEventListener('click', () => {
+  if (recipePhotoViewerGallery.length > 1) {
+    showRecipePhotoViewerItem(recipePhotoViewerIndex + 1);
+  }
+});
+
+recipePhotoZoomOut?.addEventListener('click', () => {
+  setRecipePhotoViewerScale(recipePhotoViewerScale / 1.25);
+});
+
+recipePhotoZoomIn?.addEventListener('click', () => {
+  setRecipePhotoViewerScale(recipePhotoViewerScale * 1.25);
+});
+
+recipePhotoFit?.addEventListener('click', fitRecipePhotoViewer);
+recipePhotoClose?.addEventListener('click', closeRecipePhotoViewer);
+
+recipePhotoDelete?.addEventListener('click', async () => {
+  const recipe = recipePhotoViewerRecipe;
+  const attachmentId = Number(recipePhotoDelete.dataset.attachmentId);
+  const cookLogId = Number(recipePhotoDelete.dataset.cookLogId);
+
+  if (!recipe || !attachmentId || !cookLogId) return;
+
+  if (!window.confirm('Delete this cook-log photo?')) return;
+
+  recipePhotoDelete.disabled = true;
+  recipePhotoDelete.textContent = 'Deleting…';
+
+  try {
+    const response = await fetch(
+      `${API}/recipes/${encodeURIComponent(recipe.id)}/cook-log/${cookLogId}/photos/${attachmentId}`,
+      { method: 'DELETE' }
+    );
+
+    if (handleUnauthorizedResponse(response)) return;
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    closeRecipePhotoViewer();
+    openRecipe(recipe);
+  } catch (error) {
+    console.error(error);
+    recipePhotoDelete.textContent = 'Delete failed';
+    setTimeout(() => {
+      recipePhotoDelete.textContent = 'Delete';
+    }, 2000);
+  } finally {
+    recipePhotoDelete.disabled = false;
+  }
+});
+
+recipePhotoViewer?.addEventListener('close', () => {
+  recipePhotoViewerImage?.removeAttribute('src');
+  recipePhotoViewerGallery = [];
+  recipePhotoViewerIndex = -1;
+  recipePhotoViewerRecipe = null;
+  recipePhotoViewerScale = 1;
+});
+
+document.addEventListener('keydown', event => {
+  if (!recipePhotoViewer?.open) return;
+
+  if (event.key === 'ArrowLeft') {
+    event.preventDefault();
+    showRecipePhotoViewerItem(recipePhotoViewerIndex - 1);
+  }
+
+  if (event.key === 'ArrowRight') {
+    event.preventDefault();
+    showRecipePhotoViewerItem(recipePhotoViewerIndex + 1);
+  }
+});
 
 Promise.all([
   loadAuthenticatedUser(),
