@@ -191,6 +191,19 @@
       ></textarea>
     </label>
 
+    <label class="form-field">
+      <span>Photos <small>(optional)</small></span>
+      <input
+        id="cookLogPhotos"
+        type="file"
+        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+        multiple
+      >
+      <small>Add prep, process, or finished-dish photos. JPG, PNG, or WebP; 15 MB each.</small>
+    </label>
+
+    <p id="cookLogStatus" class="cook-log-dialog__status" role="status"></p>
+
     <div class="dialog-actions">
       <button
         class="secondary-btn"
@@ -481,6 +494,46 @@
   </form>
 </dialog>
 
+
+
+<dialog id="recipePhotoViewer" class="recipe-photo-viewer">
+  <div class="recipe-photo-viewer__shell">
+    <header class="recipe-photo-viewer__header">
+      <div class="recipe-photo-viewer__title">
+        <strong id="recipePhotoViewerFileName">Photo</strong>
+        <span id="recipePhotoViewerCount"></span>
+      </div>
+
+      <div class="recipe-photo-viewer__actions">
+        <button id="recipePhotoZoomOut" class="secondary-btn" type="button" title="Zoom out">−</button>
+        <button id="recipePhotoFit" class="secondary-btn" type="button">Fit</button>
+        <button id="recipePhotoZoomIn" class="secondary-btn" type="button" title="Zoom in">+</button>
+        <button id="recipePhotoDelete" class="secondary-btn recipe-photo-viewer__delete" type="button" hidden>Delete</button>
+        <button id="recipePhotoClose" class="secondary-btn" type="button">Close</button>
+      </div>
+    </header>
+
+    <div id="recipePhotoStage" class="recipe-photo-viewer__stage">
+      <img id="recipePhotoViewerImage" alt="">
+    </div>
+
+    <button
+      id="recipePhotoPrevious"
+      class="recipe-photo-viewer__nav recipe-photo-viewer__nav--previous"
+      type="button"
+      aria-label="Previous photo"
+      title="Previous photo"
+    >‹</button>
+
+    <button
+      id="recipePhotoNext"
+      class="recipe-photo-viewer__nav recipe-photo-viewer__nav--next"
+      type="button"
+      aria-label="Next photo"
+      title="Next photo"
+    >›</button>
+  </div>
+</dialog>
 
 <dialog id="groceryResultDialog" class="grocery-result-dialog">
   <button

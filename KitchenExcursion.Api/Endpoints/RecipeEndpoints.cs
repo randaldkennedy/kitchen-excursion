@@ -336,13 +336,26 @@ public static class RecipeEndpoints
             return Results.Forbid();
 
         // Capture recipe-owned attachments before deleting the recipe identity.
-        // The attachment records live in platform.* rather than kitchen.*.
+        // Cook-log photos use their cook-log id as EntityId, so collect those ids too.
+        var cookLogEntityIds = await db.RecipeCookLogs
+            .AsNoTracking()
+            .Where(c => c.RecipeId == recipe.RecipeId)
+            .Select(c => c.Id.ToString())
+            .ToListAsync(cancellationToken);
+
         var attachments = await platformDb.Attachments
             .Where(a =>
                 a.HouseholdId == recipe.HouseholdId &&
                 a.App == "kitchen" &&
-                a.EntityType == "recipe" &&
-                a.EntityId == recipe.Slug)
+                (
+                    (a.EntityType == "recipe" &&
+                     a.EntityId == recipe.Slug)
+                    ||
+                    (a.Category == "cook-log-photo" &&
+                     a.EntityType == "recipe-cook-log" &&
+                     a.EntityId != null &&
+                     cookLogEntityIds.Contains(a.EntityId))
+                ))
             .ToListAsync(cancellationToken);
 
         var strategy = db.Database.CreateExecutionStrategy();
@@ -496,6 +509,8 @@ public static class RecipeEndpoints
         string id,
         long cookLogId,
         KitchenExcursionContext db,
+        LaUltimaExcursionDbContext platformDb,
+        IAttachmentStorageService storage,
         CancellationToken cancellationToken)
     {
         var entry = await db.RecipeCookLogs
@@ -512,8 +527,43 @@ public static class RecipeEndpoints
             });
         }
 
+        var entityId = cookLogId.ToString();
+
+        var attachments = await platformDb.Attachments
+            .Where(a =>
+                a.HouseholdId == entry.Recipe.HouseholdId &&
+                a.App == "kitchen" &&
+                a.Category == "cook-log-photo" &&
+                a.EntityType == "recipe-cook-log" &&
+                a.EntityId == entityId)
+            .ToListAsync(cancellationToken);
+
         db.RecipeCookLogs.Remove(entry);
         await db.SaveChangesAsync(cancellationToken);
+
+        var cleanedAttachments = new List<Attachment>();
+
+        foreach (var attachment in attachments)
+        {
+            try
+            {
+                await storage.DeleteAsync(
+                    attachment.BlobName,
+                    cancellationToken);
+
+                cleanedAttachments.Add(attachment);
+            }
+            catch
+            {
+                // Keep metadata if blob cleanup fails so the orphan can be reconciled later.
+            }
+        }
+
+        if (cleanedAttachments.Count > 0)
+        {
+            platformDb.Attachments.RemoveRange(cleanedAttachments);
+            await platformDb.SaveChangesAsync(cancellationToken);
+        }
 
         return Results.NoContent();
     }
